@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Pet pet = new Pet("blazing","123",3,"Somestreet 123, TelAviv", "I like playing catch!");
+        Pet pet = new Pet("blazing","123",3,"Somestreet 123, TelAviv", "I like playing catch!","0509876543");
         Model.instance.addPet(pet);
 
     }

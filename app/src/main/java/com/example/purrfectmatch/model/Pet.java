@@ -20,6 +20,7 @@ public class Pet {
     int age = 0;
     String address = "";
     String description = "";
+    String phoneNumber = "";
     Long updateDate = new Long(0);
 
     public void setUpdateDate(Long updateDate) {
@@ -27,12 +28,13 @@ public class Pet {
     }
 
     public Pet(){}
-    public Pet(String name, String id, int age, String address, String description) {
+    public Pet(String name, String id, int age, String address, String description, String phoneNumber) {
         this.name = name;
         this.id = id;
         this.age = age;
         this.address = address;
         this.description = description;
+        this.phoneNumber = phoneNumber;
     }
 
     public void setId(String id) {
@@ -55,6 +57,8 @@ public class Pet {
         this.description = description;
     }
 
+    public void setPhoneNumber(String description) { this.phoneNumber = phoneNumber; }
+
     public String getName() { return name; }
 
     public String getId() { return id; }
@@ -64,6 +68,8 @@ public class Pet {
     public String getAddress() { return address; }
 
     public String getDescription() { return description; }
+
+    public String getPhoneNumber() { return phoneNumber; }
 
     public Long getUpdateDate() {
         return updateDate;
@@ -76,6 +82,7 @@ public class Pet {
         json.put("age",age);
         json.put("address",address);
         json.put("description",description);
+        json.put("phoneNumber",phoneNumber);
         json.put("updateDate", FieldValue.serverTimestamp());
         return json;
     }
@@ -86,10 +93,11 @@ public class Pet {
         int age = (int) json.get("age");
         String address = (String) json.get("address");
         String description = (String) json.get("description");
+        String phoneNumber = (String) json.get("phoneNumber");
         Timestamp ts = (Timestamp)json.get("updateDate");
         Long updateDate = ts.getSeconds();
 
-        Pet pet = new Pet(name,id,age,address,description);
+        Pet pet = new Pet(name,id,age,address,description,phoneNumber);
         pet.setUpdateDate(updateDate);
         return pet;
     }
