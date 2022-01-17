@@ -17,6 +17,8 @@ public class Pet {
     @NonNull
     String id = "";
     String name = "";
+    String email = "";
+    String password= "";
     Long updateDate = new Long(0);
 
     public void setUpdateDate(Long updateDate) {
@@ -24,9 +26,11 @@ public class Pet {
     }
 
     public Pet(){}
-    public Pet(String name, String id) {
+    public Pet(String name, String id, String email, String password) {
         this.name = name;
         this.id = id;
+        this.email = email;
+        this.password = password;
     }
 
     public void setId(String id) {
@@ -37,6 +41,10 @@ public class Pet {
         this.name = name;
     }
 
+    public void setEmail(String email) { this.email = email; }
+
+    public void setPassword(String password) { this.password = password; }
+
     public String getName() {
         return name;
     }
@@ -45,10 +53,16 @@ public class Pet {
         return id;
     }
 
+    public String getEmail() { return email; }
+
+    public String getPassword() { return password; }
+
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("id",id);
         json.put("name",name);
+        json.put("email",email);
+        json.put("password",password);
         json.put("updateDate", FieldValue.serverTimestamp());
         return json;
     }
@@ -56,10 +70,12 @@ public class Pet {
     public static Pet create(Map<String, Object> json) {
         String id = (String) json.get("id");
         String name = (String) json.get("name");
+        String email = (String) json.get("email");
+        String password = (String) json.get("password");
         Timestamp ts = (Timestamp)json.get("updateDate");
         Long updateDate = ts.getSeconds();
 
-        Pet pet = new Pet(name,id);
+        Pet pet = new Pet(name,id,email,password);
         pet.setUpdateDate(updateDate);
         return pet;
     }
