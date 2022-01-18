@@ -17,6 +17,10 @@ public class Pet {
     @NonNull
     String id = "";
     String name = "";
+    String address = "";
+    String age = "";
+    String about = "";
+
     Long updateDate = new Long(0);
 
     public void setUpdateDate(Long updateDate) {
