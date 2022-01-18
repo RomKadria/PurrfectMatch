@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import android.content.Context;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,23 +85,7 @@ public class SignupSTwoFragment extends Fragment {
         }
     }
 
-//    private void upload() {
-//        if (imageBitmap == null){
-////            Model.instance.addPet(pet,()->{
-////                Navigation.findNavController(nameEt).navigateUp();
-////            });
-//        }else{
-//            Model.instance.saveImage(imageBitmap, "text" + ".jpg", url -> {
-//                pet.setAvatarUrl(url);
-//                Model.instance.addPet(pet,()->{
-//                    Navigation.findNavController(nameEt).navigateUp();
-//                });
-//            });
-//        }
-//    }
-
         private void upload() {
-
             Intent galleryintent = new Intent(Intent.ACTION_GET_CONTENT, null);
             galleryintent.setType("image/*");
 
@@ -112,39 +97,25 @@ public class SignupSTwoFragment extends Fragment {
 
             Intent[] intentArray =  {cameraIntent};
             chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-//            startActivity(chooser);
-
-            startActivityForResult(chooser,REQUEST_CAMERA);
-
-
-//            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            startActivityForResult(intent,REQUEST_CAMERA);
-
-//            Intent intent = new Intent();
-//            intent.setType("image/*");
-//            intent.setAction(Intent.ACTION_GET_CONTENT);
-//            startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
-
+            startActivityForResult(chooser,SELECT_IMAGE);
         }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK && data != null)
-        {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            iv.setImageBitmap(photo);
-
-            Model.instance.saveImage(photo, "dogo.jpg", url -> {
-                Toast.makeText(getActivity(), "success", Toast.LENGTH_SHORT).show();
-            });
-        } else if (requestCode == SELECT_IMAGE &&
-                   resultCode == Activity.RESULT_OK) {
-            if (data != null && data.getData() != null) {
-                filePath = data.getData();
+        if (requestCode == SELECT_IMAGE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
-//                    Model.instance.saveImage(bitmap, "test.jpg");
-                    iv.setImageBitmap(bitmap);
+                    Bitmap photo;
+                    if (data.getData() != null) {
+                        filePath = data.getData();
+                         photo = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+                    } else {
+                         photo = (Bitmap) data.getExtras().get("data");
+                    }
+                    iv.setImageBitmap(photo);
+                    Model.instance.saveImage(photo, "rrr.jpg", url -> {
+                        Toast.makeText(getActivity(), "success", Toast.LENGTH_SHORT).show();
+                    });
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -153,17 +124,4 @@ public class SignupSTwoFragment extends Fragment {
                 Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
             }
     }
-
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_CAMERA){
-//            if (resultCode == Activity.RESULT_OK){
-//                Bundle extras = data.getExtras();
-//                imageBitmap = (Bitmap) extras.get("data");
-//            }
-//        }
-//    }
-
 }
