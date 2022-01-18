@@ -6,6 +6,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -70,9 +71,10 @@ public class ModelFirebase {
     }
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
+
     public void saveImage(Bitmap imageBitmap, String imageName, Model.SaveImageListener listener) {
         StorageReference storageRef = storage.getReference();
-        StorageReference imgRef = storageRef.child("user_avatars/" + imageName);
+        StorageReference imgRef = storageRef.child("pet_images/" + imageName);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -89,12 +91,11 @@ public class ModelFirebase {
 
     public void saveImage(Bitmap imageBitmap, String imageName) {
         StorageReference storageRef = storage.getReference();
-        StorageReference imgRef = storageRef.child("user_avatars/" + imageName);
+        StorageReference imgRef = storageRef.child("pet_images/" + imageName);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
-
         UploadTask uploadTask = imgRef.putBytes(data);
     }
 

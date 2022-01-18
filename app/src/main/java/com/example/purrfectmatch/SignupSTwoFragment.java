@@ -3,6 +3,7 @@ package com.example.purrfectmatch;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
@@ -30,7 +32,8 @@ public class SignupSTwoFragment extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     final static int RESULT_SUCCESS = 0;
     private static final int REQUEST_CAMERA = 1;
-    private static final int SELECT_IMAGE = 0;
+    private static final int SELECT_IMAGE = 22;
+    private final int PICK_IMAGE_REQUEST = 22;
 
     EditText nameEt;
     EditText ageEt;
@@ -39,6 +42,8 @@ public class SignupSTwoFragment extends Fragment {
     Button signUpBtn;
     Button uploadBtn;
     Bitmap imageBitmap;
+    ImageView iv;
+    private Uri filePath;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,6 +57,7 @@ public class SignupSTwoFragment extends Fragment {
         aboutEt = view.findViewById(R.id.signupSTwo_about_et);
         signUpBtn = view.findViewById(R.id.signupSTwo_signup_btn);
         uploadBtn = view.findViewById(R.id.signupSTwo_upload_btn);
+        iv = view.findViewById(R.id.imgView);
 
         signUpBtn.setOnClickListener(v -> signUp());
         uploadBtn.setOnClickListener(v -> upload());
@@ -94,31 +100,58 @@ public class SignupSTwoFragment extends Fragment {
 //    }
 
         private void upload() {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(intent,REQUEST_CAMERA);
+
+            Intent galleryintent = new Intent(Intent.ACTION_GET_CONTENT, null);
+            galleryintent.setType("image/*");
+
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+            Intent chooser = new Intent(Intent.ACTION_CHOOSER);
+            chooser.putExtra(Intent.EXTRA_INTENT, galleryintent);
+            chooser.putExtra(Intent.EXTRA_TITLE, "how would you like to get your photo");
+
+            Intent[] intentArray =  {cameraIntent};
+            chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+//            startActivity(chooser);
+
+            startActivityForResult(chooser,REQUEST_CAMERA);
+
+
+//            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            startActivityForResult(intent,REQUEST_CAMERA);
 
 //            Intent intent = new Intent();
 //            intent.setType("image/*");
 //            intent.setAction(Intent.ACTION_GET_CONTENT);
 //            startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+
         }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SELECT_IMAGE) {
-            if (resultCode == Activity.RESULT_OK) {
-                if (data != null) {
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
-                        Model.instance.saveImage(bitmap, "test");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK && data != null)
+        {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            iv.setImageBitmap(photo);
+
+            Model.instance.saveImage(photo, "dogo.jpg", url -> {
+                Toast.makeText(getActivity(), "success", Toast.LENGTH_SHORT).show();
+            });
+        } else if (requestCode == SELECT_IMAGE &&
+                   resultCode == Activity.RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                filePath = data.getData();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+//                    Model.instance.saveImage(bitmap, "test.jpg");
+                    iv.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
             }
-        }
     }
 
 
