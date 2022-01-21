@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.purrfectmatch.model.Model;
+import com.example.purrfectmatch.model.Pet;
+
 public class SignupSOneFragment extends Fragment {
 
     EditText etEmail, etPassword, etConfirmPassword;
@@ -32,22 +35,84 @@ public class SignupSOneFragment extends Fragment {
 
         etEmail.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                if (etEmail.getText().toString().trim().matches(emailPattern)) {
-                    Toast.makeText(getContext().getApplicationContext(), "Valid Email Address", Toast.LENGTH_SHORT).show();
-                } else {
-                    etEmail.setError("Invalid Email Address");
-                }
+                validateEmail();
+            }
+        });
+
+        etPassword.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                if (!validatePassword())
+                    etPassword.setError("Password must be at least 6 characters");
+                else if (!validateConfirmPassword())
+                    etConfirmPassword.setError("Password doesn't match");
+            }
+        });
+
+        etConfirmPassword.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                if (!validateConfirmPassword())
+                    etConfirmPassword.setError("Password doesn't match");
             }
         });
 
         btnNext.setOnClickListener(v -> {
-            if(etEmail.getError() != null)
-                etEmail.requestFocus();
-            else if(etConfirmPassword.getError() != null)
-                etConfirmPassword.requestFocus();
-            //else
+            if(validateAll()) {
+                //Send parameters to next screen
+                Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+            }
         });
 
         return view;
+    }
+
+    public boolean validateEmail() {
+        final boolean[] isExists = {true};
+        String email = etEmail.getText().toString().trim();
+        boolean matchFound = email.matches(emailPattern);
+
+//        Model.instance.getPetById(email, new Model.GetPetById() {
+//            @Override
+//            public void onComplete(Pet pet) {
+//                if (pet != null)
+//                    isExists[0] = false;
+//            }
+//        });
+
+        if (isExists[0]) {
+            etEmail.setError("Email address already exists");
+            return false;
+        } else if (!matchFound) {
+            etEmail.setError("Invalid email address");
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean validatePassword() {
+        return (etPassword.getText().toString().length() >= 6);
+    }
+
+    public boolean validateConfirmPassword() {
+        String password = etPassword.getText().toString();
+        String cPassword = etConfirmPassword.getText().toString();
+        return password.matches(cPassword);
+    }
+
+    public boolean validateAll() {
+        if(etEmail.getError() != null) {
+            etEmail.requestFocus();
+            return false;
+        }
+        else if(etPassword.getError() != null) {
+            etPassword.requestFocus();
+            return false;
+        }
+        else if (etConfirmPassword.getError() != null) {
+            etConfirmPassword.requestFocus();
+            return false;
+        }
+
+        return true;
     }
 }

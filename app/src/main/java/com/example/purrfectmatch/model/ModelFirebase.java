@@ -23,27 +23,27 @@ public class ModelFirebase {
                 .build();
         db.setFirestoreSettings(settings);
     }
-//    public interface GetAllStudentsListener{
-//        void onComplete(List<Student> list);
-//    }
+    public interface GetAllPetsListener{
+        void onComplete(List<Pet> list);
+    }
 
-//    public void getAllStudents(Long lastUpdateDate, GetAllStudentsListener listener) {
-//        db.collection(Student.COLLECTION_NAME)
-//                .whereGreaterThanOrEqualTo("updateDate",new Timestamp(lastUpdateDate,0))
-//                .get()
-//                .addOnCompleteListener(task -> {
-//                    List<Student> list = new LinkedList<Student>();
-//                    if (task.isSuccessful()){
-//                        for (QueryDocumentSnapshot doc : task.getResult()){
-//                            Student student = Student.create(doc.getData());
-//                            if (student != null){
-//                                list.add(student);
-//                            }
-//                        }
-//                    }
-//                    listener.onComplete(list);
-//                });
-//    }
+    public void getAllPets(Long lastUpdateDate, GetAllPetsListener listener) {
+        db.collection(Pet.COLLECTION_NAME)
+                .whereGreaterThanOrEqualTo("updateDate",new Timestamp(lastUpdateDate,0))
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<Pet> list = new LinkedList<Pet>();
+                    if (task.isSuccessful()){
+                        for (QueryDocumentSnapshot doc : task.getResult()){
+                            Pet pet = Pet.create(doc.getData());
+                            if (pet != null){
+                                list.add(pet);
+                            }
+                        }
+                    }
+                    listener.onComplete(list);
+                });
+    }
 
     public void addPet(Pet pet, Model.AddPetListener listener) {
         Map<String, Object> json = pet.toJson();
@@ -61,19 +61,19 @@ public class ModelFirebase {
                 .set(json);
     }
 
-//    public void getStudentById(String studentId, Model.GetStudentById listener) {
-//        db.collection(Student.COLLECTION_NAME)
-//                .document(studentId)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        Student student = null;
-//                        if (task.isSuccessful() & task.getResult()!= null){
-//                            student = Student.create(task.getResult().getData());
-//                        }
-//                        listener.onComplete(student);
-//                    }
-//                });
-//    }
+    public void getPetById(String petId, Model.GetPetById listener) {
+        db.collection(Pet.COLLECTION_NAME)
+                .document(petId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Pet pet = null;
+                        if (task.isSuccessful() & task.getResult()!= null){
+                            pet = Pet.create(task.getResult().getData());
+                        }
+                        listener.onComplete(pet);
+                    }
+                });
+    }
 }
