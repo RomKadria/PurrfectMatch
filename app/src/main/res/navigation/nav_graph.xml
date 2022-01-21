@@ -12,20 +12,22 @@
         <action
             android:id="@+id/action_signupSOneFragment_to_signupSTwoFragment"
             app:destination="@id/signupSTwoFragment" />
-        <argument
-            android:name="email"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="aa" />
-        <argument
-            android:name="password"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="aa" />
     </fragment>
     <fragment
         android:id="@+id/signupSTwoFragment"
         android:name="com.example.purrfectmatch.SignupSTwoFragment"
         android:label="fragment_signup_s_two"
-        tools:layout="@layout/fragment_signup_s_two" />
+        tools:layout="@layout/fragment_signup_s_two">
+    <argument
+        android:name="email"
+        app:argType="string"
+        app:nullable="true"
+        android:defaultValue="bbbb" />
+    <argument
+        android:name="password"
+        app:argType="string"
+        app:nullable="true"
+        android:defaultValue="123" />
+    </fragment>
+
 </navigation>

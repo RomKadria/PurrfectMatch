@@ -57,7 +57,7 @@ public class ModelFirebase {
     public void addPet(Pet pet, Model.AddPetListener listener) {
         Map<String, Object> json = pet.toJson();
         db.collection(Pet.COLLECTION_NAME)
-                .document(pet.getId())
+                .document(pet.getEmail())
                 .set(json)
                 .addOnSuccessListener(unused -> listener.onComplete())
                 .addOnFailureListener(e -> listener.onComplete());
@@ -66,7 +66,7 @@ public class ModelFirebase {
     public void addPet(Pet pet) {
         Map<String, Object> json = pet.toJson();
         db.collection(Pet.COLLECTION_NAME)
-                .document(pet.getId())
+                .document(pet.getEmail())
                 .set(json);
     }
 
