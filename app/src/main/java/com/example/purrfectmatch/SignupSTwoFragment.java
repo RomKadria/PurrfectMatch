@@ -53,6 +53,9 @@ public class SignupSTwoFragment extends Fragment {
     Bitmap photo;
     ProgressBar progressBar;
 
+    String email;
+    String password;
+
 //    NumberPicker agePicker;
 
     @Override
@@ -61,6 +64,10 @@ public class SignupSTwoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_signup_s_two, container, false);
 
+        if (getArguments() != null) {
+            email = SignupSTwoFragmentArgs.fromBundle(getArguments()).getEmail();
+            password = SignupSTwoFragmentArgs.fromBundle(getArguments()).getPassword();
+        }
         nameEt = view.findViewById(R.id.signupSTwo_name_et);
         ageEt = view.findViewById(R.id.signupSTwo_age_et);
         addressEt = view.findViewById(R.id.signupSTwo_address_et);
@@ -102,13 +109,10 @@ public class SignupSTwoFragment extends Fragment {
 
 
         } else {
-
             String name = nameEt.getText().toString();
             int age = Integer.parseInt(ageEt.getText().toString());
             String address = addressEt.getText().toString();
             String about = addressEt.getText().toString();
-            String email = "test";
-            String password = "1122";
 
             if (age < MIN_AGE || age > MAX_AGE) {
                 Toast.makeText(getActivity(), "Age must be between " + MIN_AGE + " and " + MAX_AGE, Toast.LENGTH_SHORT).show();
@@ -118,7 +122,7 @@ public class SignupSTwoFragment extends Fragment {
             Model.instance.saveImage(photo, email + ".jpg", url -> {
                 Toast.makeText(getActivity(), "add image success", Toast.LENGTH_SHORT).show();
 
-                Pet pet = new Pet(name, email, age, address, about, password, email, url);
+                Pet pet = new Pet(email, name, age, address, about, password, url);
                 Model.instance.addPet(pet, () -> {
                     Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);

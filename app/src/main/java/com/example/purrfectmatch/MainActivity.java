@@ -19,9 +19,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       NavHost navHost = (NavHost)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-       navCtl = navHost.getNavController();
+        NavHost navHost = (NavHost)getSupportFragmentManager().findFragmentById(R.id.base_navhost);
+        navCtl = navHost.getNavController();
 
-       NavigationUI.setupActionBarWithNavController(this,navCtl);
+        NavigationUI.setupActionBarWithNavController(this,navCtl);
     }
 }
