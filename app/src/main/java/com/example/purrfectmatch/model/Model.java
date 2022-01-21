@@ -1,6 +1,7 @@
 package com.example.purrfectmatch.model;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -96,6 +97,13 @@ public class Model {
     public Pet getPetById(String petId, GetPetById listener) {
         modelFirebase.getPetById(petId, listener);
         return null;
+    }
+    public interface SaveImageListener{
+        void onComplete(String url);
+    }
+
+    public void saveImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
+        modelFirebase.saveImage(imageBitmap,imageName,listener);
     }
 }
 
