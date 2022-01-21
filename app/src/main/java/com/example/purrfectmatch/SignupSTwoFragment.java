@@ -50,7 +50,7 @@ public class SignupSTwoFragment extends Fragment {
     ImageView imageIv;
     private Uri filePath;
     Bitmap photo;
-    NumberPicker agePicker;
+//    NumberPicker agePicker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,9 +65,9 @@ public class SignupSTwoFragment extends Fragment {
         signUpBtn = view.findViewById(R.id.signupSTwo_signup_btn);
         uploadBtn = view.findViewById(R.id.signupSTwo_upload_btn);
         imageIv = view.findViewById(R.id.signupSTwo_image_iv);
-        agePicker = view.findViewById(R.id.signupSTwo_age_np);
-        agePicker.setMaxValue(120);
-        agePicker.setMinValue(0);
+//        agePicker = view.findViewById(R.id.signupSTwo_age_np);
+//        agePicker.setMaxValue(120);
+//        agePicker.setMinValue(0);
 
         signUpBtn.setOnClickListener(v -> signUp());
         uploadBtn.setOnClickListener(v -> upload());
