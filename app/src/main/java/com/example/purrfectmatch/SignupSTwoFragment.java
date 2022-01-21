@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 
 import android.content.Context;
 
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
@@ -32,6 +34,8 @@ import java.io.IOException;
 public class SignupSTwoFragment extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     final static int RESULT_SUCCESS = 0;
+    final static int MAX_AGE = 200;
+    final static int MIN_AGE = 0;
     private static final int REQUEST_CAMERA = 1;
     private static final int SELECT_IMAGE = 22;
     private final int PICK_IMAGE_REQUEST = 22;
@@ -43,8 +47,10 @@ public class SignupSTwoFragment extends Fragment {
     Button signUpBtn;
     Button uploadBtn;
     Bitmap imageBitmap;
-    ImageView iv;
+    ImageView imageIv;
     private Uri filePath;
+    Bitmap photo;
+    NumberPicker agePicker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,20 +64,26 @@ public class SignupSTwoFragment extends Fragment {
         aboutEt = view.findViewById(R.id.signupSTwo_about_et);
         signUpBtn = view.findViewById(R.id.signupSTwo_signup_btn);
         uploadBtn = view.findViewById(R.id.signupSTwo_upload_btn);
-        iv = view.findViewById(R.id.imgView);
+        imageIv = view.findViewById(R.id.signupSTwo_image_iv);
+        agePicker = view.findViewById(R.id.signupSTwo_age_np);
+        agePicker.setMaxValue(120);
+        agePicker.setMinValue(0);
 
         signUpBtn.setOnClickListener(v -> signUp());
         uploadBtn.setOnClickListener(v -> upload());
+        ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
 
 
         return view;
     }
 
     private void signUp() {
+
         if (nameEt.getText().toString().isEmpty() ||
             ageEt.getText().toString().isEmpty() ||
             addressEt.getText().toString().isEmpty() ||
-            aboutEt.getText().toString().isEmpty()) {
+            aboutEt.getText().toString().isEmpty() ||
+            photo == null) {
 
             Context context = getContext();
             CharSequence text = "Please fill all fields";
@@ -81,8 +93,29 @@ public class SignupSTwoFragment extends Fragment {
 
 
         } else {
-            Pet pet = new Pet();
+
+            String name = nameEt.getText().toString();
+            int age = Integer.parseInt(ageEt.getText().toString());
+            String address = addressEt.getText().toString();
+            String about = addressEt.getText().toString();
+            String email = "test";
+            String password = "1122";
+
+            if (age < MIN_AGE || age > MAX_AGE) {
+                Toast.makeText(getActivity(), "Age must be between " + MIN_AGE + " and " + MAX_AGE, Toast.LENGTH_SHORT).show();
+            } else if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getActivity(), "missing data from last phase, please restart the process", Toast.LENGTH_SHORT).show();
+            } else { // All good lets add the pet
+            Model.instance.saveImage(photo, email + ".jpg", url -> {
+                Toast.makeText(getActivity(), "add image success", Toast.LENGTH_SHORT).show();
+
+                Pet pet = new Pet(name, email, age, address, about, password, email, url);
+                Model.instance.addPet(pet, () -> {
+                    Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
+                });
+            });
         }
+    }
     }
 
         private void upload() {
@@ -105,17 +138,15 @@ public class SignupSTwoFragment extends Fragment {
         if (requestCode == SELECT_IMAGE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 try {
-                    Bitmap photo;
                     if (data.getData() != null) {
                         filePath = data.getData();
-                         photo = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+                        photo = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
                     } else {
                          photo = (Bitmap) data.getExtras().get("data");
                     }
-                    iv.setImageBitmap(photo);
-                    Model.instance.saveImage(photo, "rrr.jpg", url -> {
-                        Toast.makeText(getActivity(), "success", Toast.LENGTH_SHORT).show();
-                    });
+
+                    imageIv.setImageBitmap(photo);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

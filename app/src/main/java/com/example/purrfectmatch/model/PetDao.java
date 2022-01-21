@@ -16,6 +16,10 @@ public interface PetDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Pet... pets);
 
+//    @Insert
+//    public void insertPet(Pet);
+
+
 //    @Delete
 //    void delete(Pet pet);
 }

@@ -20,6 +20,9 @@ public class Pet {
     int age = 0;
     String address = "";
     String description = "";
+    String password = "";
+    String email = "";
+    String petUrl;
     Long updateDate = new Long(0);
 
     public void setUpdateDate(Long updateDate) {
@@ -27,12 +30,15 @@ public class Pet {
     }
 
     public Pet(){}
-    public Pet(String name, String id, int age, String address, String description) {
+    public Pet(String name, String id, int age, String address, String description, String password, String email, String petUrl) {
         this.name = name;
         this.id = id;
         this.age = age;
         this.address = address;
         this.description = description;
+        this.email = email;
+        this.password = password;
+        this.petUrl = petUrl;
     }
 
     public void setId(String id) {
@@ -65,6 +71,30 @@ public class Pet {
 
     public String getDescription() { return description; }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPetUrl() {
+        return petUrl;
+    }
+
+    public void setPetUrl(String petUrl) {
+        this.petUrl = petUrl;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public Long getUpdateDate() {
         return updateDate;
     }
@@ -77,6 +107,9 @@ public class Pet {
         json.put("address",address);
         json.put("description",description);
         json.put("updateDate", FieldValue.serverTimestamp());
+        json.put("password", password);
+        json.put("email", email);
+        json.put("petUrl", petUrl);
         return json;
     }
 
@@ -86,10 +119,12 @@ public class Pet {
         int age = (int) json.get("age");
         String address = (String) json.get("address");
         String description = (String) json.get("description");
+        String email = (String) json.get("email");
+        String password = (String) json.get("password");
+        String petUrl = (String) json.get("petUrl");
         Timestamp ts = (Timestamp)json.get("updateDate");
         Long updateDate = ts.getSeconds();
-
-        Pet pet = new Pet(name,id,age,address,description);
+        Pet pet = new Pet(name,id,age,address,description, password, email, petUrl);
         pet.setUpdateDate(updateDate);
         return pet;
     }

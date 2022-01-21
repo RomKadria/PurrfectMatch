@@ -89,15 +89,15 @@ public class ModelFirebase {
                 }));
     }
 
-    public void saveImage(Bitmap imageBitmap, String imageName) {
-        StorageReference storageRef = storage.getReference();
-        StorageReference imgRef = storageRef.child("pet_images/" + imageName);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-        UploadTask uploadTask = imgRef.putBytes(data);
-    }
+//    public void saveImage(Bitmap imageBitmap, String imageName) {
+//        StorageReference storageRef = storage.getReference();
+//        StorageReference imgRef = storageRef.child("pet_images/" + imageName);
+//
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//        byte[] data = baos.toByteArray();
+//        UploadTask uploadTask = imgRef.putBytes(data);
+//    }
 
 //    public void getStudentById(String studentId, Model.GetStudentById listener) {
 //        db.collection(Student.COLLECTION_NAME)
