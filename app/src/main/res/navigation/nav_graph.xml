@@ -8,5 +8,21 @@
         android:id="@+id/signupSOneFragment"
         android:name="com.example.purrfectmatch.SignupSOneFragment"
         android:label="fragment_signup_s_one"
-        tools:layout="@layout/fragment_signup_s_one" />
+        tools:layout="@layout/fragment_signup_s_one" >
+        <action
+            android:id="@+id/action_signupSOneFragment_to_signupSTwoFragment"
+            app:destination="@id/signupSTwoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signupSTwoFragment"
+        android:name="com.example.purrfectmatch.SignupSTwoFragment"
+        android:label="fragment_signup_s_two"
+        tools:layout="@layout/fragment_signup_s_two" >
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -1,21 +1,15 @@
 package com.example.purrfectmatch;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import com.example.purrfectmatch.model.Model;
-import com.example.purrfectmatch.model.Pet;
 
 public class SignupSOneFragment extends Fragment {
 
@@ -41,24 +35,25 @@ public class SignupSOneFragment extends Fragment {
 
         etPassword.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                if (!validatePassword())
-                    etPassword.setError("Password must be at least 6 characters");
-                else if (!validateConfirmPassword())
-                    etConfirmPassword.setError("Password doesn't match");
+                validatePassword();
+                if (!etConfirmPassword.getText().toString().isEmpty())
+                    validateConfirmPassword();
             }
         });
 
         etConfirmPassword.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                if (!validateConfirmPassword())
-                    etConfirmPassword.setError("Password doesn't match");
+                validateConfirmPassword();
             }
         });
 
         btnNext.setOnClickListener(v -> {
             if(validateAll()) {
                 //Send parameters to next screen
-                Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+
+                
+
+                Navigation.findNavController(v).navigate(R.id.action_signupSOneFragment_to_signupSTwoFragment);
             }
         });
 
@@ -78,10 +73,11 @@ public class SignupSOneFragment extends Fragment {
 //            }
 //        });
 
-        if (isExists[0]) {
+        if (!isExists[0]) {
             etEmail.setError("Email address already exists");
             return false;
-        } else if (!matchFound) {
+        }
+        else if (!matchFound) {
             etEmail.setError("Invalid email address");
             return false;
         }
@@ -90,29 +86,41 @@ public class SignupSOneFragment extends Fragment {
     }
 
     public boolean validatePassword() {
-        return (etPassword.getText().toString().length() >= 6);
+        if (etPassword.getText().toString().length() < 6) {
+            etPassword.setError("Password must be at least 6 characters");
+            return false;
+        }
+
+        return true;
     }
 
     public boolean validateConfirmPassword() {
         String password = etPassword.getText().toString();
         String cPassword = etConfirmPassword.getText().toString();
-        return password.matches(cPassword);
+        if (password.matches(cPassword))
+            return true;
+        else {
+            etConfirmPassword.setError("Passwords don't match");
+            return false;
+        }
     }
 
     public boolean validateAll() {
-        if(etEmail.getError() != null) {
-            etEmail.requestFocus();
-            return false;
-        }
-        else if(etPassword.getError() != null) {
-            etPassword.requestFocus();
-            return false;
-        }
-        else if (etConfirmPassword.getError() != null) {
+        boolean flag = true;
+
+        if (!validateConfirmPassword()) {
             etConfirmPassword.requestFocus();
-            return false;
+            flag = false;
+        }
+        if(!validatePassword()) {
+            etPassword.requestFocus();
+            flag = false;
+        }
+        if(!validateEmail()) {
+            etEmail.requestFocus();
+            flag = false;
         }
 
-        return true;
+        return flag;
     }
 }
