@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
@@ -50,6 +51,8 @@ public class SignupSTwoFragment extends Fragment {
     ImageView imageIv;
     private Uri filePath;
     Bitmap photo;
+    ProgressBar progressBar;
+
 //    NumberPicker agePicker;
 
     @Override
@@ -65,6 +68,8 @@ public class SignupSTwoFragment extends Fragment {
         signUpBtn = view.findViewById(R.id.signupSTwo_signup_btn);
         uploadBtn = view.findViewById(R.id.signupSTwo_upload_btn);
         imageIv = view.findViewById(R.id.signupSTwo_image_iv);
+        progressBar = view.findViewById(R.id.signupSTwo_progressbar);
+        progressBar.setVisibility(View.GONE);
 //        agePicker = view.findViewById(R.id.signupSTwo_age_np);
 //        agePicker.setMaxValue(120);
 //        agePicker.setMinValue(0);
@@ -78,6 +83,7 @@ public class SignupSTwoFragment extends Fragment {
     }
 
     private void signUp() {
+        progressBar.setVisibility(View.VISIBLE);
 
         if (nameEt.getText().toString().isEmpty() ||
             ageEt.getText().toString().isEmpty() ||
@@ -90,6 +96,9 @@ public class SignupSTwoFragment extends Fragment {
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
+
+            progressBar.setVisibility(View.GONE);
+
 
 
         } else {
@@ -112,6 +121,8 @@ public class SignupSTwoFragment extends Fragment {
                 Pet pet = new Pet(name, email, age, address, about, password, email, url);
                 Model.instance.addPet(pet, () -> {
                     Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+
                 });
             });
         }

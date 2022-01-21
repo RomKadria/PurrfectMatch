@@ -19,12 +19,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        NavHost navHost = (NavHost)getSupportFragmentManager().findFragmentById(R.id.nav_graph);
-//        navCtl = navHost.getNavController();
-//        NavigationUI.setupActionBarWithNavController(this,navCtl);
+//       NavHost navHost = (NavHost)getSupportFragmentManager().findFragmentById(R.id.nav_graph);
+//       navCtl = navHost.getNavController();
 
-//        Pet pet = new Pet("blazing","123");
-//        Model.instance.addPet(pet);
+//        NavigationUI.setupActionBarWithNavController(this,navCtl);
 
     }
 }
