@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.purrfectmatch.model.Model;
+import com.example.purrfectmatch.model.Pet;
+
 public class SignupSOneFragment extends Fragment {
 
     EditText etEmail, etPassword, etConfirmPassword;
@@ -49,11 +52,12 @@ public class SignupSOneFragment extends Fragment {
 
         btnNext.setOnClickListener(v -> {
             if(validateAll()) {
-                //Send parameters to next screen
-
-                
-
-                Navigation.findNavController(v).navigate(R.id.action_signupSOneFragment_to_signupSTwoFragment);
+                SignupSOneFragmentDirections.ActionSignupSOneFragmentToSignupSTwoFragment action =
+                        SignupSOneFragmentDirections.actionSignupSOneFragmentToSignupSTwoFragment(
+                                etEmail.getText().toString().trim(),
+                                etPassword.getText().toString()
+                        );
+                Navigation.findNavController(v).navigate(action);
             }
         });
 
