@@ -99,16 +99,12 @@ public class Model {
         modelFirebase.saveImage(imageBitmap,imageName,listener);
     }
 
-//    public void saveImage(Bitmap imageBitmap, String imageName) {
-//        modelFirebase.saveImage(imageBitmap,imageName);
-//    }
-
-//    public interface GetPetById{
-//        void onComplete(Pet pet);
-//    }
-//    public Pet getPetById(String petId, GetPetById listener) {
-//        modelFirebase.getPetById(petId,listener);
-//        return null;
-//    }
+    public interface GetPetById{
+        void onComplete(Pet pet);
+    }
+    public Pet getPetById(String petId, GetPetById listener) {
+        modelFirebase.getPetById(petId,listener);
+        return null;
+    }
 }
 

@@ -30,4 +30,14 @@
         android:defaultValue="123" />
     </fragment>
 
+    <fragment
+        android:id="@+id/petDetailsFragment"
+        android:name="com.example.purrfectmatch.PetDetailsFragment"
+        android:label="About Me"
+        tools:layout="@layout/fragment_pet_details">
+        <argument
+            android:name="petId"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

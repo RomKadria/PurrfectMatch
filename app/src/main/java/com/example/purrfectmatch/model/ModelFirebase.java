@@ -114,4 +114,20 @@ public class ModelFirebase {
 //                    }
 //                });
 //    }
+
+    public void getPetById(String petId, Model.GetPetById listener) {
+        db.collection(Pet.COLLECTION_NAME)
+                .document(petId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Pet pet = null;
+                        if (task.isSuccessful() & task.getResult()!= null){
+                            pet = Pet.create(task.getResult().getData());
+                        }
+                        listener.onComplete(pet);
+                    }
+                });
+    }
 }
