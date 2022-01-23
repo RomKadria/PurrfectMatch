@@ -7,7 +7,7 @@
     tools:context=".PetDetailsFragment">
 
     <ImageView
-        android:id="@+id/pet_details_imv"
+        android:id="@+id/pet_details_img"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -30,7 +30,7 @@
         android:textSize="24sp"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pet_details_imv" />
+        app:layout_constraintTop_toBottomOf="@+id/pet_details_img" />
 
     <TextView
         android:id="@+id/pet_details_description_tv"
@@ -71,18 +71,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pet_details_contact_tv" />
 
-    <TextView
-        android:id="@+id/pet_details_PhoneNumber_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/pet_details_chat_btn"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/chat_btn"
+        android:scrollbarSize="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/pet_details_map_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/pet_details_map_btn"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="8dp"
-        android:text="~PhoneNumber~"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pet_details_address_tv" />
+        android:background="@drawable/map_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/pet_details_chat_btn"
+        app:layout_constraintTop_toTopOf="@+id/pet_details_chat_btn" />
 
     <ProgressBar
         android:id="@+id/pet_details_progressbar"

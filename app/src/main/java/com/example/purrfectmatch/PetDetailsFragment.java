@@ -16,8 +16,8 @@ public class PetDetailsFragment extends Fragment {
     TextView headerTv;
     TextView descriptionTv;
     TextView addressTv;
-    TextView phoneNumberTv;
     ImageView petImg;
+    TextView contactTv;
     ProgressBar progressBar;
 
     @Override
@@ -29,8 +29,8 @@ public class PetDetailsFragment extends Fragment {
         headerTv = view.findViewById(R.id.pet_details_header_tv);
         descriptionTv = view.findViewById(R.id.pet_details_description_tv);
         addressTv = view.findViewById(R.id.pet_details_address_tv);
-        phoneNumberTv = view.findViewById(R.id.pet_details_PhoneNumber_tv);
-        petImg = view.findViewById(R.id.pet_details_imv);
+        petImg = view.findViewById(R.id.pet_details_img);
+        contactTv = view.findViewById(R.id.pet_details_contact_tv);
         progressBar = view.findViewById(R.id.pet_details_progressbar);
         String petId = "asdasd@gmail.com";
 //        String petId = PetDetailsFragmentArgs.fromBundle(getArguments()).getPetId();
@@ -41,7 +41,6 @@ public class PetDetailsFragment extends Fragment {
                 headerTv.setText(pet.getName() + ", " + pet.getAge());
                 descriptionTv.setText(pet.getDescription());
                 addressTv.setText(pet.getAddress());
-                phoneNumberTv.setText(pet.getPhoneNumber());
                 if (pet.getPetUrl() != null) {
                     Picasso.get().load(pet.getPetUrl()).into(petImg);
                 }
@@ -50,7 +49,7 @@ public class PetDetailsFragment extends Fragment {
                 headerTv.setVisibility(View.VISIBLE);
                 descriptionTv.setVisibility(View.VISIBLE);
                 addressTv.setVisibility(View.VISIBLE);
-                phoneNumberTv.setVisibility(View.VISIBLE);
+                contactTv.setVisibility(View.VISIBLE);
             }
         });
 
