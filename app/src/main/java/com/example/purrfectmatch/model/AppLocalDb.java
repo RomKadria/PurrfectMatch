@@ -1,19 +1,19 @@
 package com.example.purrfectmatch.model;
 
-//import androidx.room.database;
-//import androidx.room.Room;
-//import androidx.room.RoomDatabase;
-//
-//@Database(entities = {Student.class}, version = 3)
-//abstract class AppLocalDbRepository extends RoomDatabase {
-//    public abstract StudentDao studentDao();
-//}
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+
+@Database(entities = {Pet.class}, version = 1)
+abstract class AppLocalDbRepository extends RoomDatabase {
+    public abstract PetDao petDao();
+}
 
 public class AppLocalDb{
-//    static public AppLocalDbRepository db =
-//            Room.databaseBuilder(MyApplication.getContext(),
-//                    AppLocalDbRepository.class,
-//                    "dbFileName.db")
-//                    .fallbackToDestructiveMigration()
-//                    .build();
+    static public AppLocalDbRepository db =
+            Room.databaseBuilder(MyApplication.getContext(),
+                    AppLocalDbRepository.class,
+                    "purrfectMatch.db")
+                    .fallbackToDestructiveMigration()
+                    .build();
 }

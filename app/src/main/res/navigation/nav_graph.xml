@@ -17,17 +17,12 @@
         android:id="@+id/signupSTwoFragment"
         android:name="com.example.purrfectmatch.SignupSTwoFragment"
         android:label="fragment_signup_s_two"
-        tools:layout="@layout/fragment_signup_s_two">
-    <argument
-        android:name="email"
-        app:argType="string"
-        app:nullable="true"
-        android:defaultValue="bbbb" />
-    <argument
-        android:name="password"
-        app:argType="string"
-        app:nullable="true"
-        android:defaultValue="123" />
+        tools:layout="@layout/fragment_signup_s_two" >
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
     </fragment>
-
 </navigation>
