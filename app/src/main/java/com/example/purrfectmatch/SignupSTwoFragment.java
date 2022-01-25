@@ -26,7 +26,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
-import com.squareup.picasso.Picasso;
 
 import com.example.purrfectmatch.model.Pet;
 

@@ -55,6 +55,16 @@ public class Pet {
         this.description = description;
     }
 
+    public void setPassword(String password) { this.password = password; }
+
+    public void setPetUrl(String petUrl) {
+        this.petUrl = petUrl;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getName() { return name; }
 
     public int getAge() { return age; }
@@ -67,24 +77,12 @@ public class Pet {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getPetUrl() {
         return petUrl;
     }
 
-    public void setPetUrl(String petUrl) {
-        this.petUrl = petUrl;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Long getUpdateDate() {
@@ -107,7 +105,7 @@ public class Pet {
     public static Pet create(Map<String, Object> json) {
         String email = (String) json.get("email");
         String name = (String) json.get("name");
-        int age = (int) json.get("age");
+        int age = Integer.parseInt(json.get("age").toString());
         String address = (String) json.get("address");
         String description = (String) json.get("description");
         String password = (String) json.get("password");
