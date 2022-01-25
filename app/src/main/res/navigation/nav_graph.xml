@@ -24,5 +24,8 @@
         <argument
             android:name="password"
             app:argType="string" />
+        <action
+            android:id="@+id/action_change_signUp_details"
+            app:destination="@id/signupSOneFragment" />
     </fragment>
 </navigation>
