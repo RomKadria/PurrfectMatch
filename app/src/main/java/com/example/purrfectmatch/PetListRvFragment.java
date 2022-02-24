@@ -21,15 +21,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.purrfectmatch.model.Model;
 import com.example.purrfectmatch.model.Pet;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class StudentListRvFragment extends Fragment {
+public class PetListRvFragment extends Fragment {
     PetListRvViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
@@ -59,8 +61,11 @@ public class StudentListRvFragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View v,int position) {
-                String stId = viewModel.getData().getValue().get(position).getId();
-                Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToPetDetailsFragment(stId));
+                // TODO: is getEmail correct here?
+                String petId = viewModel.getData().getValue().get(position).getEmail();
+
+                // TODO: Navigate to fragment_pet_list
+//                Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToPetDetailsFragment(petId));
 
             }
         });
@@ -85,13 +90,15 @@ public class StudentListRvFragment extends Fragment {
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView nameTv;
+        public TextView petName;
+        public ImageView petImage;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
-            nameTv = itemView.findViewById(R.id.listrow_name_tv);
-            idTv = itemView.findViewById(R.id.listrow_id_tv);
-            cb = itemView.findViewById(R.id.listrow_cb);
+            petName = itemView.findViewById(R.id.pc_pet_name);
+            petImage = itemView.findViewById(R.id.pc_pet_image);
+
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -123,9 +130,8 @@ public class StudentListRvFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             Pet pet = viewModel.getData().getValue().get(position);
-            holder.nameTv.setText(pet.getName());
-            holder.idTv.setText(pet.getId());
-            holder.cb.setChecked(pet.isFlag());
+            holder.petName.setText(pet.getName());
+            Picasso.get().load(pet.getPetUrl()).into(holder.petImage);
         }
 
         @Override
@@ -140,12 +146,14 @@ public class StudentListRvFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.student_list_menu,menu);
+
+        // TODO: Do we need this
+        // inflater.inflate(R.menu.student_list_menu,menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.addStudentFragment){
+        if (item.getItemId() == R.id.petDetailsFragment){
             Log.d("TAG","ADD...");
             return true;
         }else {
