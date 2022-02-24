@@ -44,10 +44,10 @@ public class Model {
         petListLoadingState.setValue(PetListLoadingState.loading);
 
         // get last local update date
-        Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("PetsLastUpdateDate",0);
+        //Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("PetsLastUpdateDate",0);
 
         // firebase get all updates since lastLocalUpdateDate
-        modelFirebase.getAllPets(lastUpdateDate, new ModelFirebase.GetAllPetsListener() {
+        modelFirebase.getAllPets( new ModelFirebase.GetAllPetsListener() {
             @Override
             public void onComplete(List<Pet> list) {
                 // add all records to the local db

@@ -3,14 +3,13 @@ package com.example.purrfectmatch;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.purrfectmatch.databinding.FragmentAnimalCardBinding;
 import com.example.purrfectmatch.model.Pet;
-
+import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
@@ -19,10 +18,10 @@ import java.util.List;
  */
 public class MyAnimalCardRecyclerViewAdapter extends RecyclerView.Adapter<MyAnimalCardRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Pet> mValues;
+    private final List<Pet> pets;
 
     public MyAnimalCardRecyclerViewAdapter(List<Pet> items) {
-        mValues = items;
+        pets = items;
     }
 
     @Override
@@ -34,32 +33,30 @@ public class MyAnimalCardRecyclerViewAdapter extends RecyclerView.Adapter<MyAnim
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) { // TODO: Add onclicks etc
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getName());
-        holder.mContentView.setText(mValues.get(position).getDescription());
-        holder.petImage.setImageURI(mValues.get(position).getPetUrl());  // TODO: get the actual image
+        holder.mItem = pets.get(position);
+        holder.petName.setText(pets.get(position).getName());
+        Picasso.get().load(pets.get(position).getPetUrl()).into(holder.petImage);
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return pets.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public ImageView petImage;
+        public final TextView petName;
+        public final ImageView petImage;
         public Pet mItem;
 
         public ViewHolder(FragmentAnimalCardBinding binding) {
             super(binding.getRoot());
-            mIdView = binding.itemNumber;
-            mContentView = binding.content;
+            petName = binding.pcPetName;
+            petImage = binding.pcPetImage;
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + petName.getText() + "'";
         }
     }
 }

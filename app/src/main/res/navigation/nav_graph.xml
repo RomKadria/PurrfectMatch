@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/signupSOneFragment">
+    app:startDestination="@id/animalCardFragment">
     <fragment
         android:id="@+id/signupSOneFragment"
         android:name="com.example.purrfectmatch.SignupSOneFragment"
@@ -24,6 +24,9 @@
         <argument
             android:name="password"
             app:argType="string" />
+        <action
+            android:id="@+id/action_signupSTwoFragment_to_animalCardFragment"
+            app:destination="@id/animalCardFragment" />
     </fragment>
 
     <fragment
@@ -35,4 +38,15 @@
             android:name="petId"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/animalCardFragment"
+        android:name="com.example.purrfectmatch.AnimalCardFragment"
+        android:label="fragment_animal_card_list"
+        tools:layout="@layout/fragment_animal_card_list" >
+        <action
+            android:id="@+id/action_animalCardFragment_to_petDetailsFragment"
+            app:destination="@id/petDetailsFragment" />
+    </fragment>
+
+
 </navigation>
