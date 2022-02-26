@@ -24,6 +24,9 @@
         <argument
             android:name="password"
             app:argType="string" />
+        <action
+            android:id="@+id/action_signupSTwoFragment_to_petListRvFragment"
+            app:destination="@id/petListRvFragment" />
     </fragment>
 
     <fragment
@@ -34,5 +37,14 @@
         <argument
             android:name="petId"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/petListRvFragment"
+        android:name="com.example.purrfectmatch.PetListRvFragment"
+        android:label="fragment_pet_list"
+        tools:layout="@layout/fragment_pet_list" >
+        <action
+            android:id="@+id/action_petListRvFragment_to_petDetailsFragment"
+            app:destination="@id/petDetailsFragment" />
     </fragment>
 </navigation>
