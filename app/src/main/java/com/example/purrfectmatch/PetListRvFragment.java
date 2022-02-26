@@ -3,7 +3,6 @@ package com.example.purrfectmatch;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,17 +18,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.purrfectmatch.model.Model;
 import com.example.purrfectmatch.model.Pet;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 public class PetListRvFragment extends Fragment {
     PetListRvViewModel viewModel;
@@ -47,10 +41,10 @@ public class PetListRvFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pet_list,container,false);
 
-        swipeRefresh = view.findViewById(R.id.studentlist_swiperefresh);
+        swipeRefresh = view.findViewById(R.id.petlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPetList());
 
-        RecyclerView list = view.findViewById(R.id.studentlist_rv);
+        RecyclerView list = view.findViewById(R.id.petlist_rv);
         list.setHasFixedSize(true);
 
         list.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -61,11 +55,9 @@ public class PetListRvFragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View v,int position) {
-                // TODO: is getEmail correct here?
                 String petId = viewModel.getData().getValue().get(position).getEmail();
 
-                // TODO: Navigate to fragment_pet_list
-//                Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToPetDetailsFragment(petId));
+               Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToPetDetailsFragment(petId));
 
             }
         });
@@ -112,6 +104,7 @@ public class PetListRvFragment extends Fragment {
     interface OnItemClickListener{
         void onItemClick(View v,int position);
     }
+
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
 
         OnItemClickListener listener;
@@ -122,7 +115,7 @@ public class PetListRvFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.pet_list_row,parent,false);
+            View view = getLayoutInflater().inflate(R.layout.pet_list_card,parent,false);
             MyViewHolder holder = new MyViewHolder(view,listener);
             return holder;
         }
@@ -140,24 +133,6 @@ public class PetListRvFragment extends Fragment {
                 return 0;
             }
             return viewModel.getData().getValue().size();
-        }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        // TODO: Do we need this
-        // inflater.inflate(R.menu.student_list_menu,menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.petDetailsFragment){
-            Log.d("TAG","ADD...");
-            return true;
-        }else {
-            return super.onOptionsItemSelected(item);
         }
     }
 }

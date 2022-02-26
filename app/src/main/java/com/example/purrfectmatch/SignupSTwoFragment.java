@@ -126,11 +126,7 @@ public class SignupSTwoFragment extends Fragment {
                     Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
 
-                //    var action = SignupSOneFragmentDirections.actionSignupSOneFragmentToSignupSTwoFragment();
-                //    Navigation.findNavController(v).navigate(action);
-
-
-                    Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToPetListRvFragment());
+                   Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToPetListRvFragment());
                 });
             });
         }
