@@ -38,6 +38,7 @@ public class ModelFirebase {
 
     public void getAllPets(Long lastUpdateDate, GetAllPetsListener listener) {
         db.collection(Pet.COLLECTION_NAME)
+                .whereNotEqualTo("id", 123)
                 .whereGreaterThanOrEqualTo("updateDate",new Timestamp(lastUpdateDate,0))
                 .get()
                 .addOnCompleteListener(task -> {

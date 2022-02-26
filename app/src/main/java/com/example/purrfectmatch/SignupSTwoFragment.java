@@ -80,7 +80,7 @@ public class SignupSTwoFragment extends Fragment {
 //        agePicker.setMaxValue(120);
 //        agePicker.setMinValue(0);
 
-        signUpBtn.setOnClickListener(v -> signUp());
+        signUpBtn.setOnClickListener(v -> signUp(v));
         uploadBtn.setOnClickListener(v -> upload());
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
 
@@ -88,7 +88,7 @@ public class SignupSTwoFragment extends Fragment {
         return view;
     }
 
-    private void signUp() {
+    private void signUp(View v) {
         progressBar.setVisibility(View.VISIBLE);
 
         if (nameEt.getText().toString().isEmpty() ||
@@ -126,6 +126,11 @@ public class SignupSTwoFragment extends Fragment {
                     Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
 
+                //    var action = SignupSOneFragmentDirections.actionSignupSOneFragmentToSignupSTwoFragment();
+                //    Navigation.findNavController(v).navigate(action);
+
+
+                    Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToPetListRvFragment());
                 });
             });
         }
