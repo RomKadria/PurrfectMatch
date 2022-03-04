@@ -103,4 +103,16 @@ public class ModelFirebase {
                     }
                 });
     }
+
+    public void checkEmail(String email, Model.OnEmailCheckListener listener){
+        db.collection(Pet.COLLECTION_NAME).
+                whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener((user -> {
+                    if (user.getResult().isEmpty())
+                        listener.onComplete(false);
+                    else
+                        listener.onComplete(true);
+                }));
+    }
 }

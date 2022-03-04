@@ -10,15 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
-import com.example.purrfectmatch.model.Pet;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SignupSOneFragment extends Fragment {
 
     EditText etEmail, etPassword, etConfirmPassword;
     Button btnNext;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    boolean userExists = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,19 +68,17 @@ public class SignupSOneFragment extends Fragment {
     }
 
     public boolean validateEmail() {
-        final boolean[] isExists = {true};
         String email = etEmail.getText().toString().trim();
         boolean matchFound = email.matches(emailPattern);
 
-//        Model.instance.getPetById(email, new Model.GetPetById() {
-//            @Override
-//            public void onComplete(Pet pet) {
-//                if (pet != null)
-//                    isExists[0] = false;
-//            }
-//        });
+        Model.instance.checkEmailValid(email, exists -> {
+//            Toast.makeText(getActivity(), String.valueOf(exists), Toast.LENGTH_SHORT).show();
+                userExists = exists;
+        });
 
-        if (!isExists[0]) {
+//        Toast.makeText(getActivity(), String.valueOf(userExists), Toast.LENGTH_SHORT).show();
+
+        if (userExists) {
             etEmail.setError("Email address already exists");
             return false;
         }
