@@ -24,7 +24,6 @@ public class LoginFragment extends Fragment {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            // Inflate the layout for this fragment
             View view = inflater.inflate(R.layout.fragment_login, container, false);
 
             Button signInButton = view.findViewById(R.id.signin_signin_button);
@@ -38,7 +37,7 @@ public class LoginFragment extends Fragment {
             SharedPreferences loginPreferences = this.getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
             Boolean saveLogin = loginPreferences.getBoolean("saveLogin", false);
-            if (saveLogin == true) {
+            if (saveLogin) {
                 emailInput.setText(loginPreferences.getString("email", ""));
                 passwordInput.setText(loginPreferences.getString("password", ""));
                 saveLoginCheckBox.setChecked(true);
@@ -61,11 +60,8 @@ public class LoginFragment extends Fragment {
                             Toast.LENGTH_SHORT);
 
 
-
                     String email = emailInput.getText().toString();
                     String password = passwordInput.getText().toString();
-
-
 
 
                     if (email.isEmpty() || password.isEmpty()) {
