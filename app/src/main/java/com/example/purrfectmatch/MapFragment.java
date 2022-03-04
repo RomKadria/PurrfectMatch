@@ -17,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -34,17 +35,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //    }
 
 
-
+    View view;
+    FragmentManager manager;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
+         view = inflater.inflate(R.layout.fragment_map, container, false);
 //
 //        SupportMapFragment mapFragment = (SupportMapFragment) getParentFragmentManager ()
 //                .findFragmentById(R.id.map);
 //        mapFragment.getMapAsync(this);
 
-        FragmentManager manager = getParentFragmentManager();
+        manager = getParentFragmentManager();
 
         FragmentTransaction transaction = manager.beginTransaction();
         SupportMapFragment fragment = new SupportMapFragment();
@@ -57,8 +59,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
     @Override
     public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions()
+        Marker myMarker;
+        myMarker = map.addMarker(new MarkerOptions()
                 .position(new LatLng(31.951339, 34.805291))
-                .title("RomHouse"));
+                .title("RomHouse")
+                .snippet("This is my spot!"));
+
+        map.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) manager);
+//        map.addMarker(new MarkerOptions()
+//                .position()
+//               );
     }
 }
