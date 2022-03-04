@@ -69,22 +69,6 @@ public class ModelFirebase {
                 .document(pet.getEmail())
                 .set(json);
     }
-
-    public void getPetByEmail(String email, Model.getPetByEmailListener listener) {
-        db.collection(Pet.COLLECTION_NAME)
-                .document(email)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Pet pet = null;
-                        if (task.isSuccessful() & task.getResult()!= null){
-                            pet = Pet.create(task.getResult().getData());
-                        }
-                        listener.onComplete(pet);
-                    }
-                });
-    }
     
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -118,5 +102,20 @@ public class ModelFirebase {
                         listener.onComplete(pet);
                     }
                 });
+    }
+
+    public void checkUser(String email, String password, Model.OnUserCheckListener listener){
+        db.collection(Pet.COLLECTION_NAME).
+                whereEqualTo("email", email)
+                .whereEqualTo("password", password)
+                .get()
+                .addOnCompleteListener((user -> {
+                    if (user.getResult().isEmpty())
+                    {
+                        listener.onComplete(false);
+                    } else {
+                        listener.onComplete(true);
+                    }
+                }));
     }
 }

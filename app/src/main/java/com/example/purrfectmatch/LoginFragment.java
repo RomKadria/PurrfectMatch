@@ -21,7 +21,10 @@ import com.example.purrfectmatch.model.Pet;
 
 public class LoginFragment extends Fragment {
 
-        @Override
+
+    boolean userValid = false;
+
+    @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.fragment_login, container, false);
@@ -68,13 +71,16 @@ public class LoginFragment extends Fragment {
                         blankInputToast.show();
 
                     } else {
-                        // TODO: check password & email in db
-                        Pet pet = Model.instance.getPetByEmail(email, url -> {});
 
-                        if ((pet == null) || (!pet.getEmail().equals(email)) || !(pet.getPassword().equals(password))){
+                        // user validation
+                        Model.instance.checkUserValid(email, password, valid -> {
+                            userValid = valid;
+                        });
+
+
+                        if (!userValid){
                             wrongInputToast.show();
                         } else {
-
                             if (saveLoginCheckBox.isChecked()) {
                                 loginPrefsEditor.putBoolean("saveLogin", true);
                                 loginPrefsEditor.putString("username", email);
