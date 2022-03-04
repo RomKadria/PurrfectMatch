@@ -2,9 +2,12 @@ package com.example.purrfectmatch;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +23,7 @@ public class PetDetailsFragment extends Fragment {
     ImageView petImg;
     TextView contactTv;
     ProgressBar progressBar;
+    ImageButton chatBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +37,7 @@ public class PetDetailsFragment extends Fragment {
         petImg = view.findViewById(R.id.pet_details_img);
         contactTv = view.findViewById(R.id.pet_details_contact_tv);
         progressBar = view.findViewById(R.id.pet_details_progressbar);
+        chatBtn = view.findViewById(R.id.pet_details_chat_btn);
         String petId = PetDetailsFragmentArgs.fromBundle(getArguments()).getPetId();
 
         Model.instance.getPetById(petId, new Model.GetPetById() {
@@ -66,6 +71,10 @@ public class PetDetailsFragment extends Fragment {
                     });
                 }
             }
+        });
+
+        chatBtn.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(PetDetailsFragmentDirections.actionPetDetailsFragmentToChatFragment(petId));
         });
 
         return view;
