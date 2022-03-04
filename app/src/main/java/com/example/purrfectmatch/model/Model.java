@@ -90,12 +90,12 @@ public class Model {
         modelFirebase.addPet(pet);
     }
 
-//    public interface GetPetById{
-//        void onComplete(Pet pet);
-//    }
-//    public Pet getPetById(String petId, GetPetById listener) {
-//        modelFirebase.getPetById(petId,listener);
-//        return null;
-//    }
+    public interface getPetByEmailListener{
+        void onComplete(Pet pet);
+    }
+    public Pet getPetByEmail(String email, getPetByEmailListener listener) {
+        modelFirebase.getPetByEmail(email,listener);
+        return null;
+    }
 }
 

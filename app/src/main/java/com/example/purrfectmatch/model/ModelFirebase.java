@@ -61,19 +61,19 @@ public class ModelFirebase {
                 .set(json);
     }
 
-//    public void getStudentById(String studentId, Model.GetStudentById listener) {
-//        db.collection(Student.COLLECTION_NAME)
-//                .document(studentId)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        Student student = null;
-//                        if (task.isSuccessful() & task.getResult()!= null){
-//                            student = Student.create(task.getResult().getData());
-//                        }
-//                        listener.onComplete(student);
-//                    }
-//                });
-//    }
+    public void getPetByEmail(String email, Model.getPetByEmailListener listener) {
+        db.collection(Pet.COLLECTION_NAME)
+                .document(email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Pet pet = null;
+                        if (task.isSuccessful() & task.getResult()!= null){
+                            pet = Pet.create(task.getResult().getData());
+                        }
+                        listener.onComplete(pet);
+                    }
+                });
+    }
 }

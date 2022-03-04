@@ -1,37 +1,51 @@
 package com.example.purrfectmatch;
 
+import android.os.Bundle;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 
-import com.example.purrfectmatch.model.Model;
-import com.example.purrfectmatch.model.Pet;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
+import com.example.purrfectmatch.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
+
+    private AppBarConfiguration appBarConfiguration;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        Button signInButton = (Button) findViewById(R.id.signin_signin_button);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                EditText emailInput = (EditText) findViewById(R.id.signin_email_input);
-                EditText passwordInput = (EditText) findViewById(R.id.signin_password_input);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-                String email = emailInput.getText().toString();
-                String password = passwordInput.getText().toString();
+        setSupportActionBar(binding.toolbar);
 
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
+    }
 
-        Pet pet = new Pet("blazing","123", "rexi@gmail.com", "12345");
-        Model.instance.addPet(pet);
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 }
