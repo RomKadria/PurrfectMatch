@@ -14,4 +14,6 @@
     <string name="Signup">Sign up</string>
     <string name="picture">Picture</string>
     <string name="upload">upload</string>
+    <string name="pet_name">pet_name</string>
+    <string name="pet_image">pet_image</string>
 </resources>
