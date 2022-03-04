@@ -37,6 +37,9 @@
         <argument
             android:name="petId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_petDetailsFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/petListRvFragment"
@@ -46,5 +49,11 @@
         <action
             android:id="@+id/action_petListRvFragment_to_petDetailsFragment"
             app:destination="@id/petDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.purrfectmatch.MapFragment"
+        android:label="Map"
+        tools:layout="@layout/fragment_map">
     </fragment>
 </navigation>

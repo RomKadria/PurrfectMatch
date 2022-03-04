@@ -2,12 +2,18 @@ package com.example.purrfectmatch;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Callback;
 import com.example.purrfectmatch.model.Model;
@@ -20,6 +26,7 @@ public class PetDetailsFragment extends Fragment {
     ImageView petImg;
     TextView contactTv;
     ProgressBar progressBar;
+    ImageButton mapImageBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,7 +40,10 @@ public class PetDetailsFragment extends Fragment {
         petImg = view.findViewById(R.id.pet_details_img);
         contactTv = view.findViewById(R.id.pet_details_contact_tv);
         progressBar = view.findViewById(R.id.pet_details_progressbar);
+        mapImageBtn = view.findViewById(R.id.pet_details_map_btn);
         String petId = PetDetailsFragmentArgs.fromBundle(getArguments()).getPetId();
+
+        mapImageBtn.setOnClickListener(v -> navMap(v));
 
         Model.instance.getPetById(petId, new Model.GetPetById() {
             @Override
@@ -69,5 +79,10 @@ public class PetDetailsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void navMap(View v) {
+        Toast.makeText(getActivity(), "here", Toast.LENGTH_SHORT).show();
+        Navigation.findNavController(v).navigate(PetDetailsFragmentDirections.actionPetDetailsFragmentToMapFragment());
     }
 }
