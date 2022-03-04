@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,8 +91,9 @@ public class LoginFragment extends Fragment {
 
                             successInputToast.show();
 
-                            // TODO: move to landing screen
-                        }
+                            Navigation.findNavController(v)
+                                      .navigate(LoginFragmentDirections
+                                      .actionLoginFragmentToPetListRvFragment());                       }
                     }
                 }
             });
@@ -99,18 +101,12 @@ public class LoginFragment extends Fragment {
             // on sign up
             signUpButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    // TODO: move to signup screen
-
+                    Navigation.findNavController(v)
+                              .navigate(LoginFragmentDirections
+                              .actionLoginFragmentToSignupSOneFragment());
                 }
             });
 
             return view;
         }
-
-//        private void toLandingPage() {
-//            Intent intent = new Intent(getContext(), BaseActivity.class);
-//            startActivity(intent);
-//            getActivity().finish();
-//        }
-
     }

@@ -73,16 +73,8 @@ public class Pet {
 
     public String getDescription() { return description; }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getPetUrl() {
         return petUrl;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public Long getUpdateDate() {
