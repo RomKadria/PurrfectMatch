@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/signupSOneFragment">
+    app:startDestination="@id/mapFragment">
     <fragment
         android:id="@+id/signupSOneFragment"
         android:name="com.example.purrfectmatch.SignupSOneFragment"
@@ -55,5 +55,8 @@
         android:name="com.example.purrfectmatch.MapFragment"
         android:label="Map"
         tools:layout="@layout/fragment_map">
+        <action
+            android:id="@+id/action_mapFragment_to_petDetailsFragment2"
+            app:destination="@id/petDetailsFragment" />
     </fragment>
 </navigation>

@@ -1,5 +1,6 @@
 package com.example.purrfectmatch;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,8 +11,10 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -57,17 +60,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         return view;
     }
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(GoogleMap map) {
         Marker myMarker;
         myMarker = map.addMarker(new MarkerOptions()
                 .position(new LatLng(31.951339, 34.805291))
                 .title("RomHouse")
-                .snippet("This is my spot!"));
+                .snippet("123@gmail.com"));
 
-        map.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) manager);
-//        map.addMarker(new MarkerOptions()
-//                .position()
-//               );
+        map.setOnMarkerClickListener(marker -> {
+            String markerName = marker.getTitle();
+            String petId = marker.getSnippet();
+            Navigation.findNavController(view).navigate(MapFragmentDirections.actionMapFragmentToPetDetailsFragment2(petId));
+            return false;
+        });
     }
 }
