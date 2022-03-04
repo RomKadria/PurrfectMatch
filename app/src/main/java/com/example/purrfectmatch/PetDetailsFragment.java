@@ -33,8 +33,7 @@ public class PetDetailsFragment extends Fragment {
         petImg = view.findViewById(R.id.pet_details_img);
         contactTv = view.findViewById(R.id.pet_details_contact_tv);
         progressBar = view.findViewById(R.id.pet_details_progressbar);
-        String petId = "asdasd@gmail.com";
-//        String petId = PetDetailsFragmentArgs.fromBundle(getArguments()).getPetId();
+        String petId = PetDetailsFragmentArgs.fromBundle(getArguments()).getPetId();
 
         Model.instance.getPetById(petId, new Model.GetPetById() {
             @Override
