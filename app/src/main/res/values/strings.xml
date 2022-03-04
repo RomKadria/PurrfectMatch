@@ -2,13 +2,16 @@
     <string name="app_name">PurrfectMatch</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_main">MainActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="sso_singup">Sign up to Purrfect Match</string>
+    <string name="sso_email">Email:</string>
+    <string name="sso_password">Password:</string>
+    <string name="sso_confirm_password">Confirm\nPassword:</string>
+    <string name="sso_next">Next</string>
+    <string name="Age">Age</string>
+    <string name="Name">Name</string>
+    <string name="address">Address</string>
+    <string name="About">About</string>
+    <string name="Signup">Sign up</string>
+    <string name="picture">Picture</string>
+    <string name="upload">upload</string>
 </resources>

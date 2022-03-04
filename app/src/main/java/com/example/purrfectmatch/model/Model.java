@@ -1,6 +1,7 @@
 package com.example.purrfectmatch.model;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -35,48 +36,48 @@ public class Model {
     }
 
     MutableLiveData<List<Pet>> petsList = new MutableLiveData<List<Pet>>();
-//    public LiveData<List<Pet>> getAll(){
-//        if (petsList.getValue() == null) { refreshPetList(); };
-//        return  petsList;
-//    }
-//    public void refreshPetList(){
-//        petListLoadingState.setValue(PetListLoadingState.loading);
-//
-//        // get last local update date
-//        Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("PetsLastUpdateDate",0);
-//
-//        // firebase get all updates since lastLocalUpdateDate
-//        modelFirebase.getAllPets(lastUpdateDate, new ModelFirebase.GetAllPetsListener() {
-//            @Override
-//            public void onComplete(List<Pet> list) {
-//                // add all records to the local db
-//                executor.execute(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Long lud = new Long(0);
-//                        Log.d("TAG","fb returned " + list.size());
-//                        for (Pet pet: list) {
-//                            AppLocalDb.db.petDao().insertAll(pet);
-//                            if (lud < pet.getUpdateDate()){
-//                                lud = pet.getUpdateDate();
-//                            }
-//                        }
-//                        // update last local update date
-//                        MyApplication.getContext()
-//                                .getSharedPreferences("TAG",Context.MODE_PRIVATE)
-//                                .edit()
-//                                .putLong("PetsLastUpdateDate",lud)
-//                                .commit();
-//
-//                        //return all data to caller
-//                        List<Pet> stList = AppLocalDb.db.petDao().getAll();
-//                        petList.postValue(stList);
-//                        petListLoadingState.postValue(PetListLoadingState.loaded);
-//                    }
-//                });
-//            }
-//        });
-//    }
+    public LiveData<List<Pet>> getAll(){
+        if (petsList.getValue() == null) { refreshPetList(); };
+        return petsList;
+    }
+    public void refreshPetList(){
+        petListLoadingState.setValue(PetListLoadingState.loading);
+
+        // get last local update date
+        Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("PetsLastUpdateDate",0);
+
+        // firebase get all updates since lastLocalUpdateDate
+        modelFirebase.getAllPets(lastUpdateDate, new ModelFirebase.GetAllPetsListener() {
+            @Override
+            public void onComplete(List<Pet> list) {
+                // add all records to the local db
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Long lud = new Long(0);
+                        Log.d("TAG","fb returned " + list.size());
+                        for (Pet pet: list) {
+                            AppLocalDb.db.petDao().insertAll(pet);
+                            if (lud < pet.getUpdateDate()){
+                                lud = pet.getUpdateDate();
+                            }
+                        }
+                        // update last local update date
+                        MyApplication.getContext()
+                                .getSharedPreferences("TAG",Context.MODE_PRIVATE)
+                                .edit()
+                                .putLong("PetsLastUpdateDate",lud)
+                                .commit();
+
+                        //return all data to caller
+                        List<Pet> petList = AppLocalDb.db.petDao().getAll();
+                        petsList.postValue(petList);
+                        petListLoadingState.postValue(PetListLoadingState.loaded);
+                    }
+                });
+            }
+        });
+    }
 
     public interface AddPetListener{
         void onComplete();
@@ -96,6 +97,20 @@ public class Model {
     public Pet getPetByEmail(String email, getPetByEmailListener listener) {
         modelFirebase.getPetByEmail(email,listener);
         return null;
+    }
+    public interface GetPetById{
+        void onComplete(Pet pet);
+    }
+    public Pet getPetById(String petId, GetPetById listener) {
+        modelFirebase.getPetById(petId, listener);
+        return null;
+    }
+    public interface SaveImageListener{
+        void onComplete(String url);
+    }
+
+    public void saveImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
+        modelFirebase.saveImage(imageBitmap,imageName,listener);
     }
 }
 

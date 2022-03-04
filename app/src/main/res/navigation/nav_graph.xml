@@ -3,20 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/blankFragment">
-
+    app:startDestination="@id/signupSOneFragment">
     <fragment
-        android:id="@+id/blankFragment"
-        android:name="com.example.purrfectmatch.BlankFragment"
-        android:label="fragment_blank"
-        tools:layout="@layout/fragment_blank" >
+        android:id="@+id/signupSOneFragment"
+        android:name="com.example.purrfectmatch.SignupSOneFragment"
+        android:label="fragment_signup_s_one"
+        tools:layout="@layout/fragment_signup_s_one" >
         <action
-            android:id="@+id/action_blankFragment_to_blankFragment2"
-            app:destination="@id/blankFragment2" />
+            android:id="@+id/action_signupSOneFragment_to_signupSTwoFragment"
+            app:destination="@id/signupSTwoFragment" />
     </fragment>
     <fragment
-        android:id="@+id/blankFragment2"
-        android:name="com.example.purrfectmatch.BlankFragment2"
-        android:label="fragment_blank2"
-        tools:layout="@layout/fragment_blank2" />
+        android:id="@+id/signupSTwoFragment"
+        android:name="com.example.purrfectmatch.SignupSTwoFragment"
+        android:label="fragment_signup_s_two"
+        tools:layout="@layout/fragment_signup_s_two" >
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_signupSTwoFragment_to_petListRvFragment"
+            app:destination="@id/petListRvFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/petDetailsFragment"
+        android:name="com.example.purrfectmatch.PetDetailsFragment"
+        android:label="About Me"
+        tools:layout="@layout/fragment_pet_details">
+        <argument
+            android:name="petId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/petListRvFragment"
+        android:name="com.example.purrfectmatch.PetListRvFragment"
+        android:label="fragment_pet_list"
+        tools:layout="@layout/fragment_pet_list" >
+        <action
+            android:id="@+id/action_petListRvFragment_to_petDetailsFragment"
+            app:destination="@id/petDetailsFragment" />
+    </fragment>
 </navigation>
