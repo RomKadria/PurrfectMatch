@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.purrfectmatch">
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="${MAPS_API_KEY}" />
 
     <application
         android:name=".model.MyApplication"
@@ -14,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PurrfectMatch">
 
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="${MAPS_API_KEY}"/>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAFHigo26NYSUBYvcClXs1pDU1bN4dkSqU"/>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
