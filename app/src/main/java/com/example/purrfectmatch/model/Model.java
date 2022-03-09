@@ -102,6 +102,10 @@ public class Model {
         void onComplete(String url);
     }
 
+    public interface SaveMessageListener{
+        void onComplete(String sendingPetId, String recivingPetId, String message);
+    }
+
     public void saveImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
         modelFirebase.saveImage(imageBitmap,imageName,listener);
     }

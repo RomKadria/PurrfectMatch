@@ -26,26 +26,27 @@ import java.util.Map;
 public class ModelFirebase {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public ModelFirebase(){
+    public ModelFirebase() {
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(false)
                 .build();
         db.setFirestoreSettings(settings);
     }
-    public interface GetAllPetsListener{
+
+    public interface GetAllPetsListener {
         void onComplete(List<Pet> list);
     }
 
     public void getAllPets(Long lastUpdateDate, GetAllPetsListener listener) {
         db.collection(Pet.COLLECTION_NAME)
-                .whereGreaterThanOrEqualTo("updateDate",new Timestamp(lastUpdateDate,0))
+                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
                 .get()
                 .addOnCompleteListener(task -> {
                     List<Pet> list = new LinkedList<Pet>();
-                    if (task.isSuccessful()){
-                        for (QueryDocumentSnapshot doc : task.getResult()){
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
                             Pet pet = Pet.create(doc.getData());
-                            if (pet != null){
+                            if (pet != null) {
                                 list.add(pet);
                             }
                         }
@@ -84,11 +85,12 @@ public class ModelFirebase {
         uploadTask.addOnFailureListener(exception -> listener.onComplete(null))
                 .addOnSuccessListener(taskSnapshot ->
                         imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    Uri downloadUrl = uri;
-                    listener.onComplete(downloadUrl.toString());
-                }));
+                            Uri downloadUrl = uri;
+                            listener.onComplete(downloadUrl.toString());
+                        }));
     }
-        public void getPetById(String petId, Model.GetPetById listener) {
+
+    public void getPetById(String petId, Model.GetPetById listener) {
         db.collection(Pet.COLLECTION_NAME)
                 .document(petId)
                 .get()
@@ -96,7 +98,7 @@ public class ModelFirebase {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         Pet pet = null;
-                        if (task.isSuccessful() & task.getResult()!= null){
+                        if (task.isSuccessful() & task.getResult() != null) {
                             pet = Pet.create(task.getResult().getData());
                         }
                         listener.onComplete(pet);
