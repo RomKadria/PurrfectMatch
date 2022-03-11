@@ -3,13 +3,17 @@ package com.example.purrfectmatch;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.navigation.Navigation;
 
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +22,8 @@ import android.widget.Toast;
 import com.example.purrfectmatch.model.AppLocalDb;
 import com.example.purrfectmatch.model.Model;
 import com.example.purrfectmatch.model.Pet;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,12 +31,20 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.List;
 
 
 public class AllLocationsMapFragment extends Fragment {
+    private static final int DEFAULT_ZOOM = 18;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
+    private boolean locationPermissionGranted;
+    private Location lastKnownLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+
     private GoogleMap mMap;
     SearchView searchView;
     View view;
@@ -67,21 +81,18 @@ public class AllLocationsMapFragment extends Fragment {
             }
 
             if (focusMyLocation == true) {
+                if (!locationPermissionGranted) {
+                    getLocationPermission();
+                }
+                setUserLocation();
 //                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentPet.getLatitude(), currentPet.getLongitude()), 10))
             }
-//            myMarker = mMap.addMarker(new MarkerOptions()
-//                    .position(new LatLng(31.951339, 34.805291))
-//                    .title("RomHouse")
-//                    .snippet("123@gmail.com"));
 
             mMap.setOnMarkerClickListener(marker -> {
                 String petId = marker.getSnippet();
                 Navigation.findNavController(view).navigate(AllLocationsMapFragmentDirections.actionAllLocationsMapFragmentToPetDetailsFragment(petId));
                 return false;
             });
-//            LatLng sydney = new LatLng(-34, 151);
-//            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         }
     };
 
@@ -98,6 +109,9 @@ public class AllLocationsMapFragment extends Fragment {
             focusMyLocation = true;
         }
         view = inflater.inflate(R.layout.fragment_user_location_map, container, false);
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireContext());
+
         return view;
     }
 
@@ -125,12 +139,12 @@ public class AllLocationsMapFragment extends Fragment {
                         e.printStackTrace();
                     }
 
-                    if (addressList.isEmpty() == false) {
+                    if (!addressList.isEmpty()) {
                         Address address = addressList.get(0);
-
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                    } else {
+                        Toast.makeText(getContext(), location + " doesn't exist", Toast.LENGTH_SHORT).show();
                     }
                 }
                 return false;
@@ -144,6 +158,66 @@ public class AllLocationsMapFragment extends Fragment {
 
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        locationPermissionGranted = false;
+        if (requestCode
+                == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                locationPermissionGranted = true;
+                setUserLocation();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = true;
+            setUserLocation();
+        } else {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    private void setUserLocation() {
+        /*
+         * Get the best and most recent location of the device, which may be null in rare
+         * cases when a location is not available.
+         */
+        try {
+            if (locationPermissionGranted) {
+                    Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(this.requireActivity(), task -> {
+                    if (task.isSuccessful()) {
+                        // Set the map's camera position to the current location of the device.
+                        lastKnownLocation = task.getResult();
+                        if (lastKnownLocation != null) {
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(lastKnownLocation.getLatitude(),
+                                            lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage(), e);
         }
     }
 }
