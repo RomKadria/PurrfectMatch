@@ -61,6 +61,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         manager = getParentFragmentManager();
         searchView = view.findViewById(R.id.idSearchView);
+        searchView.setIconified(false);
+        searchView.setQueryHint("Search here");
 
 
         FragmentTransaction transaction = manager.beginTransaction();
@@ -94,17 +96,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     }
                     // on below line we are getting the location
                     // from our list a first position.
-                    Address address = addressList.get(0);
+                    if(addressList.isEmpty() == false) {
 
-                    // on below line we are creating a variable for our location
-                    // where we will add our locations latitude and longitude.
-                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        Address address = addressList.get(0);
+                        // on below line we are creating a variable for our location
+                        // where we will add our locations latitude and longitude.
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
 
-                    // on below line we are adding marker to that position.
-                    map.addMarker(new MarkerOptions().position(latLng).title(location));
+                        // on below line we are adding marker to that position.
+                        map.addMarker(new MarkerOptions().position(latLng).title(location));
 
-                    // below line is to animate camera to that position.
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                    }
                 }
                 return false;
             }
@@ -120,6 +123,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(GoogleMap map) {
+        this.map = map;
         Marker myMarker;
         myMarker = map.addMarker(new MarkerOptions()
                 .position(new LatLng(31.951339, 34.805291))
