@@ -54,6 +54,7 @@ public class SignupSTwoFragment extends Fragment {
 
     String email;
     String password;
+    String address;
 
 //    NumberPicker agePicker;
 
@@ -64,8 +65,13 @@ public class SignupSTwoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_signup_s_two, container, false);
 
         if (getArguments() != null) {
-            email = SignupSTwoFragmentArgs.fromBundle(getArguments()).getEmail();
-            password = SignupSTwoFragmentArgs.fromBundle(getArguments()).getPassword();
+            String emailArg = SignupSTwoFragmentArgs.fromBundle(getArguments()).getEmail();
+            String passwordArg = SignupSTwoFragmentArgs.fromBundle(getArguments()).getPassword();
+            String addressArg = SignupSTwoFragmentArgs.fromBundle(getArguments()).getAddress();
+
+            email = emailArg != null ? emailArg : email;
+            password = passwordArg != null ? passwordArg : password;
+            address = addressArg != null ? addressArg : address;
         }
         nameEt = view.findViewById(R.id.signupSTwo_name_et);
         ageEt = view.findViewById(R.id.signupSTwo_age_et);
@@ -126,7 +132,7 @@ public class SignupSTwoFragment extends Fragment {
                     Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
 
-                   Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToPetListRvFragment());
+                   Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToUserLocationMapFragment());
                 });
             });
         }

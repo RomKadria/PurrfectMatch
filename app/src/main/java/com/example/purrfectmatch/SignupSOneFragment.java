@@ -55,7 +55,8 @@ public class SignupSOneFragment extends Fragment {
                 SignupSOneFragmentDirections.ActionSignupSOneFragmentToSignupSTwoFragment action =
                         SignupSOneFragmentDirections.actionSignupSOneFragmentToSignupSTwoFragment(
                                 etEmail.getText().toString().trim(),
-                                etPassword.getText().toString()
+                                etPassword.getText().toString(),
+                                null
                         );
                 Navigation.findNavController(v).navigate(action);
             }
@@ -101,8 +102,10 @@ public class SignupSOneFragment extends Fragment {
     public boolean validateConfirmPassword() {
         String password = etPassword.getText().toString();
         String cPassword = etConfirmPassword.getText().toString();
-        if (password.matches(cPassword))
+        if (password.matches(cPassword)) {
+            etConfirmPassword.setError(null);
             return true;
+        }
         else {
             etConfirmPassword.setError("Passwords don't match");
             return false;

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -28,7 +29,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +41,7 @@ public class userLocationMapFragment extends Fragment {
 
     private GoogleMap mMap;
     private SearchView searchView;
-    private FloatingActionButton confirmButton;
+    private ImageView confirmButton;
     private View view;
     private Marker marker;
     private Address address;
@@ -70,13 +70,24 @@ public class userLocationMapFragment extends Fragment {
             MarkerOptions markerOptions = new MarkerOptions().position(defaultLocation);
             marker = mMap.addMarker(markerOptions);
 
+            mMap.moveCamera(CameraUpdateFactory
+                    .newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+
+            try {
+                addressList = geocoder.getFromLocation(defaultLocation.latitude, defaultLocation.longitude, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            address = addressList.get(0);
+
+
             // Ask for location permissions
             if (!locationPermissionGranted) {
                 getLocationPermission();
             }
 
             // Get the current location of the device and set the position of the map.
-            getDeviceLocation();
+            setLocationMarker();
         }
     };
 
@@ -100,7 +111,7 @@ public class userLocationMapFragment extends Fragment {
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.userLocationMap);
 
         searchView = view.findViewById(R.id.userLocationSv);
-        confirmButton = view.findViewById(R.id.userLocationButton);
+        confirmButton = view.findViewById(R.id.userConfirmButton);
 
         confirmButton.setOnClickListener(v -> {
             userLocationMapFragmentDirections.ActionUserLocationMapFragmentToSignupSTwoFragment action =
@@ -125,9 +136,7 @@ public class userLocationMapFragment extends Fragment {
                 }
 
                 if (addressList != null) {
-                    if (addressList.isEmpty()) {
-                        Toast.makeText(getContext(), location + " doesn't exist", Toast.LENGTH_SHORT).show();
-                    } else {
+                    if (!addressList.isEmpty()) {
                         address = addressList.get(0);
 
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
@@ -135,6 +144,8 @@ public class userLocationMapFragment extends Fragment {
                         marker.setPosition(latLng);
 
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                    } else {
+                        Toast.makeText(getContext(), location + " doesn't exist", Toast.LENGTH_SHORT).show();
                     }
                 }
                 return false;
@@ -161,7 +172,7 @@ public class userLocationMapFragment extends Fragment {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 locationPermissionGranted = true;
-                getDeviceLocation();
+                setLocationMarker();
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -178,14 +189,14 @@ public class userLocationMapFragment extends Fragment {
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
-            getDeviceLocation();
+            setLocationMarker();
         } else {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
 
-    private void getDeviceLocation() {
+    private void setLocationMarker() {
         /*
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
@@ -213,16 +224,6 @@ public class userLocationMapFragment extends Fragment {
                         }
                     }
                 });
-            } else {
-                mMap.moveCamera(CameraUpdateFactory
-                        .newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
-
-                try {
-                    addressList = geocoder.getFromLocation(defaultLocation.latitude, defaultLocation.longitude, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                address = addressList.get(0);
             }
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage(), e);

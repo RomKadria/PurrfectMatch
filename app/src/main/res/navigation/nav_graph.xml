@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/userLocationMapFragment">
+    app:startDestination="@id/signupSOneFragment">
     <fragment
         android:id="@+id/signupSOneFragment"
         android:name="com.example.purrfectmatch.SignupSOneFragment"
@@ -20,13 +20,22 @@
         tools:layout="@layout/fragment_signup_s_two" >
         <argument
             android:name="email"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
         <argument
             android:name="password"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
         <action
             android:id="@+id/action_signupSTwoFragment_to_petListRvFragment"
             app:destination="@id/petListRvFragment" />
+        <argument
+            android:name="address"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_signupSTwoFragment_to_userLocationMapFragment"
+            app:destination="@id/userLocationMapFragment" />
     </fragment>
 
     <fragment
@@ -63,5 +72,9 @@
         android:id="@+id/userLocationMapFragment"
         android:name="com.example.purrfectmatch.userLocationMapFragment"
         android:label="fragment_user_location_map"
-        tools:layout="@layout/fragment_user_location_map" />
+        tools:layout="@layout/fragment_user_location_map" >
+        <action
+            android:id="@+id/action_userLocationMapFragment_to_signupSTwoFragment"
+            app:destination="@id/signupSTwoFragment" />
+    </fragment>
 </navigation>
