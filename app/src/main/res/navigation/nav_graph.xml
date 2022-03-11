@@ -54,11 +54,6 @@
             app:destination="@id/allLocationsMapFragment" />
     </fragment>
     <fragment
-        android:id="@+id/mapFragment"
-        android:name="com.example.purrfectmatch.MapFragment"
-        android:label="Map"
-        tools:layout="@layout/fragment_map"/>
-    <fragment
         android:id="@+id/userLocationMapFragment"
         android:name="com.example.purrfectmatch.userLocationMapFragment"
         android:label="fragment_user_location_map"
