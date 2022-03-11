@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.navigation.Navigation;
 
 import android.location.Address;
 import android.location.Geocoder;
@@ -13,22 +15,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.purrfectmatch.model.AppLocalDb;
+import com.example.purrfectmatch.model.Model;
+import com.example.purrfectmatch.model.Pet;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
 
 
-public class userLocationMapFragment extends Fragment {
+public class AllLocationsMapFragment extends Fragment {
     private GoogleMap mMap;
     SearchView searchView;
     View view;
-
+    String email;
+    boolean focusMyLocation = false;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -44,6 +51,34 @@ public class userLocationMapFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
+            Marker myMarker;
+            LiveData<List<Pet>> petList = Model.instance.getAll();
+
+            for (int i=0; i<petList.getValue().size(); i++) {
+                Pet currentPet = petList.getValue().get(i);
+                if (focusMyLocation == false && currentPet.getEmail() == email) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentPet.getLatitude(), currentPet.getLongitude()), 10));
+                }
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(currentPet.getLatitude(),
+                                    currentPet.getLongitude()))
+                            .title(currentPet.getName())
+                            .snippet(currentPet.getEmail()));
+            }
+
+            if (focusMyLocation == true) {
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentPet.getLatitude(), currentPet.getLongitude()), 10))
+            }
+//            myMarker = mMap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(31.951339, 34.805291))
+//                    .title("RomHouse")
+//                    .snippet("123@gmail.com"));
+
+            mMap.setOnMarkerClickListener(marker -> {
+                String petId = marker.getSnippet();
+                Navigation.findNavController(view).navigate(AllLocationsMapFragmentDirections.actionAllLocationsMapFragmentToPetDetailsFragment(petId));
+                return false;
+            });
 //            LatLng sydney = new LatLng(-34, 151);
 //            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
@@ -55,6 +90,11 @@ public class userLocationMapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            email = AllLocationsMapFragmentArgs.fromBundle(getArguments()).getEmail();
+        } else {
+            focusMyLocation = true;
+        }
         view = inflater.inflate(R.layout.fragment_user_location_map, container, false);
         return view;
     }
@@ -87,8 +127,6 @@ public class userLocationMapFragment extends Fragment {
                         Address address = addressList.get(0);
 
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-
-                        mMap.addMarker(new MarkerOptions().position(latLng).title(location));
 
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                     }

@@ -27,6 +27,7 @@ public class PetDetailsFragment extends Fragment {
     TextView contactTv;
     ProgressBar progressBar;
     ImageButton mapImageBtn;
+    String petId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,7 +42,7 @@ public class PetDetailsFragment extends Fragment {
         contactTv = view.findViewById(R.id.pet_details_contact_tv);
         progressBar = view.findViewById(R.id.pet_details_progressbar);
         mapImageBtn = view.findViewById(R.id.pet_details_map_btn);
-        String petId = PetDetailsFragmentArgs.fromBundle(getArguments()).getPetId();
+        petId = PetDetailsFragmentArgs.fromBundle(getArguments()).getPetId();
 
         mapImageBtn.setOnClickListener(v -> navMap(v));
 
@@ -83,6 +84,13 @@ public class PetDetailsFragment extends Fragment {
 
     private void navMap(View v) {
         Toast.makeText(getActivity(), "here", Toast.LENGTH_SHORT).show();
-        Navigation.findNavController(v).navigate(PetDetailsFragmentDirections.actionPetDetailsFragmentToMapFragment());
+
+        PetDetailsFragmentDirections.ActionPetDetailsFragmentToAllLocationsMapFragment action =
+                PetDetailsFragmentDirections.actionPetDetailsFragmentToAllLocationsMapFragment(
+                    petId
+                );
+        Navigation.findNavController(v).navigate(action);
+
+//        Navigation.findNavController(v).navigate(PetDetailsFragmentDirections.actionPetDetailsFragmentToAllLocationsMapFragment());
     }
 }

@@ -121,7 +121,7 @@ public class SignupSTwoFragment extends Fragment {
             Model.instance.saveImage(photo, email + ".jpg", url -> {
                 Toast.makeText(getActivity(), "add image success", Toast.LENGTH_SHORT).show();
 
-                Pet pet = new Pet(email, name, age, address, about, password, url);
+                Pet pet = new Pet(email, name, age, address, about, password, url, 31.951339, 34.805291);
                 Model.instance.addPet(pet, () -> {
                     Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
