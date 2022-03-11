@@ -50,8 +50,6 @@ public class PetDetailsFragment extends Fragment {
             @Override
             public void onComplete(Pet pet) {
                 if (pet.getPetUrl() != null) {
-
-
                     Picasso.get()
                             .load(pet.getPetUrl())
                             .error(R.drawable.pet_avatar)

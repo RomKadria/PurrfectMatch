@@ -92,7 +92,9 @@ public class AllLocationsMapFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         if (getArguments() != null) {
             email = AllLocationsMapFragmentArgs.fromBundle(getArguments()).getEmail();
-        } else {
+        }
+
+        if (email == null) {
             focusMyLocation = true;
         }
         view = inflater.inflate(R.layout.fragment_user_location_map, container, false);
