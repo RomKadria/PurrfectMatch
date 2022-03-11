@@ -139,7 +139,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         map.setOnMarkerClickListener(marker -> {
             String petId = marker.getSnippet();
-            Navigation.findNavController(view).navigate(MapFragmentDirections.actionMapFragmentToPetDetailsFragment2(petId));
+//            Navigation.findNavController(view).navigate(MapFragmentDirections.actionMapFragmentToPetDetailsFragment2(petId));
             return false;
         });
     }

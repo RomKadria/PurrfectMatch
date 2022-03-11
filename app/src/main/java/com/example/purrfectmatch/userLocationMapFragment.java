@@ -91,8 +91,6 @@ public class userLocationMapFragment extends Fragment {
                         mMap.addMarker(new MarkerOptions().position(latLng).title(location));
 
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                    } else {
-                        Toast.makeText(getContext(), "aaa", Toast.LENGTH_SHORT).show();
                     }
                 }
                 return false;
