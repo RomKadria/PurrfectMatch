@@ -55,8 +55,7 @@ public class SignupSOneFragment extends Fragment {
                 SignupSOneFragmentDirections.ActionSignupSOneFragmentToSignupSTwoFragment action =
                         SignupSOneFragmentDirections.actionSignupSOneFragmentToSignupSTwoFragment(
                                 etEmail.getText().toString().trim(),
-                                etPassword.getText().toString(),
-                                null
+                                etPassword.getText().toString()
                         );
                 Navigation.findNavController(v).navigate(action);
             }

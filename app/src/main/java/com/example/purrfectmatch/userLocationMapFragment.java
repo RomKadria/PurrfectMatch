@@ -115,7 +115,7 @@ public class userLocationMapFragment extends Fragment {
         confirmButton = view.findViewById(R.id.userConfirmButton);
 
         confirmButton.setOnClickListener(v -> {
-            NavHostFragment.findNavController(this).getPreviousBackStackEntry().getSavedStateHandle().set("address", address.getAddressLine(0));
+            NavHostFragment.findNavController(this).getPreviousBackStackEntry().getSavedStateHandle().set("address", address);
             Navigation.findNavController(v).popBackStack(R.id.signupSTwoFragment, false);
         });
 

@@ -3,6 +3,7 @@ package com.example.purrfectmatch;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -58,12 +59,10 @@ public class SignupSTwoFragment extends Fragment {
     private Uri filePath;
     Bitmap photo;
     ProgressBar progressBar;
-
+    Double latitude;
+    Double longitude;
     String email;
     String password;
-    String address;
-
-//    NumberPicker agePicker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,14 +71,10 @@ public class SignupSTwoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_signup_s_two, container, false);
 
         if (getArguments() != null) {
-            String emailArg = SignupSTwoFragmentArgs.fromBundle(getArguments()).getEmail();
-            String passwordArg = SignupSTwoFragmentArgs.fromBundle(getArguments()).getPassword();
-            String addressArg = SignupSTwoFragmentArgs.fromBundle(getArguments()).getAddress();
-
-            email = emailArg != null ? emailArg : email;
-            password = passwordArg != null ? passwordArg : password;
-            address = addressArg != null ? addressArg : address;
+            email = SignupSTwoFragmentArgs.fromBundle(getArguments()).getEmail();
+            password = SignupSTwoFragmentArgs.fromBundle(getArguments()).getPassword();
         }
+
         nameEt = view.findViewById(R.id.signupSTwo_name_et);
         ageEt = view.findViewById(R.id.signupSTwo_age_et);
         addressEt = view.findViewById(R.id.signupSTwo_address_et);
@@ -106,15 +101,14 @@ public class SignupSTwoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         NavController navController = NavHostFragment.findNavController(this);
-        // We use a String here, but any type that can be put in a Bundle is supported
-        MutableLiveData<String> liveData = navController.getCurrentBackStackEntry()
+
+        MutableLiveData<Address> liveData = navController.getCurrentBackStackEntry()
                 .getSavedStateHandle()
                 .getLiveData("address");
-        liveData.observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String address) {
-                addressEt.setText(address);
-            }
+        liveData.observe(getViewLifecycleOwner(), address -> {
+            addressEt.setText(address.getAddressLine(0));
+            latitude = address.getLatitude();
+            longitude = address.getLongitude();
         });
     }
 
@@ -152,7 +146,7 @@ public class SignupSTwoFragment extends Fragment {
                 Model.instance.saveImage(photo, email + ".jpg", url -> {
                     Toast.makeText(getActivity(), "add image success", Toast.LENGTH_SHORT).show();
 
-                Pet pet = new Pet(email, name, age, address, about, password, url, 31.951339, 34.805291);
+                Pet pet = new Pet(email, name, age, address, about, password, url, latitude, longitude);
                 Model.instance.addPet(pet, () -> {
                     Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
