@@ -114,7 +114,7 @@ public class AllLocationsMapFragment extends Fragment {
         if (email == null) {
             focusMyLocation = true;
         }
-        view = inflater.inflate(R.layout.fragment_user_location_map, container, false);
+        view = inflater.inflate(R.layout.fragment_all_locations_map, container, false);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireContext());
 
@@ -125,9 +125,9 @@ public class AllLocationsMapFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.userLocationMap);
+                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.allLocationsMap);
 
-        searchView = view.findViewById(R.id.userLocationSv);
+        searchView = view.findViewById(R.id.allLocationsSv);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -137,21 +137,19 @@ public class AllLocationsMapFragment extends Fragment {
 
                 List<Address> addressList = null;
 
-                if (location != null || location.equals("")) {
-                    Geocoder geocoder = new Geocoder(getContext());
-                    try {
-                        addressList = geocoder.getFromLocationName(location, 1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                Geocoder geocoder = new Geocoder(getContext());
+                try {
+                    addressList = geocoder.getFromLocationName(location, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-                    if (!addressList.isEmpty()) {
-                        Address address = addressList.get(0);
-                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                    } else {
-                        Toast.makeText(getContext(), location + " doesn't exist", Toast.LENGTH_SHORT).show();
-                    }
+                if (!addressList.isEmpty()) {
+                    Address address = addressList.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                } else {
+                    Toast.makeText(getContext(), location + " doesn't exist", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             }

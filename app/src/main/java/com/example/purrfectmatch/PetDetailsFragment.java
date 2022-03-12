@@ -81,8 +81,6 @@ public class PetDetailsFragment extends Fragment {
     }
 
     private void navMap(View v) {
-        Toast.makeText(getActivity(), "here", Toast.LENGTH_SHORT).show();
-
         PetDetailsFragmentDirections.ActionPetDetailsFragmentToAllLocationsMapFragment action =
                 PetDetailsFragmentDirections.actionPetDetailsFragmentToAllLocationsMapFragment(
                     petId

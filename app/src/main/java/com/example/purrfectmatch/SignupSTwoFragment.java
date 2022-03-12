@@ -146,11 +146,11 @@ public class SignupSTwoFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
             } else { // All good lets add the pet
                 Model.instance.saveImage(photo, email + ".jpg", url -> {
-                    Toast.makeText(getActivity(), "add image success", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "add image success", Toast.LENGTH_SHORT).show();
 
                 Pet pet = new Pet(email, name, age, address, about, password, url, latitude, longitude);
                 Model.instance.addPet(pet, () -> {
-                    Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
 
                        Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToPetListRvFragment());
