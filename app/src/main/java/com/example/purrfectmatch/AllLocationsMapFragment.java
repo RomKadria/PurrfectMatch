@@ -6,8 +6,10 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -50,6 +52,8 @@ public class AllLocationsMapFragment extends Fragment {
     View view;
     String email;
     boolean focusMyLocation = false;
+    PetListRvViewModel petList;
+
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -65,11 +69,13 @@ public class AllLocationsMapFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
-            Marker myMarker;
-            LiveData<List<Pet>> petList = Model.instance.getAll();
+//            Marker myMarker;
+//            LiveData<List<Pet>> petList = Model.instance.getAll();
 
-            for (int i=0; i<petList.getValue().size(); i++) {
-                Pet currentPet = petList.getValue().get(i);
+//            for (int i=0; i<petList.getValue().size(); i++) {
+
+            for (int i=0; i<petList.getData().getValue().size(); i++) {
+                Pet currentPet = petList.getData().getValue().get(i);
                 if (focusMyLocation == false && currentPet.getEmail() == email) {
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentPet.getLatitude(), currentPet.getLongitude()), 10));
                 }
@@ -177,6 +183,12 @@ public class AllLocationsMapFragment extends Fragment {
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        petList = new ViewModelProvider(this).get(PetListRvViewModel.class);
     }
 
     private void getLocationPermission() {
