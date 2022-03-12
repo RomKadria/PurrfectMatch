@@ -3,34 +3,56 @@ package com.example.purrfectmatch;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.List;
 
 
 public class userLocationMapFragment extends Fragment {
+    private final LatLng defaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private static final int DEFAULT_ZOOM = 18;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
     private GoogleMap mMap;
-    SearchView searchView;
-    View view;
+    private SearchView searchView;
+    private ImageView confirmButton;
+    private View view;
+    private Marker marker;
+    private Address address;
+    private boolean locationPermissionGranted;
+    private Location lastKnownLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private List<Address> addressList = null;
+    private Geocoder geocoder;
 
-
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+    private final OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
          * Manipulates the map once available.
@@ -44,9 +66,29 @@ public class userLocationMapFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
-//            LatLng sydney = new LatLng(-34, 151);
-//            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+            // Create a marker on a default location
+            MarkerOptions markerOptions = new MarkerOptions().position(defaultLocation);
+            marker = mMap.addMarker(markerOptions);
+
+            mMap.moveCamera(CameraUpdateFactory
+                    .newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
+
+            try {
+                addressList = geocoder.getFromLocation(defaultLocation.latitude, defaultLocation.longitude, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            address = addressList.get(0);
+
+
+            // Ask for location permissions
+            if (!locationPermissionGranted) {
+                getLocationPermission();
+            }
+
+            // Get the current location of the device and set the position of the map.
+            setLocationMarker();
         }
     };
 
@@ -56,6 +98,10 @@ public class userLocationMapFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user_location_map, container, false);
+        geocoder = new Geocoder(getContext());
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireContext());
+
         return view;
     }
 
@@ -66,6 +112,12 @@ public class userLocationMapFragment extends Fragment {
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.userLocationMap);
 
         searchView = view.findViewById(R.id.userLocationSv);
+        confirmButton = view.findViewById(R.id.userConfirmButton);
+
+        confirmButton.setOnClickListener(v -> {
+            NavHostFragment.findNavController(this).getPreviousBackStackEntry().getSavedStateHandle().set("address", address);
+            Navigation.findNavController(v).popBackStack(R.id.signupSTwoFragment, false);
+        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -73,24 +125,23 @@ public class userLocationMapFragment extends Fragment {
 
                 String location = searchView.getQuery().toString();
 
-                List<Address> addressList = null;
+                try {
+                    addressList = geocoder.getFromLocationName(location, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-                if (location != null || location.equals("")) {
-                    Geocoder geocoder = new Geocoder(getContext());
-                    try {
-                        addressList = geocoder.getFromLocationName(location, 1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (addressList.isEmpty() == false) {
-                        Address address = addressList.get(0);
+                if (addressList != null) {
+                    if (!addressList.isEmpty()) {
+                        address = addressList.get(0);
 
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
 
-                        mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                        marker.setPosition(latLng);
 
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                    } else {
+                        Toast.makeText(getContext(), location + " doesn't exist", Toast.LENGTH_SHORT).show();
                     }
                 }
                 return false;
@@ -104,6 +155,74 @@ public class userLocationMapFragment extends Fragment {
 
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        locationPermissionGranted = false;
+        if (requestCode
+                == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                locationPermissionGranted = true;
+                setLocationMarker();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = true;
+            setLocationMarker();
+        } else {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    private void setLocationMarker() {
+        /*
+         * Get the best and most recent location of the device, which may be null in rare
+         * cases when a location is not available.
+         */
+        try {
+            if (locationPermissionGranted) {
+                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(this.requireActivity(), task -> {
+                    if (task.isSuccessful()) {
+                        // Set the map's camera position to the current location of the device.
+                        lastKnownLocation = task.getResult();
+                        if (lastKnownLocation != null) {
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(lastKnownLocation.getLatitude(),
+                                            lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                            LatLng latLng = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                            marker.setPosition(latLng);
+
+                            try {
+                                addressList = geocoder.getFromLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            address = addressList.get(0);
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage(), e);
         }
     }
 }
