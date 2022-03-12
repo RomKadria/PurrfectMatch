@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_signupSTwoFragment_to_petListRvFragment"
             app:destination="@id/petListRvFragment" />
+        <action
+            android:id="@+id/action_signupSTwoFragment_to_userLocationMapFragment"
+            app:destination="@id/userLocationMapFragment" />
     </fragment>
 
     <fragment
@@ -37,6 +40,9 @@
         <argument
             android:name="petId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_petDetailsFragment_to_allLocationsMapFragment"
+            app:destination="@id/allLocationsMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/petListRvFragment"
@@ -46,5 +52,25 @@
         <action
             android:id="@+id/action_petListRvFragment_to_petDetailsFragment"
             app:destination="@id/petDetailsFragment" />
+        <action
+            android:id="@+id/action_petListRvFragment_to_allLocationsMapFragment"
+            app:destination="@id/allLocationsMapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userLocationMapFragment"
+        android:name="com.example.purrfectmatch.userLocationMapFragment"
+        android:label="fragment_user_location_map"
+        tools:layout="@layout/fragment_user_location_map" />
+    <fragment
+        android:id="@+id/allLocationsMapFragment"
+        android:name="com.example.purrfectmatch.AllLocationsMapFragment"
+        android:label="AllLocationsMapFragment" >
+        <action
+            android:id="@+id/action_allLocationsMapFragment_to_petDetailsFragment"
+            app:destination="@id/petDetailsFragment" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

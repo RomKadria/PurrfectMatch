@@ -2,12 +2,18 @@ package com.example.purrfectmatch;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Callback;
 import com.example.purrfectmatch.model.Model;
@@ -20,6 +26,8 @@ public class PetDetailsFragment extends Fragment {
     ImageView petImg;
     TextView contactTv;
     ProgressBar progressBar;
+    ImageButton mapImageBtn;
+    String petId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,14 +41,15 @@ public class PetDetailsFragment extends Fragment {
         petImg = view.findViewById(R.id.pet_details_img);
         contactTv = view.findViewById(R.id.pet_details_contact_tv);
         progressBar = view.findViewById(R.id.pet_details_progressbar);
-        String petId = PetDetailsFragmentArgs.fromBundle(getArguments()).getPetId();
+        mapImageBtn = view.findViewById(R.id.pet_details_map_btn);
+        petId = PetDetailsFragmentArgs.fromBundle(getArguments()).getPetId();
+
+        mapImageBtn.setOnClickListener(v -> navMap(v));
 
         Model.instance.getPetById(petId, new Model.GetPetById() {
             @Override
             public void onComplete(Pet pet) {
                 if (pet.getPetUrl() != null) {
-
-
                     Picasso.get()
                             .load(pet.getPetUrl())
                             .error(R.drawable.pet_avatar)
@@ -69,5 +78,15 @@ public class PetDetailsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void navMap(View v) {
+        PetDetailsFragmentDirections.ActionPetDetailsFragmentToAllLocationsMapFragment action =
+                PetDetailsFragmentDirections.actionPetDetailsFragmentToAllLocationsMapFragment(
+                    petId
+                );
+        Navigation.findNavController(v).navigate(action);
+
+//        Navigation.findNavController(v).navigate(PetDetailsFragmentDirections.actionPetDetailsFragmentToAllLocationsMapFragment());
     }
 }
