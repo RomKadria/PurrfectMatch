@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/signupSOneFragment">
+    app:startDestination="@id/petListRvFragment">
     <fragment
         android:id="@+id/signupSOneFragment"
         android:name="com.example.purrfectmatch.SignupSOneFragment"
@@ -20,22 +20,13 @@
         tools:layout="@layout/fragment_signup_s_two" >
         <argument
             android:name="email"
-            app:argType="string"
-            app:nullable="true" />
+            app:argType="string" />
         <argument
             android:name="password"
-            app:argType="string"
-            app:nullable="true" />
+            app:argType="string" />
         <action
             android:id="@+id/action_signupSTwoFragment_to_petListRvFragment"
             app:destination="@id/petListRvFragment" />
-        <argument
-            android:name="address"
-            app:argType="string"
-            app:nullable="true" />
-        <action
-            android:id="@+id/action_signupSTwoFragment_to_userLocationMapFragment"
-            app:destination="@id/userLocationMapFragment" />
     </fragment>
 
     <fragment
@@ -47,8 +38,8 @@
             android:name="petId"
             app:argType="string" />
         <action
-            android:id="@+id/action_petDetailsFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
+            android:id="@+id/action_petDetailsFragment_to_allLocationsMapFragment"
+            app:destination="@id/allLocationsMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/petListRvFragment"
@@ -58,23 +49,25 @@
         <action
             android:id="@+id/action_petListRvFragment_to_petDetailsFragment"
             app:destination="@id/petDetailsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/mapFragment"
-        android:name="com.example.purrfectmatch.MapFragment"
-        android:label="Map"
-        tools:layout="@layout/fragment_map">
         <action
-            android:id="@+id/action_mapFragment_to_petDetailsFragment2"
-            app:destination="@id/petDetailsFragment" />
+            android:id="@+id/action_petListRvFragment_to_allLocationsMapFragment"
+            app:destination="@id/allLocationsMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/userLocationMapFragment"
         android:name="com.example.purrfectmatch.userLocationMapFragment"
         android:label="fragment_user_location_map"
-        tools:layout="@layout/fragment_user_location_map" >
+        tools:layout="@layout/fragment_user_location_map" />
+    <fragment
+        android:id="@+id/allLocationsMapFragment"
+        android:name="com.example.purrfectmatch.AllLocationsMapFragment"
+        android:label="AllLocationsMapFragment" >
         <action
-            android:id="@+id/action_userLocationMapFragment_to_signupSTwoFragment"
-            app:destination="@id/signupSTwoFragment" />
+            android:id="@+id/action_allLocationsMapFragment_to_petDetailsFragment"
+            app:destination="@id/petDetailsFragment" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

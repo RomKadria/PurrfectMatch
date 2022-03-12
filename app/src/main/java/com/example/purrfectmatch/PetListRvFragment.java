@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.example.purrfectmatch.model.Model;
 import com.example.purrfectmatch.model.Pet;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 public class PetListRvFragment extends Fragment {
@@ -43,6 +44,11 @@ public class PetListRvFragment extends Fragment {
 
         swipeRefresh = view.findViewById(R.id.petlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPetList());
+
+        FloatingActionButton watchMap = view.findViewById(R.id.petlist_watchMap_fb);
+        watchMap.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToAllLocationsMapFragment(null));
+        });
 
         RecyclerView list = view.findViewById(R.id.petlist_rv);
         list.setHasFixedSize(true);
