@@ -115,8 +115,10 @@ public class SignupSTwoFragment extends Fragment {
 
             if (age < MIN_AGE || age > MAX_AGE) {
                 Toast.makeText(getActivity(), "Age must be between " + MIN_AGE + " and " + MAX_AGE, Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             } else if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(getActivity(), "missing data from last phase, please restart the process", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             } else { // All good lets add the pet
             Model.instance.saveImage(photo, email + ".jpg", url -> {
                 Toast.makeText(getActivity(), "add image success", Toast.LENGTH_SHORT).show();
