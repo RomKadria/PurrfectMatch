@@ -6,9 +6,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.content.Context;
 
@@ -20,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
@@ -46,6 +52,7 @@ public class SignupSTwoFragment extends Fragment {
     EditText aboutEt;
     Button signUpBtn;
     Button uploadBtn;
+    ImageButton mapBtn;
     Bitmap imageBitmap;
     ImageView imageIv;
     private Uri filePath;
@@ -79,6 +86,7 @@ public class SignupSTwoFragment extends Fragment {
         aboutEt = view.findViewById(R.id.signupSTwo_about_et);
         signUpBtn = view.findViewById(R.id.signupSTwo_signup_btn);
         uploadBtn = view.findViewById(R.id.signupSTwo_upload_btn);
+        mapBtn = view.findViewById(R.id.signupSTwo_map_btn);
         imageIv = view.findViewById(R.id.signupSTwo_image_iv);
         progressBar = view.findViewById(R.id.signupSTwo_progressbar);
         progressBar.setVisibility(View.GONE);
@@ -88,13 +96,30 @@ public class SignupSTwoFragment extends Fragment {
 
         signUpBtn.setOnClickListener(v -> signUp(v));
         uploadBtn.setOnClickListener(v -> upload());
+        mapBtn.setOnClickListener(v -> openMap(v));
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
 
 
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        NavController navController = NavHostFragment.findNavController(this);
+        // We use a String here, but any type that can be put in a Bundle is supported
+        MutableLiveData<String> liveData = navController.getCurrentBackStackEntry()
+                .getSavedStateHandle()
+                .getLiveData("address");
+        liveData.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String address) {
+                addressEt.setText(address);
+            }
+        });
+    }
+
     private void signUp(View v) {
+
         progressBar.setVisibility(View.VISIBLE);
 
         if (nameEt.getText().toString().isEmpty() ||
@@ -124,35 +149,40 @@ public class SignupSTwoFragment extends Fragment {
             } else if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(getActivity(), "missing data from last phase, please restart the process", Toast.LENGTH_SHORT).show();
             } else { // All good lets add the pet
-            Model.instance.saveImage(photo, email + ".jpg", url -> {
-                Toast.makeText(getActivity(), "add image success", Toast.LENGTH_SHORT).show();
+                Model.instance.saveImage(photo, email + ".jpg", url -> {
+                    Toast.makeText(getActivity(), "add image success", Toast.LENGTH_SHORT).show();
 
-                Pet pet = new Pet(email, name, age, address, about, password, url);
-                Model.instance.addPet(pet, () -> {
-                    Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
+                    Pet pet = new Pet(email, name, age, address, about, password, url);
+                    Model.instance.addPet(pet, () -> {
+                        Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
 
-                   Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToUserLocationMapFragment());
+                       Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToPetListRvFragment());
+                    });
                 });
-            });
+            }
         }
     }
+
+    private void upload() {
+        Intent galleryintent = new Intent(Intent.ACTION_GET_CONTENT, null);
+        galleryintent.setType("image/*");
+
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+        Intent chooser = new Intent(Intent.ACTION_CHOOSER);
+        chooser.putExtra(Intent.EXTRA_INTENT, galleryintent);
+        chooser.putExtra(Intent.EXTRA_TITLE, "how would you like to get your photo");
+
+        Intent[] intentArray =  {cameraIntent};
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+        startActivityForResult(chooser,SELECT_IMAGE);
     }
 
-        private void upload() {
-            Intent galleryintent = new Intent(Intent.ACTION_GET_CONTENT, null);
-            galleryintent.setType("image/*");
+    private void openMap(View v) {
+        Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToUserLocationMapFragment());
+    }
 
-            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-            Intent chooser = new Intent(Intent.ACTION_CHOOSER);
-            chooser.putExtra(Intent.EXTRA_INTENT, galleryintent);
-            chooser.putExtra(Intent.EXTRA_TITLE, "how would you like to get your photo");
-
-            Intent[] intentArray =  {cameraIntent};
-            chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-            startActivityForResult(chooser,SELECT_IMAGE);
-        }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -6,6 +6,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -114,13 +115,8 @@ public class userLocationMapFragment extends Fragment {
         confirmButton = view.findViewById(R.id.userConfirmButton);
 
         confirmButton.setOnClickListener(v -> {
-            userLocationMapFragmentDirections.ActionUserLocationMapFragmentToSignupSTwoFragment action =
-                userLocationMapFragmentDirections.actionUserLocationMapFragmentToSignupSTwoFragment(
-                        null,
-                        null,
-                        address.getAddressLine(0)
-                );
-            Navigation.findNavController(v).navigate(action);
+            NavHostFragment.findNavController(this).getPreviousBackStackEntry().getSavedStateHandle().set("address", address.getAddressLine(0));
+            Navigation.findNavController(v).popBackStack(R.id.signupSTwoFragment, false);
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
