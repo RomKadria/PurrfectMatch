@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    tools:context=".ChatMessageFragment">
+
+    <TextView
+        android:id="@+id/chat_message_user_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:textStyle="normal|bold" />
+
+    <TextView
+        android:id="@+id/chat_message_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/chat_message_user_tv"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/chat_message_edit_btn" />
+
+    <ImageButton
+        android:id="@+id/chat_message_edit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/chat_message_time_tv"
+        android:layout_toLeftOf="@id/chat_message_delete_btn"
+        android:background="@drawable/edit" />
+
+    <ImageButton
+        android:id="@+id/chat_message_delete_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/chat_message_edit_btn"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/delete" />
+
+    <TextView
+        android:id="@+id/chat_message_text_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_message_user_tv"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/chat_message_text_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_message_user_tv"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/chat_message_edit_cancel_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_message_text_et"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/chat_message_edit_save_btn"
+        android:text="cancel"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/chat_message_edit_save_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_message_text_et"
+        android:layout_alignBottom="@id/chat_message_edit_cancel_btn"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:text="save"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+
+</RelativeLayout>
