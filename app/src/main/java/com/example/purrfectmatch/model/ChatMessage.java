@@ -1,38 +1,74 @@
 package com.example.purrfectmatch.model;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
+
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+@Entity
 public class ChatMessage {
-    private String messageText;
-    private String messageUser;
-    private long messageTime;
+    final public static String COLLECTION_NAME = "messages";
 
-    public ChatMessage(String messageText, String messageUser) {
-        this.messageText = messageText;
-        this.messageUser = messageUser;
+    @PrimaryKey
+    String sendingId;
+    String receivingId;
+    String textMessage;
+    String imgUrl;
+    long messageTime;
 
-        // Initialize to current time
+    Long updateDate = new Long(0);
+
+    public void setUpdateDate(Long updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public ChatMessage(String sendingId, String receivingId, String textMessage, String imgUrl) {
+        this.sendingId = sendingId;
+        this.receivingId = receivingId;
+        this.textMessage = textMessage;
+        this.imgUrl = imgUrl;
         messageTime = new Date().getTime();
     }
 
-    public ChatMessage(){
-
+    public String getReceivingId() {
+        return receivingId;
     }
 
-    public String getMessageText() {
-        return messageText;
+    public void setReceivingId(String receivingId) {
+        this.receivingId = receivingId;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+    public String getTextMessage() {
+        return textMessage;
     }
 
-    public String getMessageUser() {
-        return messageUser;
+    public void setTextMessage(String textMessage) {
+        this.textMessage = textMessage;
     }
 
-    public void setMessageUser(String messageUser) {
-        this.messageUser = messageUser;
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public String getSendingId() {
+        return sendingId;
+    }
+
+    public void setSendingId(String sendingId) {
+        this.sendingId = sendingId;
+    }
+
+    public Long getUpdateDate() {
+        return updateDate;
     }
 
     public long getMessageTime() {
@@ -41,5 +77,27 @@ public class ChatMessage {
 
     public void setMessageTime(long messageTime) {
         this.messageTime = messageTime;
+    }
+
+    public Map<String, Object> toJson() {
+        Map<String, Object> json = new HashMap<String, Object>();
+        json.put("sendingId", sendingId);
+        json.put("receivingId", receivingId);
+        json.put("textMessage", textMessage);
+        json.put("imgUrl", imgUrl);
+        json.put("updateDate", FieldValue.serverTimestamp());
+        return json;
+    }
+
+    public static ChatMessage create(Map<String, Object> json) {
+        String sendingId = (String) json.get("sendingId");
+        String receivingId = (String) json.get("receivingId");
+        String textMessage = (String) json.get("textMessage");
+        String imgUrl = (String) json.get("imgUrl");
+        Timestamp ts = (Timestamp) json.get("updateDate");
+        Long updateDate = ts.getSeconds();
+        ChatMessage message = new ChatMessage(sendingId, receivingId, textMessage, imgUrl);
+        message.setUpdateDate(updateDate);
+        return message;
     }
 }
