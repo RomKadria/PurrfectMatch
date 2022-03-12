@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,12 +25,15 @@ public class Pet {
     String petUrl;
     Long updateDate = new Long(0);
 
+    double latitude = 0.0;
+    double longitude = 0.0;
+
     public void setUpdateDate(Long updateDate) {
         this.updateDate = updateDate;
     }
 
     public Pet(){}
-    public Pet( String email, String name, int age, String address, String description, String password, String petUrl) {
+    public Pet( String email, String name, int age, String address, String description, String password, String petUrl, double latitude, double longitude) {
         this.name = name;
         this.age = age;
         this.address = address;
@@ -37,6 +41,8 @@ public class Pet {
         this.email = email;
         this.password = password;
         this.petUrl = petUrl;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public void setName(String name) {
@@ -65,6 +71,10 @@ public class Pet {
         this.email = email;
     }
 
+//    public void setGeoPoint(GeoPoint geoPoint) {
+//        this.geoPoint = geoPoint;
+//    }
+
     public String getName() { return name; }
 
     public int getAge() { return age; }
@@ -85,6 +95,26 @@ public class Pet {
         return email;
     }
 
+//    public GeoPoint getGeoPoint() {
+//        return geoPoint;
+//    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     public Long getUpdateDate() {
         return updateDate;
     }
@@ -99,6 +129,9 @@ public class Pet {
         json.put("updateDate", FieldValue.serverTimestamp());
         json.put("password", password);
         json.put("petUrl", petUrl);
+//        json.put("geoPoint", new GeoPoint(latitude, longitude));
+        json.put("latitude", latitude);
+        json.put("longitude", longitude);
         return json;
     }
 
@@ -112,7 +145,10 @@ public class Pet {
         String petUrl = (String) json.get("petUrl");
         Timestamp ts = (Timestamp)json.get("updateDate");
         Long updateDate = ts.getSeconds();
-        Pet pet = new Pet(email,name,age,address,description, password, petUrl);
+        double latitude = Double.parseDouble(json.get("latitude").toString());
+        double longitude = Double.parseDouble(json.get("longitude").toString());
+//        GeoPoint geoPoint = (GeoPoint) json.get("geoPoint");
+        Pet pet = new Pet(email,name,age,address,description, password, petUrl, latitude, longitude);
         pet.setUpdateDate(updateDate);
         return pet;
     }
