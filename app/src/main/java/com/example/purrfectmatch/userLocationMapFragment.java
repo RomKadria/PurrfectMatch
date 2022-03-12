@@ -42,8 +42,6 @@ public class userLocationMapFragment extends Fragment {
 
     private GoogleMap mMap;
     private SearchView searchView;
-    private ImageView confirmButton;
-    private View view;
     private Marker marker;
     private Address address;
     private boolean locationPermissionGranted;
@@ -97,7 +95,7 @@ public class userLocationMapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_user_location_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_location_map, container, false);
         geocoder = new Geocoder(getContext());
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireContext());
@@ -112,7 +110,7 @@ public class userLocationMapFragment extends Fragment {
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.userLocationMap);
 
         searchView = view.findViewById(R.id.userLocationSv);
-        confirmButton = view.findViewById(R.id.userConfirmButton);
+        ImageView confirmButton = view.findViewById(R.id.userConfirmButton);
 
         confirmButton.setOnClickListener(v -> {
             NavHostFragment.findNavController(this).getPreviousBackStackEntry().getSavedStateHandle().set("address", address);
