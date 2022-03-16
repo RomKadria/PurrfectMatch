@@ -74,7 +74,8 @@ public class PetDetailsFragment extends Fragment {
         });
 
         chatBtn.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(PetDetailsFragmentDirections.actionPetDetailsFragmentToChatFragment(petId));
+            // TODO: uncomment
+//            Navigation.findNavController(v).navigate(PetDetailsFragmentDirections.actionPetDetailsFragmentToChatFragment(petId)); // TODO: get from somewhere the current pet id
         });
 
         return view;

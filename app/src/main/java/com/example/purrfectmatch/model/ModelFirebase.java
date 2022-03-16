@@ -6,8 +6,6 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -147,9 +145,9 @@ public class ModelFirebase {
 
     public void getAllChatMessages(Long lastUpdateDate, String sendingId, String receivingId, GetAllChatsListener listener) {
         db.collection(ChatMessage.COLLECTION_NAME)
-                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
-                .whereEqualTo("sendingId", sendingId)
-                .whereEqualTo("receivingId", receivingId)
+//                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+//                .whereEqualTo("sendingId", sendingId)
+//                .whereEqualTo("receivingId", receivingId)
                 .get()
                 .addOnCompleteListener(task -> {
                     List<ChatMessage> list = new LinkedList<ChatMessage>();

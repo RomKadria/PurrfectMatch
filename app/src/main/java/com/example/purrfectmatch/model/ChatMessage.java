@@ -1,5 +1,6 @@
 package com.example.purrfectmatch.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -15,6 +16,7 @@ public class ChatMessage {
     final public static String COLLECTION_NAME = "messages";
 
     @PrimaryKey
+    @NonNull
     String sendingId;
     String receivingId;
     String textMessage;
