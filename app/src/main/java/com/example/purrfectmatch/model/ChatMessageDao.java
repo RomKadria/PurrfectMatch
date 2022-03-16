@@ -13,8 +13,8 @@ public interface ChatMessageDao {
     @Query("select * from ChatMessage where sendingId = :petId")
     List<ChatMessage> getAllChats(String petId);
 
-    @Query("select * from ChatMessage where (sendingId = :sendingId and receivingId = :receivingId) or (sendingId = :receivingId and receivingId = :sendingId)")
-    List<ChatMessage> getAllChatMessages(String sendingId, String receivingId);
+    @Query("select * from ChatMessage where receivingId = :otherPetId or sendingId = :otherPetId order by messageTime asc")
+    List<ChatMessage> getAllChatMessages(String otherPetId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(ChatMessage... chatMessages);

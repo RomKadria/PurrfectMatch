@@ -6,19 +6,19 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -147,16 +147,16 @@ public class ModelFirebase {
 
     public void getAllChatMessages(Long lastUpdateDate, String sendingId, String receivingId, GetAllChatsListener listener) {
         db.collection(ChatMessage.COLLECTION_NAME)
-                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
-                .whereEqualTo("sendingId", sendingId)
-                .whereEqualTo("receivingId", receivingId)
+                .whereGreaterThanOrEqualTo("messageTime", new Timestamp(lastUpdateDate, 0))
+                .whereIn("sendingId", Arrays.asList(sendingId, receivingId))
                 .get()
                 .addOnCompleteListener(task -> {
                     List<ChatMessage> list = new LinkedList<ChatMessage>();
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             ChatMessage message = ChatMessage.create(doc.getData());
-                            if (message != null) {
+
+                            if (message != null && (message.receivingId.equals(receivingId) || message.receivingId.equals(sendingId))) {
                                 list.add(message);
                             }
                         }

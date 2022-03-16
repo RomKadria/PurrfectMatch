@@ -23,31 +23,39 @@ public class ChatMessagesModel {
         loading,
         loaded
     }
+
     MutableLiveData<LoadingState> chatMessagesLoadingState = new MutableLiveData<LoadingState>();
+
     public LiveData<LoadingState> getChatMessagesLoadingState() {
         return chatMessagesLoadingState;
     }
 
     ModelFirebase modelFirebase = new ModelFirebase();
-    private ChatMessagesModel(){
+
+    private ChatMessagesModel() {
         chatMessagesLoadingState.setValue(LoadingState.loaded);
     }
 
     MutableLiveData<List<ChatMessage>> chatMessages = new MutableLiveData<List<ChatMessage>>();
-    public LiveData<List<ChatMessage>> getAllChatMessages(){
-        if (chatMessages.getValue() == null) { refreshChatMessages(); };
+
+    public LiveData<List<ChatMessage>> getAllChatMessages(String sendingPetId, String receivingPetId) {
+        if (chatMessages.getValue() == null) {
+            refreshChatMessages(sendingPetId, receivingPetId);
+        }
+        ;
         return chatMessages;
     }
-    public void refreshChatMessages(){
+
+    public void refreshChatMessages(String sendingPetId, String receivingPetId) {
         chatMessagesLoadingState.setValue(LoadingState.loading);
 
         // get last local update date TODO: mark the specific chat
         Long lastUpdateDate = MyApplication.getContext()
                 .getSharedPreferences("TAG", Context.MODE_PRIVATE)
-                .getLong("ChatMessagesLastUpdateDate",0);
+                .getLong("ChatMessagesLastUpdateDate" + receivingPetId, 0);
 
         // firebase get all updates since lastLocalUpdateDate
-        modelFirebase.getAllPets(lastUpdateDate, new ModelFirebase.GetAllChatsListener() {
+        modelFirebase.getAllChatMessages(lastUpdateDate, sendingPetId, receivingPetId, new ModelFirebase.GetAllChatsListener() {
             @Override
             public void onComplete(List<ChatMessage> list) {
                 // add all records to the local db
@@ -55,22 +63,22 @@ public class ChatMessagesModel {
                     @Override
                     public void run() {
                         Long lud = new Long(0);
-                        Log.d("TAG","fb returned " + list.size());
-                        for (ChatMessage chatMessage: list) {
+                        Log.d("TAG", "fb returned " + list.size());
+                        for (ChatMessage chatMessage : list) {
                             AppLocalDb.db.chatMessageDao().insertAll(chatMessage);
-                            if (lud < chatMessage.getUpdateDate()){
-                                lud = chatMessage.getUpdateDate();
+                            if (lud < chatMessage.getMessageTime()) {
+                                lud = chatMessage.getMessageTime();
                             }
                         }
                         // update last local update date
                         MyApplication.getContext()
-                                .getSharedPreferences("TAG",Context.MODE_PRIVATE)
+                                .getSharedPreferences("TAG", Context.MODE_PRIVATE)
                                 .edit()
-                                .putLong("ChatMessagesLastUpdateDate",lud) // TODO: save for specific chat
+                                .putLong("ChatMessagesLastUpdateDate" + receivingPetId, lud) // TODO: save for specific chat
                                 .commit();
 
                         //return all data to caller
-                        List<ChatMessage> allChatMessages = AppLocalDb.db.chatMessageDao().getAllChatMessages(); // TODO: send pets ids
+                        List<ChatMessage> allChatMessages = AppLocalDb.db.chatMessageDao().getAllChatMessages(receivingPetId);
                         chatMessages.postValue(allChatMessages);
                         chatMessagesLoadingState.postValue(LoadingState.loaded);
                     }
@@ -83,11 +91,11 @@ public class ChatMessagesModel {
         void onComplete();
     }
 
-    public void addChatMessage(ChatMessage chatMessage, AddChatMessageListener listener){
+    public void addChatMessage(ChatMessage chatMessage, AddChatMessageListener listener) {
         modelFirebase.addChatMessage(chatMessage, listener);
     }
 
-    public void addChatMessage(ChatMessage chatMessage){
+    public void addChatMessage(ChatMessage chatMessage) {
         modelFirebase.addChatMessage(chatMessage);
     }
 

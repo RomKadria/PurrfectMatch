@@ -11,9 +11,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +28,8 @@ public class ChatFragment extends Fragment {
     ChatMessagesViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
+    String sendingPetId;
+    String receivingPetId;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -35,10 +40,17 @@ public class ChatFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat,container,false);
+        View view = inflater.inflate(R.layout.fragment_chat, container, false);
+
+//        sendingPetId = ChatFragmentArgs.fromBundle(getArguments()).getSendingPetId();
+//        receivingPetId = ChatFragmentArgs.fromBundle(getArguments()).getReceivingPetId();
+// TODO: remove this 
+        sendingPetId = "a@a.a";
+        receivingPetId = "a@a.b";
+
 
         swipeRefresh = view.findViewById(R.id.chat_swiperefresh);
-        swipeRefresh.setOnRefreshListener(() -> ChatMessagesModel.instance.refreshChatMessages());
+        swipeRefresh.setOnRefreshListener(() -> ChatMessagesModel.instance.refreshChatMessages(sendingPetId, receivingPetId));
 
         RecyclerView list = view.findViewById(R.id.list_of_messages);
         list.setHasFixedSize(true);
@@ -48,20 +60,13 @@ public class ChatFragment extends Fragment {
         adapter = new MyAdapter();
         list.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(View v,int position) {
-               // TODO: move to chat
-            }
-        });
-
         setHasOptionsMenu(true);
-        viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
+        viewModel.getData(sendingPetId, receivingPetId).observe(getViewLifecycleOwner(), list1 -> refresh());
         swipeRefresh.setRefreshing(ChatMessagesModel.instance.getChatMessagesLoadingState().getValue() == ChatMessagesModel.LoadingState.loading);
         ChatMessagesModel.instance.getChatMessagesLoadingState().observe(getViewLifecycleOwner(), chatMessagesLoadingState -> {
-            if (chatMessagesLoadingState == ChatMessagesModel.LoadingState.loading){
+            if (chatMessagesLoadingState == ChatMessagesModel.LoadingState.loading) {
                 swipeRefresh.setRefreshing(true);
-            }else{
+            } else {
                 swipeRefresh.setRefreshing(false);
             }
 
@@ -74,58 +79,87 @@ public class ChatFragment extends Fragment {
         swipeRefresh.setRefreshing(false);
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
-        public TextView petName;
-        public ImageView petImage;
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView messageUser;
+        public TextView messageTime;
+        public TextView messageText;
+        public ImageView editBtn;
+        public ImageView deleteBtn;
+        public EditText editMessageText;
+        public Button editSaveBtn;
+        public Button editCancelBtn;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
-            petName = itemView.findViewById(R.id.pc_pet_name); // TODO: change this
-            petImage = itemView.findViewById(R.id.pc_pet_image);
+            messageUser = itemView.findViewById(R.id.chat_message_user_tv);
+            messageTime = itemView.findViewById(R.id.chat_message_time_tv);
+            messageText = itemView.findViewById(R.id.chat_message_text_tv);
+            editBtn = itemView.findViewById(R.id.chat_message_edit_btn);
+            deleteBtn = itemView.findViewById(R.id.chat_message_delete_btn);
+            editMessageText = itemView.findViewById(R.id.chat_message_text_et);
+            editSaveBtn = itemView.findViewById(R.id.chat_message_edit_save_btn);
+            editCancelBtn = itemView.findViewById(R.id.chat_message_edit_cancel_btn);
 
+            editBtn.setOnClickListener(v -> {
+                editMessageText.setText(messageText.getText());
+                editMessageText.setVisibility(View.VISIBLE);
+                editSaveBtn.setVisibility(View.VISIBLE);
+                editCancelBtn.setVisibility(View.VISIBLE);
+                messageText.setVisibility(View.GONE);
+            });
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    listener.onItemClick(v,pos);
-                }
+            deleteBtn.setOnClickListener(v -> {
+            });
+
+            editSaveBtn.setOnClickListener(v -> {
+
+            });
+
+            editCancelBtn.setOnClickListener(v -> {
+                editMessageText.setVisibility(View.GONE);
+                editSaveBtn.setVisibility(View.GONE);
+                editCancelBtn.setVisibility(View.GONE);
+                messageText.setVisibility(View.VISIBLE);
             });
         }
     }
 
-    interface OnItemClickListener{
-        void onItemClick(View v,int position);
+    interface OnItemClickListener {
+        void onItemClick(View v, int position);
     }
 
-    class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
+    class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         OnItemClickListener listener;
-        public void setOnItemClickListener(OnItemClickListener listener){
+
+        public void setOnItemClickListener(OnItemClickListener listener) {
             this.listener = listener;
         }
 
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.fragment_chat_message,parent,false);
-            MyViewHolder holder = new MyViewHolder(view,listener);
+            View view = getLayoutInflater().inflate(R.layout.fragment_chat_message, parent, false);
+            MyViewHolder holder = new MyViewHolder(view, listener);
             return holder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            ChatMessage chatMessage = viewModel.getData().getValue().get(position);
-            holder.petName.setText(chatMessage.getName()); // TODO: change this
-            Picasso.get().load(chatMessage.getPetUrl()).into(holder.petImage);
+            ChatMessage chatMessage = viewModel.getData(sendingPetId, receivingPetId).getValue().get(position);
+
+            holder.messageText.setText(chatMessage.getTextMessage());
+            holder.messageUser.setText(chatMessage.getSendingId()); // TODO: get the name?
+            holder.messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", chatMessage.getMessageTime()));
+//            Picasso.get().load(chatMessage.getPetUrl()).into(holder.petImage);
         }
 
         @Override
         public int getItemCount() {
-            if(viewModel.getData().getValue() == null){
+            if (viewModel.getData(sendingPetId, receivingPetId).getValue() == null) {
                 return 0;
             }
-            return viewModel.getData().getValue().size();
+            return viewModel.getData(sendingPetId, receivingPetId).getValue().size();
         }
     }
 }

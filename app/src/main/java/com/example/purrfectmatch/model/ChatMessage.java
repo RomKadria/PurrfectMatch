@@ -1,5 +1,6 @@
 package com.example.purrfectmatch.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -15,24 +16,29 @@ public class ChatMessage {
     final public static String COLLECTION_NAME = "messages";
 
     @PrimaryKey
+    @NonNull
     String sendingId;
     String receivingId;
     String textMessage;
     String imgUrl;
     long messageTime;
 
-    Long updateDate = new Long(0);
-
-    public void setUpdateDate(Long updateDate) {
-        this.updateDate = updateDate;
-    }
+    public ChatMessage(){}
 
     public ChatMessage(String sendingId, String receivingId, String textMessage, String imgUrl) {
         this.sendingId = sendingId;
         this.receivingId = receivingId;
         this.textMessage = textMessage;
         this.imgUrl = imgUrl;
-        messageTime = new Date().getTime();
+        this.messageTime = new Date().getTime();
+    }
+    
+    public ChatMessage(String sendingId, String receivingId, String textMessage, String imgUrl, long messageTime) {
+        this.sendingId = sendingId;
+        this.receivingId = receivingId;
+        this.textMessage = textMessage;
+        this.imgUrl = imgUrl;
+        this.messageTime = messageTime;
     }
 
     public String getReceivingId() {
@@ -67,9 +73,6 @@ public class ChatMessage {
         this.sendingId = sendingId;
     }
 
-    public Long getUpdateDate() {
-        return updateDate;
-    }
 
     public long getMessageTime() {
         return messageTime;
@@ -94,10 +97,9 @@ public class ChatMessage {
         String receivingId = (String) json.get("receivingId");
         String textMessage = (String) json.get("textMessage");
         String imgUrl = (String) json.get("imgUrl");
-        Timestamp ts = (Timestamp) json.get("updateDate");
-        Long updateDate = ts.getSeconds();
-        ChatMessage message = new ChatMessage(sendingId, receivingId, textMessage, imgUrl);
-        message.setUpdateDate(updateDate);
+        Timestamp ts = (Timestamp) json.get("messageTime");
+        Long messageTime = ts.getSeconds();
+        ChatMessage message = new ChatMessage(sendingId, receivingId, textMessage, imgUrl, messageTime);
         return message;
     }
 }
