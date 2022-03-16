@@ -17,6 +17,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -145,16 +146,16 @@ public class ModelFirebase {
 
     public void getAllChatMessages(Long lastUpdateDate, String sendingId, String receivingId, GetAllChatsListener listener) {
         db.collection(ChatMessage.COLLECTION_NAME)
-//                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
-//                .whereEqualTo("sendingId", sendingId)
-//                .whereEqualTo("receivingId", receivingId)
+                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+                .whereIn("sendingId", Arrays.asList(sendingId, receivingId))
                 .get()
                 .addOnCompleteListener(task -> {
                     List<ChatMessage> list = new LinkedList<ChatMessage>();
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             ChatMessage message = ChatMessage.create(doc.getData());
-                            if (message != null) {
+
+                            if (message != null && (message.receivingId.equals(receivingId) || message.receivingId.equals(sendingId))) {
                                 list.add(message);
                             }
                         }

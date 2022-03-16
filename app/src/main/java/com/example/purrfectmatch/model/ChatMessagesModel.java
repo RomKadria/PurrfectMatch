@@ -78,7 +78,7 @@ public class ChatMessagesModel {
                                 .commit();
 
                         //return all data to caller
-                        List<ChatMessage> allChatMessages = AppLocalDb.db.chatMessageDao().getAllChatMessages();//(sendingPetId, receivingPetId);
+                        List<ChatMessage> allChatMessages = AppLocalDb.db.chatMessageDao().getAllChatMessages(sendingPetId, receivingPetId);
                         chatMessages.postValue(allChatMessages);
                         chatMessagesLoadingState.postValue(LoadingState.loaded);
                     }
