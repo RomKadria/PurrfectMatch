@@ -21,27 +21,27 @@ public class Model {
     Executor executor = Executors.newFixedThreadPool(1);
     Handler mainThread = HandlerCompat.createAsync(Looper.getMainLooper());
 
-    public enum PetListLoadingState{
+    public enum LoadingState {
         loading,
         loaded
     }
-    MutableLiveData<PetListLoadingState> petListLoadingState = new MutableLiveData<PetListLoadingState>();
-    public LiveData<PetListLoadingState> getPetListLoadingState() {
+    MutableLiveData<LoadingState> petListLoadingState = new MutableLiveData<LoadingState>();
+    public LiveData<LoadingState> getPetListLoadingState() {
         return petListLoadingState;
     }
 
     ModelFirebase modelFirebase = new ModelFirebase();
     private Model(){
-        petListLoadingState.setValue(PetListLoadingState.loaded);
+        petListLoadingState.setValue(LoadingState.loaded);
     }
 
     MutableLiveData<List<Pet>> petsList = new MutableLiveData<List<Pet>>();
-    public LiveData<List<Pet>> getAll(){
+    public LiveData<List<Pet>> getAllPets(){
         if (petsList.getValue() == null) { refreshPetList(); };
         return petsList;
     }
     public void refreshPetList(){
-        petListLoadingState.setValue(PetListLoadingState.loading);
+        petListLoadingState.setValue(LoadingState.loading);
 
         // get last local update date
         Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("PetsLastUpdateDate",0);
@@ -72,7 +72,7 @@ public class Model {
                         //return all data to caller
                         List<Pet> petList = AppLocalDb.db.petDao().getAll();
                         petsList.postValue(petList);
-                        petListLoadingState.postValue(PetListLoadingState.loaded);
+                        petListLoadingState.postValue(LoadingState.loaded);
                     }
                 });
             }

@@ -75,6 +75,22 @@ public class ModelFirebase {
                 .set(json);
     }
 
+    public void addChatMessage(ChatMessage chatMessage, ChatMessagesModel.AddChatMessageListener listener) {
+        Map<String, Object> json = chatMessage.toJson();
+        db.collection(ChatMessage.COLLECTION_NAME)
+                .document()
+                .set(json)
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
+    }
+
+    public void addChatMessage(ChatMessage chatMessage) {
+        Map<String, Object> json = chatMessage.toJson();
+        db.collection(ChatMessage.COLLECTION_NAME)
+                .document()
+                .set(json);
+    }
+
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     public void saveImage(Bitmap imageBitmap, String imageName, Model.SaveImageListener listener) {

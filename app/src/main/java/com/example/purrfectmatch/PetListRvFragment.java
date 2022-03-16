@@ -11,11 +11,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -64,9 +60,9 @@ public class PetListRvFragment extends Fragment {
 
         setHasOptionsMenu(true);
         viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
-        swipeRefresh.setRefreshing(Model.instance.getPetListLoadingState().getValue() == Model.PetListLoadingState.loading);
+        swipeRefresh.setRefreshing(Model.instance.getPetListLoadingState().getValue() == Model.LoadingState.loading);
         Model.instance.getPetListLoadingState().observe(getViewLifecycleOwner(), PetListLoadingState -> {
-            if (PetListLoadingState == Model.PetListLoadingState.loading){
+            if (PetListLoadingState == Model.LoadingState.loading){
                 swipeRefresh.setRefreshing(true);
             }else{
                 swipeRefresh.setRefreshing(false);
