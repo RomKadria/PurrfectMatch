@@ -11,6 +11,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -146,7 +147,7 @@ public class ModelFirebase {
 
     public void getAllChatMessages(Long lastUpdateDate, String sendingId, String receivingId, GetAllChatsListener listener) {
         db.collection(ChatMessage.COLLECTION_NAME)
-                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+                .whereGreaterThanOrEqualTo("messageTime", new Timestamp(lastUpdateDate, 0))
                 .whereIn("sendingId", Arrays.asList(sendingId, receivingId))
                 .get()
                 .addOnCompleteListener(task -> {

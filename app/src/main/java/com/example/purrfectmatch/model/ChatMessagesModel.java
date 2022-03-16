@@ -66,8 +66,8 @@ public class ChatMessagesModel {
                         Log.d("TAG", "fb returned " + list.size());
                         for (ChatMessage chatMessage : list) {
                             AppLocalDb.db.chatMessageDao().insertAll(chatMessage);
-                            if (lud < chatMessage.getUpdateDate()) {
-                                lud = chatMessage.getUpdateDate();
+                            if (lud < chatMessage.getMessageTime()) {
+                                lud = chatMessage.getMessageTime();
                             }
                         }
                         // update last local update date
@@ -78,7 +78,7 @@ public class ChatMessagesModel {
                                 .commit();
 
                         //return all data to caller
-                        List<ChatMessage> allChatMessages = AppLocalDb.db.chatMessageDao().getAllChatMessages(sendingPetId, receivingPetId);
+                        List<ChatMessage> allChatMessages = AppLocalDb.db.chatMessageDao().getAllChatMessages(receivingPetId);
                         chatMessages.postValue(allChatMessages);
                         chatMessagesLoadingState.postValue(LoadingState.loaded);
                     }
