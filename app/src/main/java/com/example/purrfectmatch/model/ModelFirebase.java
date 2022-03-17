@@ -109,10 +109,7 @@ public class ModelFirebase {
                 whereEqualTo("email", email)
                 .get()
                 .addOnCompleteListener((user -> {
-                    if (user.getResult().isEmpty())
-                        listener.onComplete(false);
-                    else
-                        listener.onComplete(true);
+                    listener.onComplete(!user.getResult().isEmpty());
                 }));
     }
 }

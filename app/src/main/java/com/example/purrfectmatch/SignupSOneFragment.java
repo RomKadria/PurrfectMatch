@@ -21,7 +21,7 @@ public class SignupSOneFragment extends Fragment {
     EditText etEmail, etPassword, etConfirmPassword;
     Button btnNext;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-    boolean userExists = false;
+    boolean mailValid = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,27 +67,21 @@ public class SignupSOneFragment extends Fragment {
         return view;
     }
 
-    public boolean validateEmail() {
+    public void validateEmail() {
         String email = etEmail.getText().toString().trim();
         boolean matchFound = email.matches(emailPattern);
 
         Model.instance.checkEmailValid(email, exists -> {
-//            Toast.makeText(getActivity(), String.valueOf(exists), Toast.LENGTH_SHORT).show();
-                userExists = exists;
+            if (exists) {
+                etEmail.setError("Email address already exists");
+                mailValid = false;
+            } else if (!matchFound) {
+                etEmail.setError("Invalid email address");
+                mailValid = false;
+            } else {
+                mailValid = true;
+            }
         });
-
-//        Toast.makeText(getActivity(), String.valueOf(userExists), Toast.LENGTH_SHORT).show();
-
-        if (userExists) {
-            etEmail.setError("Email address already exists");
-            return false;
-        }
-        else if (!matchFound) {
-            etEmail.setError("Invalid email address");
-            return false;
-        }
-
-        return true;
     }
 
     public boolean validatePassword() {
@@ -123,7 +117,9 @@ public class SignupSOneFragment extends Fragment {
             etPassword.requestFocus();
             flag = false;
         }
-        if(!validateEmail()) {
+
+        validateEmail();
+        if(!mailValid) {
             etEmail.requestFocus();
             flag = false;
         }
