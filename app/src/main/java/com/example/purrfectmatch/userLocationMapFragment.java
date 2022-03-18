@@ -1,5 +1,7 @@
 package com.example.purrfectmatch;
 
+import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -29,6 +31,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.CancellationToken;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
@@ -42,12 +46,10 @@ public class userLocationMapFragment extends Fragment {
 
     private GoogleMap mMap;
     private SearchView searchView;
-    private ImageView confirmButton;
-    private View view;
     private Marker marker;
     private Address address;
     private boolean locationPermissionGranted;
-    private Location lastKnownLocation;
+    private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private List<Address> addressList = null;
     private Geocoder geocoder;
@@ -97,7 +99,7 @@ public class userLocationMapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_user_location_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_location_map, container, false);
         geocoder = new Geocoder(getContext());
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireContext());
@@ -112,7 +114,7 @@ public class userLocationMapFragment extends Fragment {
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.userLocationMap);
 
         searchView = view.findViewById(R.id.userLocationSv);
-        confirmButton = view.findViewById(R.id.userConfirmButton);
+        ImageView confirmButton = view.findViewById(R.id.userConfirmButton);
 
         confirmButton.setOnClickListener(v -> {
             NavHostFragment.findNavController(this).getPreviousBackStackEntry().getSavedStateHandle().set("address", address);
@@ -199,20 +201,32 @@ public class userLocationMapFragment extends Fragment {
          */
         try {
             if (locationPermissionGranted) {
-                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                Task<Location> locationResult = fusedLocationProviderClient.getCurrentLocation(PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+                    @NonNull
+                    @Override
+                    public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean isCancellationRequested() {
+                        return false;
+                    }
+                });
+                
                 locationResult.addOnCompleteListener(this.requireActivity(), task -> {
                     if (task.isSuccessful()) {
                         // Set the map's camera position to the current location of the device.
-                        lastKnownLocation = task.getResult();
-                        if (lastKnownLocation != null) {
+                        currentLocation = task.getResult();
+                        if (currentLocation != null) {
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(lastKnownLocation.getLatitude(),
-                                            lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                            LatLng latLng = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                                    new LatLng(currentLocation.getLatitude(),
+                                            currentLocation.getLongitude()), DEFAULT_ZOOM));
+                            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             marker.setPosition(latLng);
 
                             try {
-                                addressList = geocoder.getFromLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), 1);
+                                addressList = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

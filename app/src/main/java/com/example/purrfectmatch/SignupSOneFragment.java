@@ -10,15 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
-import com.example.purrfectmatch.model.Pet;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SignupSOneFragment extends Fragment {
 
     EditText etEmail, etPassword, etConfirmPassword;
     Button btnNext;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    boolean mailValid = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,29 +67,21 @@ public class SignupSOneFragment extends Fragment {
         return view;
     }
 
-    public boolean validateEmail() {
-        final boolean[] isExists = {true};
+    public void validateEmail() {
         String email = etEmail.getText().toString().trim();
         boolean matchFound = email.matches(emailPattern);
 
-//        Model.instance.getPetById(email, new Model.GetPetById() {
-//            @Override
-//            public void onComplete(Pet pet) {
-//                if (pet != null)
-//                    isExists[0] = false;
-//            }
-//        });
-
-        if (!isExists[0]) {
-            etEmail.setError("Email address already exists");
-            return false;
-        }
-        else if (!matchFound) {
-            etEmail.setError("Invalid email address");
-            return false;
-        }
-
-        return true;
+        Model.instance.checkEmailValid(email, exists -> {
+            if (exists) {
+                etEmail.setError("Email address already exists");
+                mailValid = false;
+            } else if (!matchFound) {
+                etEmail.setError("Invalid email address");
+                mailValid = false;
+            } else {
+                mailValid = true;
+            }
+        });
     }
 
     public boolean validatePassword() {
@@ -122,7 +117,9 @@ public class SignupSOneFragment extends Fragment {
             etPassword.requestFocus();
             flag = false;
         }
-        if(!validateEmail()) {
+
+        validateEmail();
+        if(!mailValid) {
             etEmail.requestFocus();
             flag = false;
         }
