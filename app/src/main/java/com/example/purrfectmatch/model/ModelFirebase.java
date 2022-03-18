@@ -41,6 +41,10 @@ public class ModelFirebase {
         void onComplete(List<ChatMessage> list);
     }
 
+    public interface GetAllChatPetsListener {
+        void onComplete(List<ChatPet> list);
+    }
+
     public void getAllPets(Long lastUpdateDate, GetAllPetsListener listener) {
         db.collection(Pet.COLLECTION_NAME)
                 .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
@@ -162,6 +166,62 @@ public class ModelFirebase {
                         }
                     }
                     listener.onComplete(list);
+                });
+    }
+
+    public void getAllChatPets(Long lastUpdateDate, String petId, GetAllChatPetsListener listener) {
+        db.collection(ChatMessage.COLLECTION_NAME)
+                // TODO: fix
+//                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+                .whereEqualTo("sendingId", petId)
+                .get()
+                .addOnCompleteListener(getSentMsgTask -> {
+                    List<String> petIdsList = new LinkedList<String>();
+
+                    if (getSentMsgTask.isSuccessful()) {
+                        for (DocumentSnapshot doc : getSentMsgTask.getResult().getDocuments()) {
+                            ChatMessage message = ChatMessage.create(doc.getData());
+                            if (!petIdsList.contains(message.receivingId)) {
+                                petIdsList.add(message.receivingId);
+                            }
+                        }
+
+                        db.collection(ChatMessage.COLLECTION_NAME)
+                                // TODO: fix
+//                                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+                                .whereEqualTo("receivingId", petId)
+                                .get()
+                                .addOnCompleteListener(getReceivedMsgTask -> {
+                                    if (getReceivedMsgTask.isSuccessful()) {
+                                        for (DocumentSnapshot doc : getReceivedMsgTask.getResult().getDocuments()) {
+                                            ChatMessage message = ChatMessage.create(doc.getData());
+                                            if (!petIdsList.contains(message.sendingId)) {
+                                                petIdsList.add(message.sendingId);
+                                            }
+                                        }
+
+                                        if (!petIdsList.isEmpty()) {
+                                            db.collection(Pet.COLLECTION_NAME)
+                                                    .whereIn("email", petIdsList)
+                                                    .get()
+                                                    .addOnCompleteListener(petTask -> {
+                                                        List<ChatPet> petList = new LinkedList<ChatPet>();
+                                                        if (petTask.isSuccessful()) {
+                                                            for (QueryDocumentSnapshot doc : petTask.getResult()) {
+                                                                ChatPet pet = ChatPet.create(doc.getData());
+                                                                if (pet != null) {
+                                                                    petList.add(pet);
+                                                                }
+                                                            }
+                                                        }
+                                                        listener.onComplete(petList);
+                                                    });
+                                        }
+                                    }
+                                    listener.onComplete(new LinkedList<ChatPet>());
+                                });
+                    }
+                    listener.onComplete(new LinkedList<ChatPet>());
                 });
     }
 }

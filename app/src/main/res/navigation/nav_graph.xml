@@ -51,6 +51,18 @@
             app:destination="@id/petDetailsFragment" />
     </fragment>
     <fragment
+        android:id="@+id/chatListRvFragment"
+        android:name="com.example.purrfectmatch.ChatListRvFragment"
+        android:label="My chats"
+        tools:layout="@layout/fragment_chat_list" >
+        <argument
+            android:name="petId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_chatListRvFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
         android:id="@+id/chatFragment"
         android:name="com.example.purrfectmatch.ChatFragment"
         android:label="Chat"
