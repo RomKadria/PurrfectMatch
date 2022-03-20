@@ -130,25 +130,6 @@ public class ModelFirebase {
                 });
     }
 
-    public void getAllChats(Long lastUpdateDate, String petId, GetAllChatsListener listener) {
-        db.collection(ChatMessage.COLLECTION_NAME)
-                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
-                .whereEqualTo("sendingId", petId)
-                .get()
-                .addOnCompleteListener(task -> {
-                    List<ChatMessage> list = new LinkedList<ChatMessage>();
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            ChatMessage message = ChatMessage.create(doc.getData());
-                            if (message != null) {
-                                list.add(message);
-                            }
-                        }
-                    }
-                    listener.onComplete(list);
-                });
-    }
-
     public void getAllChatMessages(Long lastUpdateDate, String sendingId, String receivingId, GetAllChatsListener listener) {
         db.collection(ChatMessage.COLLECTION_NAME)
                 .whereGreaterThanOrEqualTo("messageTime", new Timestamp(lastUpdateDate, 0))
@@ -158,7 +139,8 @@ public class ModelFirebase {
                     List<ChatMessage> list = new LinkedList<ChatMessage>();
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot doc : task.getResult()) {
-                            ChatMessage message = ChatMessage.create(doc.getData());
+
+                            ChatMessage message = ChatMessage.create(doc.getData(), doc.getId());
 
                             if (message != null && (message.receivingId.equals(receivingId) || message.receivingId.equals(sendingId))) {
                                 list.add(message);
@@ -179,7 +161,7 @@ public class ModelFirebase {
 
                     if (getSentMsgTask.isSuccessful()) {
                         for (DocumentSnapshot doc : getSentMsgTask.getResult().getDocuments()) {
-                            ChatMessage message = ChatMessage.create(doc.getData());
+                            ChatMessage message = ChatMessage.create(doc.getData(), doc.getId());
                             if (!petIdsList.contains(message.receivingId)) {
                                 petIdsList.add(message.receivingId);
                             }
@@ -192,7 +174,7 @@ public class ModelFirebase {
                                 .addOnCompleteListener(getReceivedMsgTask -> {
                                     if (getReceivedMsgTask.isSuccessful()) {
                                         for (DocumentSnapshot doc : getReceivedMsgTask.getResult().getDocuments()) {
-                                            ChatMessage message = ChatMessage.create(doc.getData());
+                                            ChatMessage message = ChatMessage.create(doc.getData(), doc.getId());
                                             if (!petIdsList.contains(message.sendingId)) {
                                                 petIdsList.add(message.sendingId);
                                             }
@@ -223,5 +205,18 @@ public class ModelFirebase {
                         listener.onComplete(new LinkedList<ChatPet>());
                     }
                 });
+    }
+
+    public interface UpdateChatMessageListener {
+        void onComplete();
+    }
+
+    public void updateChatMessage(ChatMessage chatMessage, UpdateChatMessageListener listener){
+        Map<String, Object> json = chatMessage.toJson();
+        db.collection(ChatMessage.COLLECTION_NAME)
+                .document(chatMessage.getId())
+                .set(json)
+                .addOnCompleteListener(unused -> listener.onComplete());
+
     }
 }

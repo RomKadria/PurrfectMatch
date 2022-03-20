@@ -14,4 +14,5 @@
     <string name="Signup">Sign up</string>
     <string name="picture">Picture</string>
     <string name="upload">upload</string>
+    <string name="messagePos">1</string>
 </resources>

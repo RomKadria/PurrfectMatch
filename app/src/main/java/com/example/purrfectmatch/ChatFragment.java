@@ -2,6 +2,7 @@ package com.example.purrfectmatch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -14,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
@@ -29,9 +31,11 @@ import android.widget.Toast;
 
 import com.example.purrfectmatch.model.ChatMessage;
 import com.example.purrfectmatch.model.ChatMessagesModel;
+import com.example.purrfectmatch.model.Model;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class ChatFragment extends Fragment {
     private static final int SELECT_IMAGE = 22;
@@ -126,6 +130,7 @@ public class ChatFragment extends Fragment {
         public Button editSaveBtn;
         public Button editCancelBtn;
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             messageUser = itemView.findViewById(R.id.chat_message_user_tv);
@@ -150,7 +155,26 @@ public class ChatFragment extends Fragment {
             deleteBtn.setOnClickListener(v -> {
             });
 
+
             editSaveBtn.setOnClickListener(v -> {
+                Integer chatMessagePos = (Integer) v.getTag(R.string.messagePos);
+                ChatMessage chatMessage = viewModel.getData(sendingPetId, receivingPetId).getValue().get(chatMessagePos);
+
+                chatMessage.setMessageTime(System.currentTimeMillis());
+                chatMessage.setTextMessage(editMessageText.getText().toString());
+
+                ChatMessagesModel.instance.updateChatMessage(chatMessage, () -> {
+                    editMessageText.setVisibility(View.GONE);
+                    editSaveBtn.setVisibility(View.GONE);
+                    editCancelBtn.setVisibility(View.GONE);
+                    messageText.setVisibility(View.VISIBLE);
+                    messageImg.setVisibility(View.VISIBLE);
+                    refresh();
+//                    Toast.makeText(Model.instance.appContext,  "message updated successfully",
+//                            Toast.LENGTH_SHORT).show();
+
+                });
+
 
             });
 
@@ -174,10 +198,11 @@ public class ChatFragment extends Fragment {
         chooser.putExtra(Intent.EXTRA_INTENT, galleryIntent);
         chooser.putExtra(Intent.EXTRA_TITLE, "how would you like to get your photo");
 
-        Intent[] intentArray =  {cameraIntent};
+        Intent[] intentArray = {cameraIntent};
         chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-        startActivityForResult(chooser,SELECT_IMAGE);
+        startActivityForResult(chooser, SELECT_IMAGE);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -214,6 +239,7 @@ public class ChatFragment extends Fragment {
             this.listener = listener;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -226,6 +252,7 @@ public class ChatFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             ChatMessage chatMessage = viewModel.getData(sendingPetId, receivingPetId).getValue().get(position);
 
+            holder.editSaveBtn.setTag(R.string.messagePos, position);
             holder.messageText.setText(chatMessage.getTextMessage());
             holder.messageUser.setText(chatMessage.getSendingId()); // TODO: get the name?
             holder.messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", chatMessage.getMessageTime()));
