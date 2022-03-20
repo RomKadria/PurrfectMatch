@@ -56,6 +56,11 @@ public class PetListRvFragment extends Fragment {
                         .navigate(PetListRvFragmentDirections
                                 .actionPetListRvFragmentToLoginFragment());
                 return true;
+            case R.id.menu_details_btn:n:
+                Navigation.findNavController(this.getView())
+                        .navigate(PetListRvFragmentDirections
+                                .actionPetListRvFragmentToWatchDetailsFragment());
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
