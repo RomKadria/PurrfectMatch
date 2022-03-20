@@ -119,6 +119,7 @@ public class ChatFragment extends Fragment {
         public TextView messageUser;
         public TextView messageTime;
         public TextView messageText;
+        public ImageView messageImg;
         public ImageView editBtn;
         public ImageView deleteBtn;
         public EditText editMessageText;
@@ -130,6 +131,7 @@ public class ChatFragment extends Fragment {
             messageUser = itemView.findViewById(R.id.chat_message_user_tv);
             messageTime = itemView.findViewById(R.id.chat_message_time_tv);
             messageText = itemView.findViewById(R.id.chat_message_text_tv);
+            messageImg = itemView.findViewById(R.id.chat_message_img);
             editBtn = itemView.findViewById(R.id.chat_message_edit_btn);
             deleteBtn = itemView.findViewById(R.id.chat_message_delete_btn);
             editMessageText = itemView.findViewById(R.id.chat_message_text_et);
@@ -142,6 +144,7 @@ public class ChatFragment extends Fragment {
                 editSaveBtn.setVisibility(View.VISIBLE);
                 editCancelBtn.setVisibility(View.VISIBLE);
                 messageText.setVisibility(View.GONE);
+                messageImg.setVisibility(View.GONE);
             });
 
             deleteBtn.setOnClickListener(v -> {
@@ -156,6 +159,7 @@ public class ChatFragment extends Fragment {
                 editSaveBtn.setVisibility(View.GONE);
                 editCancelBtn.setVisibility(View.GONE);
                 messageText.setVisibility(View.VISIBLE);
+                messageImg.setVisibility(View.VISIBLE);
             });
         }
     }
@@ -225,7 +229,11 @@ public class ChatFragment extends Fragment {
             holder.messageText.setText(chatMessage.getTextMessage());
             holder.messageUser.setText(chatMessage.getSendingId()); // TODO: get the name?
             holder.messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", chatMessage.getMessageTime()));
-//            Picasso.get().load(chatMessage.getPetUrl()).into(holder.petImage);
+
+            String img = chatMessage.getImgUrl();
+            if (img != null && !img.isEmpty()) {
+                Picasso.get().load(img).into(holder.messageImg);
+            }
         }
 
         @Override
