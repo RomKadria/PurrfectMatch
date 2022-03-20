@@ -94,8 +94,6 @@ public class watchDetailsFragment extends Fragment {
         editBtn.setOnClickListener(v -> toggleEdit());
         mapBtn.setOnClickListener(v -> openMap(v));
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
-        nameEt.setEnabled(false);
-
 
         return view;
     }
