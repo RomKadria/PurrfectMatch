@@ -22,6 +22,9 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -64,11 +67,33 @@ public class SignupSTwoFragment extends Fragment {
     String email;
     String password;
 
+    // menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.blank_menu, menu);
+    }
+
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.getActivity().onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_signup_s_two, container, false);
+
+        setHasOptionsMenu(true);
 
         if (getArguments() != null) {
             email = SignupSTwoFragmentArgs.fromBundle(getArguments()).getEmail();

@@ -18,6 +18,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -57,7 +60,6 @@ public class AllLocationsMapFragment extends Fragment {
 
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
         /**
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
@@ -104,6 +106,26 @@ public class AllLocationsMapFragment extends Fragment {
         }
     };
 
+    // menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.blank_menu, menu);
+    }
+
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.getActivity().onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -119,6 +141,8 @@ public class AllLocationsMapFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_all_locations_map, container, false);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireContext());
+
+        setHasOptionsMenu(true);
 
         return view;
     }

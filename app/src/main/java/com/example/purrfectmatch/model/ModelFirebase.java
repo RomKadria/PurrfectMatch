@@ -78,7 +78,7 @@ public class ModelFirebase {
                 .document(pet.getEmail())
                 .set(json);
     }
-
+    
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     public void saveImage(Bitmap imageBitmap, String imageName, Model.SaveImageListener listener) {
@@ -111,6 +111,21 @@ public class ModelFirebase {
                         listener.onComplete(pet);
                     }
                 });
+    }
+
+    public void checkUser(String email, String password, Model.OnUserCheckListener listener){
+        db.collection(Pet.COLLECTION_NAME).
+                whereEqualTo("email", email)
+                .whereEqualTo("password", password)
+                .get()
+                .addOnCompleteListener((user -> {
+                    if (user.getResult().isEmpty())
+                    {
+                        listener.onComplete(false);
+                    } else {
+                        listener.onComplete(true);
+                    }
+                }));
     }
 
     public void checkEmail(String email, Model.OnEmailCheckListener listener){

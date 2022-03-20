@@ -47,8 +47,8 @@
     <fragment
         android:id="@+id/petListRvFragment"
         android:name="com.example.purrfectmatch.PetListRvFragment"
-        android:label="All pets"
-        tools:layout="@layout/fragment_pet_list">
+        android:label="Pet List"
+        tools:layout="@layout/fragment_pet_list" >
         <action
             android:id="@+id/action_petListRvFragment_to_petDetailsFragment"
             app:destination="@id/petDetailsFragment" />
@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_petListRvFragment_to_watchDetailsFragment"
             app:destination="@id/watchDetailsFragment" />
+        <action
+            android:id="@+id/action_petListRvFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/userLocationMapFragment"
