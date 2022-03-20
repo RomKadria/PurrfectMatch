@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/watchDetailsFragment">
+    app:startDestination="@id/signupSOneFragment">
     <fragment
         android:id="@+id/signupSOneFragment"
         android:name="com.example.purrfectmatch.SignupSOneFragment"
-        android:label="fragment_signup_s_one"
-        tools:layout="@layout/fragment_signup_s_one" >
+        android:label="Sign up - step 1"
+        tools:layout="@layout/fragment_signup_s_one">
         <action
             android:id="@+id/action_signupSOneFragment_to_signupSTwoFragment"
             app:destination="@id/signupSTwoFragment" />
@@ -16,8 +16,8 @@
     <fragment
         android:id="@+id/signupSTwoFragment"
         android:name="com.example.purrfectmatch.SignupSTwoFragment"
-        android:label="fragment_signup_s_two"
-        tools:layout="@layout/fragment_signup_s_two" >
+        android:label="Sign up - step 2 "
+        tools:layout="@layout/fragment_signup_s_two">
         <argument
             android:name="email"
             app:argType="string" />
@@ -47,8 +47,8 @@
     <fragment
         android:id="@+id/petListRvFragment"
         android:name="com.example.purrfectmatch.PetListRvFragment"
-        android:label="fragment_pet_list"
-        tools:layout="@layout/fragment_pet_list" >
+        android:label="All pets"
+        tools:layout="@layout/fragment_pet_list">
         <action
             android:id="@+id/action_petListRvFragment_to_petDetailsFragment"
             app:destination="@id/petDetailsFragment" />
@@ -62,12 +62,12 @@
     <fragment
         android:id="@+id/userLocationMapFragment"
         android:name="com.example.purrfectmatch.userLocationMapFragment"
-        android:label="fragment_user_location_map"
+        android:label="Map"
         tools:layout="@layout/fragment_user_location_map" />
     <fragment
         android:id="@+id/allLocationsMapFragment"
         android:name="com.example.purrfectmatch.AllLocationsMapFragment"
-        android:label="AllLocationsMapFragment" >
+        android:label="Users map">
         <action
             android:id="@+id/action_allLocationsMapFragment_to_petDetailsFragment"
             app:destination="@id/petDetailsFragment" />
@@ -79,8 +79,8 @@
     <fragment
         android:id="@+id/watchDetailsFragment"
         android:name="com.example.purrfectmatch.watchDetailsFragment"
-        android:label="fragment_watch_details"
-        tools:layout="@layout/fragment_watch_details" >
+        android:label="Details"
+        tools:layout="@layout/fragment_watch_details">
         <action
             android:id="@+id/action_watchDetailsFragment_self"
             app:destination="@id/watchDetailsFragment" />
