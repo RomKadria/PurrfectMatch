@@ -112,5 +112,11 @@ public class Model {
     public void checkUserValid(String email, String password, OnUserCheckListener listener) {
         modelFirebase.checkUser(email, password, listener);
     }
+    public interface OnEmailCheckListener{
+        void onComplete(boolean exists);
+    }
+    public void checkEmailValid(String email, OnEmailCheckListener listener) {
+        modelFirebase.checkEmail(email, listener);
+    }
 }
 
