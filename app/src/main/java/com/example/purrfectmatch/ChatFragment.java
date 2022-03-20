@@ -9,27 +9,45 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.purrfectmatch.model.ChatMessage;
 import com.example.purrfectmatch.model.ChatMessagesModel;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+
 public class ChatFragment extends Fragment {
+    private static final int SELECT_IMAGE = 22;
+
     ChatMessagesViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
     String sendingPetId;
     String receivingPetId;
+
+    EditText chatEditText;
+    Button chatSendBtn;
+    ImageButton chatCamBtn;
+    ImageView photoIndicatiomImg;
+    private Uri filePath;
+    Bitmap photo;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -71,7 +89,25 @@ public class ChatFragment extends Fragment {
             }
 
         });
+
+        chatEditText = view.findViewById(R.id.chat_text_et);
+        chatSendBtn = view.findViewById(R.id.chat_send_btn);
+        chatCamBtn = view.findViewById(R.id.chat_cam_btn);
+        photoIndicatiomImg = view.findViewById(R.id.chat_camera_img);
+
+        chatCamBtn.setOnClickListener(v -> upload());
+        chatSendBtn.setOnClickListener(v -> sendMsg());
+
         return view;
+    }
+
+    private void sendMsg() {
+        String text = chatEditText.getText().toString();
+
+        // Sending msg only if text was written / photo was taken
+        if (!text.isEmpty() || photo != null) {
+
+        }
     }
 
     private void refresh() {
@@ -121,6 +157,44 @@ public class ChatFragment extends Fragment {
                 editCancelBtn.setVisibility(View.GONE);
                 messageText.setVisibility(View.VISIBLE);
             });
+        }
+    }
+
+    private void upload() {
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT, null);
+        galleryIntent.setType("image/*");
+
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+        Intent chooser = new Intent(Intent.ACTION_CHOOSER);
+        chooser.putExtra(Intent.EXTRA_INTENT, galleryIntent);
+        chooser.putExtra(Intent.EXTRA_TITLE, "how would you like to get your photo");
+
+        Intent[] intentArray =  {cameraIntent};
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+        startActivityForResult(chooser,SELECT_IMAGE);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SELECT_IMAGE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                try {
+                    if (data.getData() != null) {
+                        filePath = data.getData();
+                        photo = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+                    } else {
+                        photo = (Bitmap) data.getExtras().get("data");
+                    }
+
+                    photoIndicatiomImg.setVisibility(View.VISIBLE);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
         }
     }
 
