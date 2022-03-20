@@ -12,6 +12,9 @@ public interface ChatPetDao {
     @Query("select * from ChatPet")
     List<ChatPet> getAll();
 
+    @Query("select * from ChatPet where connectedEmail = :petId")
+    List<ChatPet> getAllConnectedPetChats(String petId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(ChatPet... chatPets);
 }

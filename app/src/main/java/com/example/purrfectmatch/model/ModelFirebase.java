@@ -171,8 +171,7 @@ public class ModelFirebase {
 
     public void getAllChatPets(Long lastUpdateDate, String petId, GetAllChatPetsListener listener) {
         db.collection(ChatMessage.COLLECTION_NAME)
-                // TODO: fix
-//                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+                .whereGreaterThanOrEqualTo("messageTime", new Timestamp(lastUpdateDate, 0))
                 .whereEqualTo("sendingId", petId)
                 .get()
                 .addOnCompleteListener(getSentMsgTask -> {
@@ -187,8 +186,7 @@ public class ModelFirebase {
                         }
 
                         db.collection(ChatMessage.COLLECTION_NAME)
-                                // TODO: fix
-//                                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+                                .whereGreaterThanOrEqualTo("messageTime", new Timestamp(lastUpdateDate, 0))
                                 .whereEqualTo("receivingId", petId)
                                 .get()
                                 .addOnCompleteListener(getReceivedMsgTask -> {
@@ -208,7 +206,7 @@ public class ModelFirebase {
                                                         List<ChatPet> petList = new LinkedList<ChatPet>();
                                                         if (petTask.isSuccessful()) {
                                                             for (QueryDocumentSnapshot doc : petTask.getResult()) {
-                                                                ChatPet pet = ChatPet.create(doc.getData());
+                                                                ChatPet pet = ChatPet.create(doc.getData(), petId);
                                                                 if (pet != null) {
                                                                     petList.add(pet);
                                                                 }
@@ -217,11 +215,13 @@ public class ModelFirebase {
                                                         listener.onComplete(petList);
                                                     });
                                         }
+                                    } else {
+                                        listener.onComplete(new LinkedList<ChatPet>());
                                     }
-                                    listener.onComplete(new LinkedList<ChatPet>());
                                 });
+                    } else {
+                        listener.onComplete(new LinkedList<ChatPet>());
                     }
-                    listener.onComplete(new LinkedList<ChatPet>());
                 });
     }
 }

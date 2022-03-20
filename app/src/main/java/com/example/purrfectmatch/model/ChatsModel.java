@@ -43,7 +43,7 @@ public class ChatsModel {
         chatPetsListLoadingState.setValue(ChatsModel.LoadingState.loading);
 
         // get last local update date
-        Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("chatPetsLastUpdateDate",0);
+        Long lastUpdateDate = ChatPet.getLocalLastUpdated();
 
         // firebase get all updates since lastLocalUpdateDate
         modelFirebase.getAllChatPets(lastUpdateDate, petId, new ModelFirebase.GetAllChatPetsListener() {
@@ -54,21 +54,19 @@ public class ChatsModel {
                     @Override
                     public void run() {
                         Long lud = new Long(0);
+                        AppLocalDb.db.chatPetDao().insertAll();
                         for (ChatPet pet: list) {
                             AppLocalDb.db.chatPetDao().insertAll(pet);
                             if (lud < pet.getUpdateDate()){
                                 lud = pet.getUpdateDate();
                             }
                         }
+
                         // update last local update date
-                        MyApplication.getContext()
-                                .getSharedPreferences("TAG",Context.MODE_PRIVATE)
-                                .edit()
-                                .putLong("chatPetsLastUpdateDate", lud)
-                                .commit();
+                        ChatPet.setLocalLastUpdated(lud);
 
                         //return all data to caller
-                        List<ChatPet> resList = AppLocalDb.db.chatPetDao().getAll();
+                        List<ChatPet> resList = AppLocalDb.db.chatPetDao().getAllConnectedPetChats(petId);
                         chatPetsList.postValue(resList);
                         chatPetsListLoadingState.postValue(ChatsModel.LoadingState.loaded);
                     }

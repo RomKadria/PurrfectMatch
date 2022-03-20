@@ -46,7 +46,7 @@ public class ChatListRvFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list,container,false);
-        petId = "a@a.b";//ChatListRvFragmentArgs.fromBundle(getArguments()).getPetId();
+        petId = ChatListRvFragmentArgs.fromBundle(getArguments()).getPetId();
 
         swipeRefresh = view.findViewById(R.id.chatlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> ChatsModel.instance.refreshChatsList(petId));
