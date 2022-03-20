@@ -22,6 +22,9 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -71,7 +74,7 @@ public class watchDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_watch_details, container, false);
-
+        setHasOptionsMenu(true);
 //        if (getArguments() != null) {
 ////            email = watchDetailsFragmentArgs.fromBundle(getArguments()).getEmail();
 ////            password = watchDetailsFragmentArgs.fromBundle(getArguments()).getPassword();
@@ -96,6 +99,26 @@ public class watchDetailsFragment extends Fragment {
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
 
         return view;
+    }
+
+    // menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.blank_menu, menu);
+    }
+
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.getActivity().onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
