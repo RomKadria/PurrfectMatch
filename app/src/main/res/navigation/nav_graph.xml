@@ -2,28 +2,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph">
-
-<!--    app:startDestination="@id/loginFragment"-->
-
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.purrfectmatch.LoginFragment"
-        android:label="Login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_petListRvFragment"
-            app:destination="@id/petListRvFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_signupSOneFragment"
-            app:destination="@id/signupSOneFragment" />
-    </fragment>
-
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/signupSOneFragment"
         android:name="com.example.purrfectmatch.SignupSOneFragment"
-        android:label="Sign Up"
-        tools:layout="@layout/fragment_signup_s_one" >
+        android:label="Sign up - step 1"
+        tools:layout="@layout/fragment_signup_s_one">
         <action
             android:id="@+id/action_signupSOneFragment_to_signupSTwoFragment"
             app:destination="@id/signupSTwoFragment" />
@@ -31,8 +16,8 @@
     <fragment
         android:id="@+id/signupSTwoFragment"
         android:name="com.example.purrfectmatch.SignupSTwoFragment"
-        android:label="Sign Up"
-        tools:layout="@layout/fragment_signup_s_two" >
+        android:label="Sign up - step 2 "
+        tools:layout="@layout/fragment_signup_s_two">
         <argument
             android:name="email"
             app:argType="string" />
@@ -71,18 +56,21 @@
             android:id="@+id/action_petListRvFragment_to_allLocationsMapFragment"
             app:destination="@id/allLocationsMapFragment" />
         <action
+            android:id="@+id/action_petListRvFragment_to_watchDetailsFragment"
+            app:destination="@id/watchDetailsFragment" />
+        <action
             android:id="@+id/action_petListRvFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/userLocationMapFragment"
         android:name="com.example.purrfectmatch.userLocationMapFragment"
-        android:label="fragment_user_location_map"
+        android:label="Map"
         tools:layout="@layout/fragment_user_location_map" />
     <fragment
         android:id="@+id/allLocationsMapFragment"
         android:name="com.example.purrfectmatch.AllLocationsMapFragment"
-        android:label="All Locations" >
+        android:label="Users map">
         <action
             android:id="@+id/action_allLocationsMapFragment_to_petDetailsFragment"
             app:destination="@id/petDetailsFragment" />
@@ -90,5 +78,29 @@
             android:name="email"
             app:argType="string"
             app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/watchDetailsFragment"
+        android:name="com.example.purrfectmatch.watchDetailsFragment"
+        android:label="Details"
+        tools:layout="@layout/fragment_watch_details">
+        <action
+            android:id="@+id/action_watchDetailsFragment_self"
+            app:destination="@id/watchDetailsFragment" />
+        <action
+            android:id="@+id/action_watchDetailsFragment_to_userLocationMapFragment"
+            app:destination="@id/userLocationMapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.purrfectmatch.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_signupSOneFragment"
+            app:destination="@id/signupSOneFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_petListRvFragment"
+            app:destination="@id/petListRvFragment" />
     </fragment>
 </navigation>

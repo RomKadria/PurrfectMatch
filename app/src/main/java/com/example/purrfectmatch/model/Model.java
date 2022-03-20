@@ -91,6 +91,14 @@ public class Model {
         modelFirebase.addPet(pet);
     }
 
+    public interface UpdatePetListener{
+        void onComplete();
+    }
+
+    public void updatePet(Pet pet, UpdatePetListener listener){
+        modelFirebase.updatePet(pet, listener);
+    }
+
     public interface GetPetById{
         void onComplete(Pet pet);
     }

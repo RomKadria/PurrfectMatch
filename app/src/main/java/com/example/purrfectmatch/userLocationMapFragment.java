@@ -118,7 +118,8 @@ public class userLocationMapFragment extends Fragment {
 
         confirmButton.setOnClickListener(v -> {
             NavHostFragment.findNavController(this).getPreviousBackStackEntry().getSavedStateHandle().set("address", address);
-            Navigation.findNavController(v).popBackStack(R.id.signupSTwoFragment, false);
+//            Navigation.findNavController(v).popBackStack(R.id.signupSTwoFragment, false);
+            Navigation.findNavController(v).popBackStack();
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
