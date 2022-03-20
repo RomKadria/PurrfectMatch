@@ -1,10 +1,9 @@
 package com.example.purrfectmatch;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -16,13 +15,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
-import com.example.purrfectmatch.model.Pet;
+import com.example.purrfectmatch.model.SaveSharedPreference;
 
 
 public class LoginFragment extends Fragment {
-
-
-    boolean userValid = false;
 
     @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,66 +32,48 @@ public class LoginFragment extends Fragment {
             EditText passwordInput = view.findViewById(R.id.signin_password_input);
             CheckBox saveLoginCheckBox = view.findViewById(R.id.signin_login_checkbox);
 
-            // if login is remembered
-            SharedPreferences loginPreferences = this.getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
-            Boolean saveLogin = loginPreferences.getBoolean("saveLogin", false);
-            if (saveLogin) {
-                emailInput.setText(loginPreferences.getString("email", ""));
-                passwordInput.setText(loginPreferences.getString("password", ""));
-                saveLoginCheckBox.setChecked(true);
-            }
+            // fill fields
+            emailInput.setText(SaveSharedPreference.getEmail(getActivity().getApplicationContext()));
+            passwordInput.setText(SaveSharedPreference.getPassword(getActivity().getApplicationContext()));
+            saveLoginCheckBox.setChecked(SaveSharedPreference.getLogin(getActivity().getApplicationContext()));
 
             // on sign in
             signInButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
 
-                    Toast blankInputToast = Toast.makeText(getActivity().getApplicationContext(),
-                            "You must fill all required fields!",
-                            Toast.LENGTH_SHORT);
-
-                    Toast wrongInputToast = Toast.makeText(getActivity().getApplicationContext(),
-                            "Your email or password is incorrect",
-                            Toast.LENGTH_SHORT);
-
-                    Toast successInputToast = Toast.makeText(getActivity().getApplicationContext(),
-                            "success",
-                            Toast.LENGTH_SHORT);
-
-
                     String email = emailInput.getText().toString();
                     String password = passwordInput.getText().toString();
+                    Toast alertToast = null;
 
 
                     if (email.isEmpty() || password.isEmpty()) {
-                        blankInputToast.show();
+                        alertToast.makeText(getActivity().getApplicationContext(),
+                                "You must fill all required fields!",
+                                Toast.LENGTH_SHORT)
+                                .show();
 
                     } else {
-
                         // user validation
                         Model.instance.checkUserValid(email, password, valid -> {
-                            userValid = valid;
-                        });
 
-
-                        if (!userValid){
-                            wrongInputToast.show();
-                        } else {
-                            if (saveLoginCheckBox.isChecked()) {
-                                loginPrefsEditor.putBoolean("saveLogin", true);
-                                loginPrefsEditor.putString("username", email);
-                                loginPrefsEditor.putString("password", password);
-                                loginPrefsEditor.commit();
+                            if (!valid){
+                                alertToast.makeText(getActivity().getApplicationContext(),
+                                        "Your email or password is incorrect",
+                                        Toast.LENGTH_SHORT)
+                                        .show();
                             } else {
-                                loginPrefsEditor.clear();
-                                loginPrefsEditor.commit();
+                                setLoginPref(email, password, saveLoginCheckBox.isChecked());
+
+                                alertToast.makeText(getActivity().getApplicationContext(),
+                                        "success",
+                                        Toast.LENGTH_SHORT)
+                                        .show();
+
+                                Navigation.findNavController(v)
+                                        .navigate(LoginFragmentDirections
+                                                .actionLoginFragmentToPetListRvFragment());
                             }
-
-                            successInputToast.show();
-
-                            Navigation.findNavController(v)
-                                      .navigate(LoginFragmentDirections
-                                      .actionLoginFragmentToPetListRvFragment());                       }
+                        });
                     }
                 }
             });
@@ -110,5 +88,16 @@ public class LoginFragment extends Fragment {
             });
 
             return view;
+        }
+
+        public void setLoginPref(String email, String password, boolean isChecked) {
+            SaveSharedPreference.setEmail(getActivity().getApplicationContext(), email);
+            SaveSharedPreference.setPassword(getActivity().getApplicationContext(), password);
+
+            if (isChecked) {
+                SaveSharedPreference.setLogin(getActivity().getApplicationContext(), true);
+            } else {
+                SaveSharedPreference.setLogin(getActivity().getApplicationContext(), false);
+            }
         }
     }
