@@ -105,8 +105,6 @@ public class SignupSOneFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
 
-    public boolean validateEmail() {
-        final boolean[] isExists = {true};
     public void validateEmail() {
         String email = etEmail.getText().toString().trim();
         boolean matchFound = email.matches(emailPattern);
