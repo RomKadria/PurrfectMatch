@@ -2,12 +2,27 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/signupSOneFragment">
+    android:id="@+id/nav_graph">
+
+<!--    app:startDestination="@id/loginFragment"-->
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.purrfectmatch.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_petListRvFragment"
+            app:destination="@id/petListRvFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_signupSOneFragment"
+            app:destination="@id/signupSOneFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/signupSOneFragment"
         android:name="com.example.purrfectmatch.SignupSOneFragment"
-        android:label="fragment_signup_s_one"
+        android:label="Sign Up"
         tools:layout="@layout/fragment_signup_s_one" >
         <action
             android:id="@+id/action_signupSOneFragment_to_signupSTwoFragment"
@@ -16,7 +31,7 @@
     <fragment
         android:id="@+id/signupSTwoFragment"
         android:name="com.example.purrfectmatch.SignupSTwoFragment"
-        android:label="fragment_signup_s_two"
+        android:label="Sign Up"
         tools:layout="@layout/fragment_signup_s_two" >
         <argument
             android:name="email"
@@ -47,7 +62,7 @@
     <fragment
         android:id="@+id/petListRvFragment"
         android:name="com.example.purrfectmatch.PetListRvFragment"
-        android:label="fragment_pet_list"
+        android:label="Pet List"
         tools:layout="@layout/fragment_pet_list" >
         <action
             android:id="@+id/action_petListRvFragment_to_petDetailsFragment"
@@ -55,6 +70,9 @@
         <action
             android:id="@+id/action_petListRvFragment_to_allLocationsMapFragment"
             app:destination="@id/allLocationsMapFragment" />
+        <action
+            android:id="@+id/action_petListRvFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/userLocationMapFragment"
@@ -64,7 +82,7 @@
     <fragment
         android:id="@+id/allLocationsMapFragment"
         android:name="com.example.purrfectmatch.AllLocationsMapFragment"
-        android:label="AllLocationsMapFragment" >
+        android:label="All Locations" >
         <action
             android:id="@+id/action_allLocationsMapFragment_to_petDetailsFragment"
             app:destination="@id/petDetailsFragment" />

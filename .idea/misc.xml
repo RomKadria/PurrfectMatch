@@ -4,22 +4,19 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Eran/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/activity_main.xml" value="0.21467391304347827" />
-        <entry key="..\:/Users/Eran/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_SignupSOne.xml" value="0.33" />
-        <entry key="..\:/Users/Eran/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_all_locations_map.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/Eran/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_blank.xml" value="0.28940217391304346" />
-        <entry key="..\:/Users/Eran/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_blank2.xml" value="0.28940217391304346" />
-        <entry key="..\:/Users/Eran/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_map.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/Eran/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_signup_s_one.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/Eran/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_signup_s_two.xml" value="0.75" />
-        <entry key="..\:/Users/Eran/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_signup_step_one.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/Eran/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_user_location_map.xml" value="0.26510416666666664" />
-        <entry key="..\:/Users/RomKa/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/activity_main.xml" value="0.2359375" />
-        <entry key="..\:/Users/RomKa/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_SignupSTwo.xml" value="0.2359375" />
-        <entry key="..\:/Users/RomKa/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_all_locations_map.xml" value="0.12158054711246201" />
-        <entry key="..\:/Users/RomKa/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_blank.xml" value="0.2359375" />
-        <entry key="..\:/Users/RomKa/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_signup_s_one.xml" value="0.13677536231884058" />
-        <entry key="..\:/Users/RomKa/AndroidStudioProjects/PurrfectMatch/app/src/main/res/layout/fragment_signup_s_two.xml" value="0.2" />
-        <entry key="..\:/Users/yuval/source/repos/PurrfectMatch/app/src/main/res/layout/fragment_pet_details.xml" value="0.240625" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/layout/activity_main.xml" value="0.16486486486486487" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/layout/content_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/layout/fragment_all_locations_map.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/layout/fragment_login.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/layout/fragment_pet_details.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/layout/fragment_pet_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/layout/fragment_signup_s_one.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/layout/fragment_signup_s_two.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/layout/pet_list_card.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/layout/toolbar.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/menu/app_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/technology/Desktop/android/PurrfectMatch/app/src/main/res/menu/blank_menu.xml" value="0.17037037037037037" />
       </map>
     </option>
   </component>

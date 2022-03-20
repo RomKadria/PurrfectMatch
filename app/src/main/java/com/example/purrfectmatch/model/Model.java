@@ -105,6 +105,13 @@ public class Model {
     public void saveImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
         modelFirebase.saveImage(imageBitmap,imageName,listener);
     }
+
+    public interface OnUserCheckListener{
+        void onComplete(boolean valid);
+    }
+    public void checkUserValid(String email, String password, OnUserCheckListener listener) {
+        modelFirebase.checkUser(email, password, listener);
+    }
     public interface OnEmailCheckListener{
         void onComplete(boolean exists);
     }
