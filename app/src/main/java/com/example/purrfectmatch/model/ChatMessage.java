@@ -22,23 +22,37 @@ public class ChatMessage {
     String textMessage;
     String imgUrl;
     long messageTime;
+    String id;
 
-    public ChatMessage(){}
 
-    public ChatMessage(String sendingId, String receivingId, String textMessage, String imgUrl) {
+
+    public ChatMessage() {
+    }
+
+    public ChatMessage(String sendingId, String receivingId, String textMessage, String imgUrl, String id) {
         this.sendingId = sendingId;
         this.receivingId = receivingId;
         this.textMessage = textMessage;
         this.imgUrl = imgUrl;
         this.messageTime = new Date().getTime();
+        this.id = id;
     }
-    
-    public ChatMessage(String sendingId, String receivingId, String textMessage, String imgUrl, long messageTime) {
+
+    public ChatMessage(String sendingId, String receivingId, String textMessage, String imgUrl, long messageTime, String id) {
         this.sendingId = sendingId;
         this.receivingId = receivingId;
         this.textMessage = textMessage;
         this.imgUrl = imgUrl;
         this.messageTime = messageTime;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getReceivingId() {
@@ -92,14 +106,14 @@ public class ChatMessage {
         return json;
     }
 
-    public static ChatMessage create(Map<String, Object> json) {
+    public static ChatMessage create(Map<String, Object> json, String id) {
         String sendingId = (String) json.get("sendingId");
         String receivingId = (String) json.get("receivingId");
         String textMessage = (String) json.get("textMessage");
         String imgUrl = (String) json.get("imgUrl");
         Timestamp ts = (Timestamp) json.get("messageTime");
         Long messageTime = ts.getSeconds();
-        ChatMessage message = new ChatMessage(sendingId, receivingId, textMessage, imgUrl, messageTime);
+        ChatMessage message = new ChatMessage(sendingId, receivingId, textMessage, imgUrl, messageTime, id);
         return message;
     }
 }

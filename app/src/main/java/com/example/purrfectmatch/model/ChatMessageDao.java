@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -21,4 +22,7 @@ public interface ChatMessageDao {
 
     @Delete
     void delete(ChatMessage chatMessage);
+
+    @Update
+    void update(ChatMessage chatMessage);
 }

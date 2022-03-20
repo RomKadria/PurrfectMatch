@@ -99,6 +99,22 @@ public class ChatMessagesModel {
         modelFirebase.addChatMessage(chatMessage);
     }
 
+    public void updateChatMessage(ChatMessage chatMessage, ModelFirebase.UpdateChatMessageListener listener) {
+        modelFirebase.updateChatMessage(chatMessage, new ModelFirebase.UpdateChatMessageListener() {
+            @Override
+            public void onComplete() {
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppLocalDb.db.chatMessageDao().update(chatMessage);
+                        listener.onComplete();
+                    }
+                });
+            }
+        });
+    }
+
+
     // TODO: check if need this
 //    public interface GetPetById{
 //        void onComplete(Pet pet);
