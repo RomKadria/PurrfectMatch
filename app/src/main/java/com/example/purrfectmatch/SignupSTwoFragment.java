@@ -85,10 +85,6 @@ public class SignupSTwoFragment extends Fragment {
         imageIv = view.findViewById(R.id.signupSTwo_image_iv);
         progressBar = view.findViewById(R.id.signupSTwo_progressbar);
         progressBar.setVisibility(View.GONE);
-//        agePicker = view.findViewById(R.id.signupSTwo_age_np);
-//        agePicker.setMaxValue(120);
-//        agePicker.setMinValue(0);
-
         signUpBtn.setOnClickListener(v -> signUp(v));
         uploadBtn.setOnClickListener(v -> upload());
         mapBtn.setOnClickListener(v -> openMap(v));
@@ -136,7 +132,7 @@ public class SignupSTwoFragment extends Fragment {
             String name = nameEt.getText().toString();
             int age = Integer.parseInt(ageEt.getText().toString());
             String address = addressEt.getText().toString();
-            String about = addressEt.getText().toString();
+            String about = aboutEt.getText().toString();
 
             if (age < MIN_AGE || age > MAX_AGE) {
                 Toast.makeText(getActivity(), "Age must be between " + MIN_AGE + " and " + MAX_AGE, Toast.LENGTH_SHORT).show();
@@ -146,11 +142,9 @@ public class SignupSTwoFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
             } else { // All good lets add the pet
                 Model.instance.saveImage(photo, email + ".jpg", url -> {
-//                    Toast.makeText(getActivity(), "add image success", Toast.LENGTH_SHORT).show();
 
                 Pet pet = new Pet(email, name, age, address, about, password, url, latitude, longitude);
                 Model.instance.addPet(pet, () -> {
-//                    Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
 
                        Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToPetListRvFragment());

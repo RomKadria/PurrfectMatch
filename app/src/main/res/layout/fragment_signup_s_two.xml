@@ -60,20 +60,6 @@
         app:layout_constraintStart_toEndOf="@+id/signupSTwo_age_tv"
         tools:ignore="SpeakableTextPresentCheck" />
 
-<!--    <NumberPicker-->
-<!--        android:id="@+id/age_np"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="8dp"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        android:text="@string/Age"-->
-<!--        android:textSize="24sp"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:orientation="vertical"-->
-<!--        app:layout_constraintBaseline_toBaselineOf="@+id/signupSTwo_age_tv"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/signupSTwo_age_tv" />-->
-
     <TextView
         android:id="@+id/signupSTwo_address_tv"
         android:layout_width="wrap_content"
@@ -100,20 +86,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/signupSTwo_address_tv"
         tools:ignore="SpeakableTextPresentCheck" />
-
-<!--    <EditText-->
-<!--        android:id="@+id/signupSTwo_address_et"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="8dp"-->
-<!--        android:layout_marginEnd="8dp"-->
-<!--        android:ems="10"-->
-<!--        android:inputType="text"-->
-<!--        android:textSize="24sp"-->
-<!--        app:layout_constraintBaseline_toBaselineOf="@+id/signupSTwo_address_tv"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/signupSTwo_address_tv"-->
-<!--        tools:ignore="SpeakableTextPresentCheck" />-->
 
     <TextView
         android:id="@+id/signupSTwo_about_tv"
@@ -187,16 +159,6 @@
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toEndOf="@+id/signupSTwo_upload_btn"
         app:layout_constraintTop_toBottomOf="@+id/signupSTwo_about_tv" />
-
-<!--    <NumberPicker-->
-<!--        android:id="@+id/signupSTwo_age_np"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/signupSTwo_image_iv"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/signupSTwo_about_tv"-->
-<!--        android:descendantFocusability="blocksDescendants"-->
-<!--        app:layout_constraintHorizontal_bias="0.5"/>-->
-
 
     <ProgressBar
         android:id="@+id/signupSTwo_progressbar"

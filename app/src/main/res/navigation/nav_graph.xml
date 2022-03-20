@@ -80,5 +80,12 @@
         android:id="@+id/watchDetailsFragment"
         android:name="com.example.purrfectmatch.watchDetailsFragment"
         android:label="fragment_watch_details"
-        tools:layout="@layout/fragment_watch_details" />
+        tools:layout="@layout/fragment_watch_details" >
+        <action
+            android:id="@+id/action_watchDetailsFragment_self"
+            app:destination="@id/watchDetailsFragment" />
+        <action
+            android:id="@+id/action_watchDetailsFragment_to_userLocationMapFragment"
+            app:destination="@id/userLocationMapFragment" />
+    </fragment>
 </navigation>

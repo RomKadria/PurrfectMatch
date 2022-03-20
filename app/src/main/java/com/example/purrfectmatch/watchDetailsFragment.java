@@ -64,7 +64,6 @@ public class watchDetailsFragment extends Fragment {
     Double longitude;
     String email;
     String password;
-
     Boolean isEdit = false;
 
     @Override
@@ -89,12 +88,13 @@ public class watchDetailsFragment extends Fragment {
         imageIv = view.findViewById(R.id.watchDetails_image_iv);
         progressBar = view.findViewById(R.id.watchDetails_progressbar);
         progressBar.setVisibility(View.GONE);
-
-        updateBtn.setOnClickListener(v -> signUp(v));
+        mapBtn.setEnabled(false);
+        updateBtn.setOnClickListener(v -> update(v));
         uploadBtn.setOnClickListener(v -> upload());
         editBtn.setOnClickListener(v -> toggleEdit());
         mapBtn.setOnClickListener(v -> openMap(v));
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
+        nameEt.setEnabled(false);
 
 
         return view;
@@ -108,13 +108,14 @@ public class watchDetailsFragment extends Fragment {
                 .getSavedStateHandle()
                 .getLiveData("address");
         liveData.observe(getViewLifecycleOwner(), address -> {
+            toggleEdit();
             addressEt.setText(address.getAddressLine(0));
             latitude = address.getLatitude();
             longitude = address.getLongitude();
         });
     }
 
-    private void signUp(View v) {
+    private void update(View v) {
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -138,24 +139,22 @@ public class watchDetailsFragment extends Fragment {
             String name = nameEt.getText().toString();
             int age = Integer.parseInt(ageEt.getText().toString());
             String address = addressEt.getText().toString();
-            String about = addressEt.getText().toString();
+            String about = aboutEt.getText().toString();
 
             if (age < MIN_AGE || age > MAX_AGE) {
                 Toast.makeText(getActivity(), "Age must be between " + MIN_AGE + " and " + MAX_AGE, Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
-            } else if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(getActivity(), "missing data from last phase, please restart the process", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
+//            } else if (email.isEmpty() || password.isEmpty()) {
+//                Toast.makeText(getActivity(), "missing data from last phase, please restart the process", Toast.LENGTH_SHORT).show();
+//                progressBar.setVisibility(View.GONE);
             } else { // All good lets add the pet
                 Model.instance.saveImage(photo, email + ".jpg", url -> {
-//                    Toast.makeText(getActivity(), "add image success", Toast.LENGTH_SHORT).show();
 
-                    Pet pet = new Pet(email, name, age, address, about, password, url, latitude, longitude);
-                    Model.instance.addPet(pet, () -> {
-//                    Toast.makeText(getActivity(), "Add pet success", Toast.LENGTH_SHORT).show();
+                    Pet pet = new Pet("a@a.a", name, age, address, about, "123456", url, latitude, longitude);
+                    Model.instance.updatePet(pet, () -> {
                         progressBar.setVisibility(View.GONE);
 
-//                        Navigation.findNavController(v).navigate(watchDetailsFragmentDirections.actionwatchDetailsFragmentToPetListRvFragment());
+                        toggleEdit();
                     });
                 });
             }
@@ -168,12 +167,14 @@ public class watchDetailsFragment extends Fragment {
             ageEt.setEnabled(true);
             aboutEt.setEnabled(true);
             updateBtn.setVisibility(View.VISIBLE);
+            mapBtn.setEnabled(true);
             isEdit = true;
         } else {
             nameEt.setEnabled(false);
             ageEt.setEnabled(false);
             aboutEt.setEnabled(false);
             updateBtn.setVisibility(View.INVISIBLE);
+            mapBtn.setEnabled(false);
             isEdit = false;
         }
     }
@@ -194,7 +195,8 @@ public class watchDetailsFragment extends Fragment {
     }
 
     private void openMap(View v) {
-//        Navigation.findNavController(v).navigate(watchDetailsFragmentDirections.actionwatchDetailsFragmentToUserLocationMapFragment());
+        toggleEdit();
+        Navigation.findNavController(v).navigate(watchDetailsFragmentDirections.actionWatchDetailsFragmentToUserLocationMapFragment());
     }
 
     @Override

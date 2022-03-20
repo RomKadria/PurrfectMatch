@@ -63,6 +63,15 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
+    public void updatePet(Pet pet, Model.UpdatePetListener listener) {
+        Map<String, Object> json = pet.toJson();
+        db.collection(Pet.COLLECTION_NAME)
+                .document(pet.getEmail())
+                .set(json)
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
+    }
+
     public void addPet(Pet pet) {
         Map<String, Object> json = pet.toJson();
         db.collection(Pet.COLLECTION_NAME)

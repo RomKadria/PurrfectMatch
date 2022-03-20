@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/watchDetails_name_tv"
         tools:ignore="SpeakableTextPresentCheck"
-        android:enabled="false"/>
+        android:enabled="true"/>
 
     <TextView
         android:id="@+id/watchDetails_age_tv"
