@@ -71,6 +71,9 @@
         <action
             android:id="@+id/action_petListRvFragment_to_allLocationsMapFragment"
             app:destination="@id/allLocationsMapFragment" />
+        <action
+            android:id="@+id/action_petListRvFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/userLocationMapFragment"

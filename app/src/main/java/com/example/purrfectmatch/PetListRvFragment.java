@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.example.purrfectmatch.model.Model;
 import com.example.purrfectmatch.model.Pet;
+import com.example.purrfectmatch.model.SaveSharedPreference;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
@@ -37,10 +38,32 @@ public class PetListRvFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(PetListRvViewModel.class);
     }
 
+    // create an action bar button
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.app_menu, menu);
+    }
+
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_logout_btn) {
+            SaveSharedPreference.clearAll(this.getActivity().getApplicationContext());
+            Navigation.findNavController(this.getView())
+                    .navigate(PetListRvFragmentDirections
+                            .actionPetListRvFragmentToLoginFragment());
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pet_list,container,false);
+
+        setHasOptionsMenu(true);
 
         swipeRefresh = view.findViewById(R.id.petlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshPetList());
@@ -64,7 +87,6 @@ public class PetListRvFragment extends Fragment {
                 String petId = viewModel.getData().getValue().get(position).getEmail();
 
                Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToPetDetailsFragment(petId));
-
             }
         });
 
