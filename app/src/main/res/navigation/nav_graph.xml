@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/signupSOneFragment">
+    app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/signupSOneFragment"
         android:name="com.example.purrfectmatch.SignupSOneFragment"
@@ -90,5 +90,17 @@
         <action
             android:id="@+id/action_watchDetailsFragment_to_userLocationMapFragment"
             app:destination="@id/userLocationMapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.purrfectmatch.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_signupSOneFragment"
+            app:destination="@id/signupSOneFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_petListRvFragment"
+            app:destination="@id/petListRvFragment" />
     </fragment>
 </navigation>
