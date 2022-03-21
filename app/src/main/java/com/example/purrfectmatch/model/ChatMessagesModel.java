@@ -2,10 +2,12 @@ package com.example.purrfectmatch.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -93,6 +95,7 @@ public class ChatMessagesModel {
         void onComplete();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void addChatMessage(ChatMessage chatMessage, AddChatMessageListener listener) {
         modelFirebase.addChatMessage(chatMessage, () -> {
             listener.onComplete();
@@ -100,10 +103,12 @@ public class ChatMessagesModel {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void addChatMessage(ChatMessage chatMessage) {
         modelFirebase.addChatMessage(chatMessage);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateChatMessage(ChatMessage chatMessage, UpdateChatMessageListener listener) {
         modelFirebase.updateChatMessage(chatMessage, () -> {
             listener.onComplete();
