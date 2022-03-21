@@ -2,8 +2,10 @@ package com.example.purrfectmatch.model;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -88,6 +90,7 @@ public class ModelFirebase {
                 .set(json);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void addChatMessage(ChatMessage chatMessage, ChatMessagesModel.AddChatMessageListener listener) {
         Map<String, Object> json = chatMessage.toJson();
         db.collection(ChatMessage.COLLECTION_NAME)
@@ -97,6 +100,7 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void addChatMessage(ChatMessage chatMessage) {
         Map<String, Object> json = chatMessage.toJson();
         db.collection(ChatMessage.COLLECTION_NAME)
@@ -221,6 +225,7 @@ public class ModelFirebase {
                 });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateChatMessage(ChatMessage chatMessage, ChatMessagesModel.UpdateChatMessageListener listener){
         Map<String, Object> json = chatMessage.toJson();
         db.collection(ChatMessage.COLLECTION_NAME)

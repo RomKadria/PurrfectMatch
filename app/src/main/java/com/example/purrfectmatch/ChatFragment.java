@@ -159,7 +159,7 @@ public class ChatFragment extends Fragment {
                 Integer chatMessagePos = (Integer) v.getTag(R.string.messagePos);
                 ChatMessage chatMessage = viewModel.getData().getValue().get(chatMessagePos);
 
-                chatMessage.setMessageTime(System.currentTimeMillis());
+                chatMessage.setMessageTime(new Timestamp(new Date()).getSeconds());
                 chatMessage.setIsDeleted(true);
 
                 ChatMessagesModel.instance.updateChatMessage(chatMessage, () -> {
