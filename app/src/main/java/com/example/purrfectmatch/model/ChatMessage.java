@@ -1,11 +1,13 @@
 package com.example.purrfectmatch.model;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FieldValue;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -15,13 +17,14 @@ import java.util.Map;
 public class ChatMessage {
     final public static String COLLECTION_NAME = "messages";
 
-    @PrimaryKey
-    @NonNull
+
     String sendingId;
     String receivingId;
     String textMessage;
     String imgUrl;
     long messageTime;
+    @PrimaryKey
+    @NonNull
     String id;
 
 
@@ -96,13 +99,14 @@ public class ChatMessage {
         this.messageTime = messageTime;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("sendingId", sendingId);
         json.put("receivingId", receivingId);
         json.put("textMessage", textMessage);
         json.put("imgUrl", imgUrl);
-        json.put("messageTime", messageTime);
+        json.put("messageTime", new Timestamp(messageTime, 0));
         return json;
     }
 
