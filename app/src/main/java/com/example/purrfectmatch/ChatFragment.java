@@ -106,11 +106,11 @@ public class ChatFragment extends Fragment {
             String textMsg = chatEditText.getText().toString();
             ChatMessage msg = new ChatMessage(sendingPetId, receivingPetId, textMsg, null, null);
             if (photo == null){
-                ChatMessagesModel.instance.addChatMessage(msg);
+                ChatMessagesModel.instance.addChatMessage(msg, () -> {});
             }else{
                 Model.instance.saveImage(photo,Timestamp.now().toString() + ".jpg", url -> {
                     msg.setImgUrl(url);
-                    ChatMessagesModel.instance.addChatMessage(msg);
+                    ChatMessagesModel.instance.addChatMessage(msg, () -> {});
                 });
             }
         }
@@ -171,10 +171,6 @@ public class ChatFragment extends Fragment {
                     editCancelBtn.setVisibility(View.GONE);
                     messageText.setVisibility(View.VISIBLE);
                     messageImg.setVisibility(View.VISIBLE);
-                    refresh();
-//                    Toast.makeText(Model.instance.appContext,  "message updated successfully",
-//                            Toast.LENGTH_SHORT).show();
-
                 });
 
 

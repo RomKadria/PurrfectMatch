@@ -218,17 +218,13 @@ public class ModelFirebase {
                 });
     }
 
-    public interface UpdateChatMessageListener {
-        void onComplete();
-    }
-
-    public void updateChatMessage(ChatMessage chatMessage, UpdateChatMessageListener listener){
+    public void updateChatMessage(ChatMessage chatMessage, ChatMessagesModel.UpdateChatMessageListener listener){
         Map<String, Object> json = chatMessage.toJson();
         db.collection(ChatMessage.COLLECTION_NAME)
                 .document(chatMessage.getId())
                 .set(json)
-                .addOnCompleteListener(unused -> listener.onComplete());
-
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
     }
 
     public void checkUser(String email, String password, Model.OnUserCheckListener listener){
