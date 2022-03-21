@@ -16,8 +16,8 @@ public class ChatPet extends Pet {
     public ChatPet(){
         super();
     }
-    public ChatPet( String email, String name, int age, String address, String description, String password, String petUrl, String connectedEmail) {
-        super(email, name, age, address, description, password, petUrl);
+    public ChatPet( String email, String name, int age, String address, String description, String password, String petUrl, double latitude, double longitude, String connectedEmail) {
+        super(email, name, age, address, description, password, petUrl, latitude, longitude);
         this.connectedEmail = connectedEmail;
     }
 
@@ -37,7 +37,9 @@ public class ChatPet extends Pet {
         String petUrl = (String) json.get("petUrl");
         Timestamp ts = (Timestamp)json.get("updateDate");
         Long updateDate = ts.getSeconds();
-        ChatPet pet = new ChatPet(email,name,age,address,description, password, petUrl, connectedEmail);
+        double latitude = Double.parseDouble(json.get("latitude").toString());
+        double longitude = Double.parseDouble(json.get("longitude").toString());
+        ChatPet pet = new ChatPet(email,name,age,address,description, password, petUrl, latitude, longitude, connectedEmail);
         pet.setUpdateDate(updateDate);
         return pet;
     }

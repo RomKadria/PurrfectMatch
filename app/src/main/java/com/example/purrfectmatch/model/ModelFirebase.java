@@ -205,6 +205,8 @@ public class ModelFirebase {
                                                         }
                                                         listener.onComplete(petList);
                                                     });
+                                        } else {
+                                            listener.onComplete(new LinkedList<ChatPet>());
                                         }
                                     } else {
                                         listener.onComplete(new LinkedList<ChatPet>());

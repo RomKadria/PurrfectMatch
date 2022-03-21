@@ -17,24 +17,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/pc_pet_image"
-        android:layout_width="147dp"
-        android:layout_height="145dp"
-        android:layout_weight="1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        <ImageView
+            android:id="@+id/pc_pet_image"
+            android:layout_width="wrap_content"
+            android:layout_height="145dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_weight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.06"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/pc_pet_name"
-        android:layout_width="147dp"
-        android:layout_height="45dp"
-        android:layout_marginLeft="10dp"
-        android:text="TextView"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/pc_pet_image"
-        app:layout_constraintLeft_toRightOf="@id/pc_pet_image"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/pc_pet_name"
+            android:layout_width="147dp"
+            android:layout_height="45dp"
+            android:text="TextView"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.14"
+            app:layout_constraintStart_toEndOf="@id/pc_pet_image"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.497" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

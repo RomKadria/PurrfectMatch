@@ -13,6 +13,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -75,6 +78,12 @@ public class PetListRvFragment extends Fragment {
         FloatingActionButton watchMap = view.findViewById(R.id.petlist_watchMap_fb);
         watchMap.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToAllLocationsMapFragment(null));
+        });
+
+        FloatingActionButton watchChats = view.findViewById(R.id.petlist_watchChats_fb);
+        watchChats.setOnClickListener(v -> {
+            String connectedEmail = SaveSharedPreference.getEmail(getActivity().getApplicationContext());
+            Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToPetChatsFragment(connectedEmail));
         });
 
         RecyclerView list = view.findViewById(R.id.petlist_rv);

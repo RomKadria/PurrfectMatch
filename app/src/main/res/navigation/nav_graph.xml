@@ -59,6 +59,9 @@
             android:id="@+id/action_petListRvFragment_to_allLocationsMapFragment"
             app:destination="@id/allLocationsMapFragment" />
         <action
+            android:id="@+id/action_petListRvFragment_to_PetChatsFragment"
+            app:destination="@id/chatListRvFragment" />
+        <action
             android:id="@+id/action_petListRvFragment_to_watchDetailsFragment"
             app:destination="@id/watchDetailsFragment" />
         <action
