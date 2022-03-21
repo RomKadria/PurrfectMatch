@@ -102,7 +102,7 @@ public class ChatMessage {
         json.put("receivingId", receivingId);
         json.put("textMessage", textMessage);
         json.put("imgUrl", imgUrl);
-        json.put("updateDate", FieldValue.serverTimestamp());
+        json.put("messageTime", messageTime);
         return json;
     }
 
