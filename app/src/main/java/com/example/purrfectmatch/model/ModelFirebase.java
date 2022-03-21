@@ -143,6 +143,7 @@ public class ModelFirebase {
         db.collection(ChatMessage.COLLECTION_NAME)
                 .whereGreaterThanOrEqualTo("messageTime", new Timestamp(lastUpdateDate, 0))
                 .whereIn("sendingId", Arrays.asList(sendingId, receivingId))
+                .whereEqualTo("isDeleted", false)
                 .get()
                 .addOnCompleteListener(task -> {
                     List<ChatMessage> list = new LinkedList<ChatMessage>();
@@ -164,6 +165,7 @@ public class ModelFirebase {
         db.collection(ChatMessage.COLLECTION_NAME)
                 .whereGreaterThanOrEqualTo("messageTime", new Timestamp(lastUpdateDate, 0))
                 .whereEqualTo("sendingId", petId)
+                .whereEqualTo("isDeleted", false)
                 .get()
                 .addOnCompleteListener(getSentMsgTask -> {
                     List<String> petIdsList = new LinkedList<String>();
@@ -179,6 +181,7 @@ public class ModelFirebase {
                         db.collection(ChatMessage.COLLECTION_NAME)
                                 .whereGreaterThanOrEqualTo("messageTime", new Timestamp(lastUpdateDate, 0))
                                 .whereEqualTo("receivingId", petId)
+                                .whereEqualTo("isDeleted", false)
                                 .get()
                                 .addOnCompleteListener(getReceivedMsgTask -> {
                                     if (getReceivedMsgTask.isSuccessful()) {
