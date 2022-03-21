@@ -126,6 +126,14 @@ public class ChatMessagesModel {
                 @Override
                 public void run() {
                     AppLocalDb.db.chatMessageDao().delete(chatMessage);
+
+                    if (AppLocalDb.db.chatMessageDao().getAllChatMessages(chatMessage.sendingId, chatMessage.receivingId).isEmpty()) {
+                        List<ChatPet> pets = AppLocalDb.db.chatPetDao().getById(chatMessage.receivingId);
+                        if (!pets.isEmpty()) {
+                            ChatPet petToDelete = pets.get(0);
+                            AppLocalDb.db.chatPetDao().delete(petToDelete);
+                        }
+                    }
                 }});
             refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId);
         });
