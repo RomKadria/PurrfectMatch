@@ -266,7 +266,7 @@ public class ChatFragment extends Fragment {
             holder.deleteBtn.setTag(R.string.messagePos, position);
             holder.messageText.setText(chatMessage.getTextMessage());
             holder.messageUser.setText(chatMessage.getSendingId()); // TODO: get the name?
-            holder.messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", chatMessage.getMessageTime()));
+            holder.messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", chatMessage.getMessageTime() * 1000));
 
             String img = chatMessage.getImgUrl();
             if (img != null && !img.isEmpty()) {
