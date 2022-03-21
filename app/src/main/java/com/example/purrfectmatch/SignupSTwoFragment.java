@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.example.purrfectmatch.model.Model;
 
 import com.example.purrfectmatch.model.Pet;
+import com.example.purrfectmatch.model.SaveSharedPreference;
 
 import java.io.IOException;
 
@@ -168,11 +169,12 @@ public class SignupSTwoFragment extends Fragment {
             } else { // All good lets add the pet
                 Model.instance.saveImage(photo, email + ".jpg", url -> {
 
-                Pet pet = new Pet(email, name, age, address, about, password, url, latitude, longitude);
-                Model.instance.addPet(pet, () -> {
-                    progressBar.setVisibility(View.GONE);
-
-                       Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToPetListRvFragment());
+                    Pet pet = new Pet(email, name, age, address, about, password, url, latitude, longitude);
+                    Model.instance.addPet(pet, () -> {
+                        progressBar.setVisibility(View.GONE);
+                        
+                        SaveSharedPreference.setLogin(getActivity().getApplicationContext(), true);
+                        Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToPetListRvFragment());
                     });
                 });
             }

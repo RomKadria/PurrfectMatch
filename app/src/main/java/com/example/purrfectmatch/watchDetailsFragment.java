@@ -33,11 +33,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
-
 import com.example.purrfectmatch.model.Pet;
+import com.example.purrfectmatch.model.SaveSharedPreference;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Callback;
+
 
 import java.io.IOException;
 
@@ -60,6 +65,8 @@ public class watchDetailsFragment extends Fragment {
     ImageButton mapBtn;
     Bitmap imageBitmap;
     ImageView imageIv;
+    ImageView petImageIv;
+    TextView picTv;
     private Uri filePath;
     Bitmap photo;
     ProgressBar progressBar;
@@ -75,10 +82,8 @@ public class watchDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_watch_details, container, false);
         setHasOptionsMenu(true);
-//        if (getArguments() != null) {
-////            email = watchDetailsFragmentArgs.fromBundle(getArguments()).getEmail();
-////            password = watchDetailsFragmentArgs.fromBundle(getArguments()).getPassword();
-////        }
+
+        String petId = SaveSharedPreference.getEmail(this.getActivity().getApplicationContext());
 
         nameEt = view.findViewById(R.id.watchDetails_name_et);
         ageEt = view.findViewById(R.id.watchDetails_age_et);
@@ -89,6 +94,8 @@ public class watchDetailsFragment extends Fragment {
         editBtn = view.findViewById(R.id.watchDetails_edit_btn);
         mapBtn = view.findViewById(R.id.watchDetails_map_btn);
         imageIv = view.findViewById(R.id.watchDetails_image_iv);
+        petImageIv = view.findViewById(R.id.watchDetails_petimage_iv);
+        picTv = view.findViewById(R.id.watchDetails_pic_tv);
         progressBar = view.findViewById(R.id.watchDetails_progressbar);
         progressBar.setVisibility(View.GONE);
         mapBtn.setEnabled(false);
@@ -97,6 +104,30 @@ public class watchDetailsFragment extends Fragment {
         editBtn.setOnClickListener(v -> toggleEdit());
         mapBtn.setOnClickListener(v -> openMap(v));
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
+        
+
+        Model.instance.getPetById(petId, pet -> {
+            if (pet.getPetUrl() != null) {
+                Picasso.get()
+                        .load(pet.getPetUrl())
+                        .error(R.drawable.pet_avatar)
+                        .into(petImageIv, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                nameEt.setText(pet.getName());
+                                ageEt.setText("" + pet.getAge());
+                                aboutEt.setText(pet.getDescription());
+                                addressEt.setText(pet.getAddress());
+
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                            }
+                        });
+            }
+        });
 
         return view;
     }
@@ -182,19 +213,25 @@ public class watchDetailsFragment extends Fragment {
         }
     }
 
-    private  void toggleEdit() {
+    private void toggleEdit() {
         if (!isEdit) {
             nameEt.setEnabled(true);
             ageEt.setEnabled(true);
             aboutEt.setEnabled(true);
+            editBtn.setText("Cancel");
             updateBtn.setVisibility(View.VISIBLE);
+            uploadBtn.setVisibility(View.VISIBLE);
+            picTv.setVisibility(View.VISIBLE);
             mapBtn.setEnabled(true);
             isEdit = true;
         } else {
             nameEt.setEnabled(false);
             ageEt.setEnabled(false);
             aboutEt.setEnabled(false);
+            editBtn.setText("Edit");
             updateBtn.setVisibility(View.INVISIBLE);
+            uploadBtn.setVisibility(View.INVISIBLE);
+            picTv.setVisibility(View.INVISIBLE);
             mapBtn.setEnabled(false);
             isEdit = false;
         }
