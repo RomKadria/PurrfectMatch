@@ -14,5 +14,8 @@
     <string name="Signup">Sign up</string>
     <string name="picture">Picture</string>
     <string name="upload">upload</string>
+    <string name="watchMap">watch map</string>
+    <string name="Update">update</string>
+    <string name="Edit">Edit</string>
     <string name="messagePos">1</string>
 </resources>

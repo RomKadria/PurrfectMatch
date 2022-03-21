@@ -72,6 +72,15 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
+    public void updatePet(Pet pet, Model.UpdatePetListener listener) {
+        Map<String, Object> json = pet.toJson();
+        db.collection(Pet.COLLECTION_NAME)
+                .document(pet.getEmail())
+                .set(json)
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
+    }
+
     public void addPet(Pet pet) {
         Map<String, Object> json = pet.toJson();
         db.collection(Pet.COLLECTION_NAME)
@@ -218,5 +227,29 @@ public class ModelFirebase {
                 .set(json)
                 .addOnCompleteListener(unused -> listener.onComplete());
 
+    }
+
+    public void checkUser(String email, String password, Model.OnUserCheckListener listener){
+        db.collection(Pet.COLLECTION_NAME).
+                whereEqualTo("email", email)
+                .whereEqualTo("password", password)
+                .get()
+                .addOnCompleteListener((user -> {
+                    if (user.getResult().isEmpty())
+                    {
+                        listener.onComplete(false);
+                    } else {
+                        listener.onComplete(true);
+                    }
+                }));
+    }
+
+    public void checkEmail(String email, Model.OnEmailCheckListener listener){
+        db.collection(Pet.COLLECTION_NAME).
+                whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener((user -> {
+                    listener.onComplete(!user.getResult().isEmpty());
+                }));
     }
 }

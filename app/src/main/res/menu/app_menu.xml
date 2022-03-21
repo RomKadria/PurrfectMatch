@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_details_btn"
+        android:icon="@drawable/check_mark"
+        android:title="Details"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_logout_btn"
+        android:icon="@drawable/exit_icon"
+        android:title="Logout"
+        app:showAsAction="always" />
+</menu>

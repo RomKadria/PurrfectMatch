@@ -2,28 +2,57 @@ package com.example.purrfectmatch;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
-import com.example.purrfectmatch.model.Pet;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SignupSOneFragment extends Fragment {
 
     EditText etEmail, etPassword, etConfirmPassword;
     Button btnNext;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    boolean mailValid = false;
+
+    // menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.blank_menu, menu);
+    }
+
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.getActivity().onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signup_s_one, container, false);
+
+        setHasOptionsMenu(true);
 
         etEmail = view.findViewById(R.id.sso_email_et);
         etPassword = view.findViewById(R.id.sso_pass_et);
@@ -64,29 +93,33 @@ public class SignupSOneFragment extends Fragment {
         return view;
     }
 
-    public boolean validateEmail() {
-        final boolean[] isExists = {true};
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+    }
+
+    public void validateEmail() {
         String email = etEmail.getText().toString().trim();
         boolean matchFound = email.matches(emailPattern);
 
-//        Model.instance.getPetById(email, new Model.GetPetById() {
-//            @Override
-//            public void onComplete(Pet pet) {
-//                if (pet != null)
-//                    isExists[0] = false;
-//            }
-//        });
-
-        if (!isExists[0]) {
-            etEmail.setError("Email address already exists");
-            return false;
-        }
-        else if (!matchFound) {
-            etEmail.setError("Invalid email address");
-            return false;
-        }
-
-        return true;
+        Model.instance.checkEmailValid(email, exists -> {
+            if (exists) {
+                etEmail.setError("Email address already exists");
+                mailValid = false;
+            } else if (!matchFound) {
+                etEmail.setError("Invalid email address");
+                mailValid = false;
+            } else {
+                mailValid = true;
+            }
+        });
     }
 
     public boolean validatePassword() {
@@ -101,8 +134,10 @@ public class SignupSOneFragment extends Fragment {
     public boolean validateConfirmPassword() {
         String password = etPassword.getText().toString();
         String cPassword = etConfirmPassword.getText().toString();
-        if (password.matches(cPassword))
+        if (password.matches(cPassword)) {
+            etConfirmPassword.setError(null);
             return true;
+        }
         else {
             etConfirmPassword.setError("Passwords don't match");
             return false;
@@ -120,7 +155,9 @@ public class SignupSOneFragment extends Fragment {
             etPassword.requestFocus();
             flag = false;
         }
-        if(!validateEmail()) {
+
+        validateEmail();
+        if(!mailValid) {
             etEmail.requestFocus();
             flag = false;
         }

@@ -41,7 +41,7 @@ import com.example.purrfectmatch.model.Pet;
 
 import java.io.IOException;
 
-public class SignupSTwoFragment extends Fragment {
+public class watchDetailsFragment extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     final static int RESULT_SUCCESS = 0;
     final static int MAX_AGE = 200;
@@ -54,8 +54,9 @@ public class SignupSTwoFragment extends Fragment {
     EditText ageEt;
     EditText addressEt;
     EditText aboutEt;
-    Button signUpBtn;
+    Button updateBtn;
     Button uploadBtn;
+    Button editBtn;
     ImageButton mapBtn;
     Bitmap imageBitmap;
     ImageView imageIv;
@@ -66,6 +67,39 @@ public class SignupSTwoFragment extends Fragment {
     Double longitude;
     String email;
     String password;
+    Boolean isEdit = false;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_watch_details, container, false);
+        setHasOptionsMenu(true);
+//        if (getArguments() != null) {
+////            email = watchDetailsFragmentArgs.fromBundle(getArguments()).getEmail();
+////            password = watchDetailsFragmentArgs.fromBundle(getArguments()).getPassword();
+////        }
+
+        nameEt = view.findViewById(R.id.watchDetails_name_et);
+        ageEt = view.findViewById(R.id.watchDetails_age_et);
+        addressEt = view.findViewById(R.id.watchDetails_address_et);
+        aboutEt = view.findViewById(R.id.watchDetails_about_et);
+        updateBtn = view.findViewById(R.id.watchDetails_update_btn);
+        uploadBtn = view.findViewById(R.id.watchDetails_upload_btn);
+        editBtn = view.findViewById(R.id.watchDetails_edit_btn);
+        mapBtn = view.findViewById(R.id.watchDetails_map_btn);
+        imageIv = view.findViewById(R.id.watchDetails_image_iv);
+        progressBar = view.findViewById(R.id.watchDetails_progressbar);
+        progressBar.setVisibility(View.GONE);
+        mapBtn.setEnabled(false);
+        updateBtn.setOnClickListener(v -> update(v));
+        uploadBtn.setOnClickListener(v -> upload());
+        editBtn.setOnClickListener(v -> toggleEdit());
+        mapBtn.setOnClickListener(v -> openMap(v));
+        ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
+
+        return view;
+    }
 
     // menu
     @Override
@@ -88,38 +122,6 @@ public class SignupSTwoFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_signup_s_two, container, false);
-
-        setHasOptionsMenu(true);
-
-        if (getArguments() != null) {
-            email = SignupSTwoFragmentArgs.fromBundle(getArguments()).getEmail();
-            password = SignupSTwoFragmentArgs.fromBundle(getArguments()).getPassword();
-        }
-
-        nameEt = view.findViewById(R.id.signupSTwo_name_et);
-        ageEt = view.findViewById(R.id.signupSTwo_age_et);
-        addressEt = view.findViewById(R.id.signupSTwo_address_et);
-        aboutEt = view.findViewById(R.id.signupSTwo_about_et);
-        signUpBtn = view.findViewById(R.id.signupSTwo_signup_btn);
-        uploadBtn = view.findViewById(R.id.signupSTwo_upload_btn);
-        mapBtn = view.findViewById(R.id.signupSTwo_map_btn);
-        imageIv = view.findViewById(R.id.signupSTwo_image_iv);
-        progressBar = view.findViewById(R.id.signupSTwo_progressbar);
-        progressBar.setVisibility(View.GONE);
-        signUpBtn.setOnClickListener(v -> signUp(v));
-        uploadBtn.setOnClickListener(v -> upload());
-        mapBtn.setOnClickListener(v -> openMap(v));
-        ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
-
-
-        return view;
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         NavController navController = NavHostFragment.findNavController(this);
 
@@ -127,21 +129,22 @@ public class SignupSTwoFragment extends Fragment {
                 .getSavedStateHandle()
                 .getLiveData("address");
         liveData.observe(getViewLifecycleOwner(), address -> {
+            toggleEdit();
             addressEt.setText(address.getAddressLine(0));
             latitude = address.getLatitude();
             longitude = address.getLongitude();
         });
     }
 
-    private void signUp(View v) {
+    private void update(View v) {
 
         progressBar.setVisibility(View.VISIBLE);
 
         if (nameEt.getText().toString().isEmpty() ||
-            ageEt.getText().toString().isEmpty() ||
-            addressEt.getText().toString().isEmpty() ||
-            aboutEt.getText().toString().isEmpty() ||
-            photo == null) {
+                ageEt.getText().toString().isEmpty() ||
+                addressEt.getText().toString().isEmpty() ||
+                aboutEt.getText().toString().isEmpty() ||
+                photo == null) {
 
             Context context = getContext();
             CharSequence text = "Please fill all fields";
@@ -162,20 +165,38 @@ public class SignupSTwoFragment extends Fragment {
             if (age < MIN_AGE || age > MAX_AGE) {
                 Toast.makeText(getActivity(), "Age must be between " + MIN_AGE + " and " + MAX_AGE, Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
-            } else if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(getActivity(), "missing data from last phase, please restart the process", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
+//            } else if (email.isEmpty() || password.isEmpty()) {
+//                Toast.makeText(getActivity(), "missing data from last phase, please restart the process", Toast.LENGTH_SHORT).show();
+//                progressBar.setVisibility(View.GONE);
             } else { // All good lets add the pet
                 Model.instance.saveImage(photo, email + ".jpg", url -> {
 
-                Pet pet = new Pet(email, name, age, address, about, password, url, latitude, longitude);
-                Model.instance.addPet(pet, () -> {
-                    progressBar.setVisibility(View.GONE);
+                    Pet pet = new Pet("a@a.a", name, age, address, about, "123456", url, latitude, longitude);
+                    Model.instance.updatePet(pet, () -> {
+                        progressBar.setVisibility(View.GONE);
 
-                       Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToPetListRvFragment());
+                        toggleEdit();
                     });
                 });
             }
+        }
+    }
+
+    private  void toggleEdit() {
+        if (!isEdit) {
+            nameEt.setEnabled(true);
+            ageEt.setEnabled(true);
+            aboutEt.setEnabled(true);
+            updateBtn.setVisibility(View.VISIBLE);
+            mapBtn.setEnabled(true);
+            isEdit = true;
+        } else {
+            nameEt.setEnabled(false);
+            ageEt.setEnabled(false);
+            aboutEt.setEnabled(false);
+            updateBtn.setVisibility(View.INVISIBLE);
+            mapBtn.setEnabled(false);
+            isEdit = false;
         }
     }
 
@@ -195,7 +216,8 @@ public class SignupSTwoFragment extends Fragment {
     }
 
     private void openMap(View v) {
-        Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToUserLocationMapFragment());
+        toggleEdit();
+        Navigation.findNavController(v).navigate(watchDetailsFragmentDirections.actionWatchDetailsFragmentToUserLocationMapFragment());
     }
 
     @Override
@@ -208,7 +230,7 @@ public class SignupSTwoFragment extends Fragment {
                         filePath = data.getData();
                         photo = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
                     } else {
-                         photo = (Bitmap) data.getExtras().get("data");
+                        photo = (Bitmap) data.getExtras().get("data");
                     }
 
                     imageIv.setImageBitmap(photo);
@@ -217,8 +239,8 @@ public class SignupSTwoFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
-            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
+        }
     }
 }

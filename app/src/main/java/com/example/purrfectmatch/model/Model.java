@@ -91,6 +91,14 @@ public class Model {
         modelFirebase.addPet(pet);
     }
 
+    public interface UpdatePetListener{
+        void onComplete();
+    }
+
+    public void updatePet(Pet pet, UpdatePetListener listener){
+        modelFirebase.updatePet(pet, listener);
+    }
+
     public interface GetPetById{
         void onComplete(Pet pet);
     }
@@ -104,6 +112,19 @@ public class Model {
 
     public void saveImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
         modelFirebase.saveImage(imageBitmap,imageName,listener);
+    }
+
+    public interface OnUserCheckListener{
+        void onComplete(boolean valid);
+    }
+    public void checkUserValid(String email, String password, OnUserCheckListener listener) {
+        modelFirebase.checkUser(email, password, listener);
+    }
+    public interface OnEmailCheckListener{
+        void onComplete(boolean exists);
+    }
+    public void checkEmailValid(String email, OnEmailCheckListener listener) {
+        modelFirebase.checkEmail(email, listener);
     }
 }
 
