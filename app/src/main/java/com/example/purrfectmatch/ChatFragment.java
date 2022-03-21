@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -67,6 +68,15 @@ public class ChatFragment extends Fragment {
 
         swipeRefresh = view.findViewById(R.id.chat_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> ChatMessagesModel.instance.refreshChatMessages(sendingPetId, receivingPetId));
+
+        // Refresh chat every 30 sec
+        new android.os.Handler(Looper.getMainLooper()).postDelayed(
+                new Runnable() {
+                    public void run() {
+                        ChatMessagesModel.instance.refreshChatMessages(sendingPetId, receivingPetId);
+                    }
+                },
+                30000);
 
         RecyclerView list = view.findViewById(R.id.list_of_messages);
         list.setHasFixedSize(true);
