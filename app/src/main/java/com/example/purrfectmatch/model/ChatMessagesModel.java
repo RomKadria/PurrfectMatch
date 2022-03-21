@@ -2,10 +2,12 @@ package com.example.purrfectmatch.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -92,7 +94,11 @@ public class ChatMessagesModel {
     public interface UpdateChatMessageListener {
         void onComplete();
     }
+    public interface DeleteChatMessageListener {
+        void onComplete();
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void addChatMessage(ChatMessage chatMessage, AddChatMessageListener listener) {
         modelFirebase.addChatMessage(chatMessage, () -> {
             listener.onComplete();
@@ -100,13 +106,27 @@ public class ChatMessagesModel {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void addChatMessage(ChatMessage chatMessage) {
         modelFirebase.addChatMessage(chatMessage);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateChatMessage(ChatMessage chatMessage, UpdateChatMessageListener listener) {
         modelFirebase.updateChatMessage(chatMessage, () -> {
             listener.onComplete();
+            refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId);
+        });
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void deleteChatMessage(ChatMessage chatMessage, DeleteChatMessageListener listener) {
+        modelFirebase.updateChatMessage(chatMessage, () -> {
+            listener.onComplete();
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    AppLocalDb.db.chatMessageDao().delete(chatMessage);
+                }});
             refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId);
         });
     }

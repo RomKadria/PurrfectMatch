@@ -55,6 +55,7 @@ public class ChatFragment extends Fragment {
     private Uri filePath;
     Bitmap photo;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -108,6 +109,7 @@ public class ChatFragment extends Fragment {
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendMsg() {
         String text = chatEditText.getText().toString();
 
@@ -169,10 +171,10 @@ public class ChatFragment extends Fragment {
                 Integer chatMessagePos = (Integer) v.getTag(R.string.messagePos);
                 ChatMessage chatMessage = viewModel.getData().getValue().get(chatMessagePos);
 
-                chatMessage.setMessageTime(System.currentTimeMillis());
+                chatMessage.setMessageTime(new Timestamp(new Date()).getSeconds());
                 chatMessage.setIsDeleted(true);
 
-                ChatMessagesModel.instance.updateChatMessage(chatMessage, () -> {
+                ChatMessagesModel.instance.deleteChatMessage(chatMessage, () -> {
                     editMessageText.setVisibility(View.GONE);
                     editSaveBtn.setVisibility(View.GONE);
                     editCancelBtn.setVisibility(View.GONE);
@@ -180,7 +182,6 @@ public class ChatFragment extends Fragment {
                     messageImg.setVisibility(View.VISIBLE);
                 });
             });
-
 
             editSaveBtn.setOnClickListener(v -> {
                 Integer chatMessagePos = (Integer) v.getTag(R.string.messagePos);
