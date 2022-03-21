@@ -36,6 +36,7 @@ import com.google.firebase.Timestamp;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.Date;
 
 public class ChatFragment extends Fragment {
     private static final int SELECT_IMAGE = 22;
@@ -175,7 +176,7 @@ public class ChatFragment extends Fragment {
                 Integer chatMessagePos = (Integer) v.getTag(R.string.messagePos);
                 ChatMessage chatMessage = viewModel.getData().getValue().get(chatMessagePos);
 
-                chatMessage.setMessageTime(System.currentTimeMillis());
+                chatMessage.setMessageTime(new Timestamp(new Date()).getSeconds());
                 chatMessage.setTextMessage(editMessageText.getText().toString());
 
                 ChatMessagesModel.instance.updateChatMessage(chatMessage, () -> {

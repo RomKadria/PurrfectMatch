@@ -124,7 +124,7 @@ public class ChatMessage {
         String imgUrl = (String) json.get("imgUrl");
         boolean isDeleted = (boolean) json.get("isDeleted");
         Timestamp ts = (Timestamp) json.get("messageTime");
-        Long messageTime = ts.getSeconds();
+        long messageTime = ts.getSeconds();
         ChatMessage message = new ChatMessage(sendingId, receivingId, textMessage, imgUrl, messageTime, isDeleted, id);
         return message;
     }

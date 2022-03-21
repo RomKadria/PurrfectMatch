@@ -141,7 +141,7 @@ public class ModelFirebase {
 
     public void getAllChatMessages(Long lastUpdateDate, String sendingId, String receivingId, GetAllChatsListener listener) {
         db.collection(ChatMessage.COLLECTION_NAME)
-                .whereGreaterThanOrEqualTo("messageTime", new Timestamp(lastUpdateDate, 0))
+//                .whereGreaterThanOrEqualTo("messageTime", new Timestamp(lastUpdateDate, 0))
                 .whereIn("sendingId", Arrays.asList(sendingId, receivingId))
                 .whereEqualTo("isDeleted", false)
                 .get()
