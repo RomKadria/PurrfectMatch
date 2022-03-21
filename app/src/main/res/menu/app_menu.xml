@@ -3,8 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_details_btn"
-        android:icon="@drawable/check_mark"
+        android:icon="@drawable/pencil"
         android:title="Details"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_chat_btn"
+        android:icon="@drawable/chat_icon"
+        android:title="Chats"
         app:showAsAction="always" />
 
     <item

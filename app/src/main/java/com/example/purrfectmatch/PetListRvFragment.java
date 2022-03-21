@@ -56,10 +56,15 @@ public class PetListRvFragment extends Fragment {
                         .navigate(PetListRvFragmentDirections
                                 .actionPetListRvFragmentToLoginFragment());
                 return true;
-            case R.id.menu_details_btn:n:
+            case R.id.menu_details_btn:
                 Navigation.findNavController(this.getView())
                         .navigate(PetListRvFragmentDirections
                                 .actionPetListRvFragmentToWatchDetailsFragment());
+                return true;
+
+            case R.id.menu_chat_btn:
+                //TODO: add navigation to chat fragment
+
                 return true;
         }
 
