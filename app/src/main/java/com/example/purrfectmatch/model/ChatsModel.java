@@ -36,7 +36,8 @@ public class ChatsModel {
 
     MutableLiveData<List<ChatPet>> chatPetsList = new MutableLiveData<List<ChatPet>>();
     public LiveData<List<ChatPet>> getAllChatPets(String petId){
-        if (chatPetsList.getValue() == null) { refreshChatsList(petId); };
+        chatPetsListLoadingState.setValue(ChatsModel.LoadingState.loading);
+        refreshChatsList(petId);
         return chatPetsList;
     }
     public void refreshChatsList(String petId) {

@@ -11,14 +11,11 @@ import java.util.List;
 public class ChatMessagesViewModel extends ViewModel {
     LiveData<List<ChatMessage>> data;
 
-    public ChatMessagesViewModel() {
-
+    public ChatMessagesViewModel(String sendingPetId, String receivingPetId) {
+        data = ChatMessagesModel.instance.getAllChatMessages(sendingPetId, receivingPetId);
     }
 
-    public LiveData<List<ChatMessage>> getData(String sendingPetId, String receivingPetId) {
-        if (data == null) {
-            data = ChatMessagesModel.instance.getAllChatMessages(sendingPetId, receivingPetId);
-        }
+    public LiveData<List<ChatMessage>> getData() {
         return data;
     }
 }

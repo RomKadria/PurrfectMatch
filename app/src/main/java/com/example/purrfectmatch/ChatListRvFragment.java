@@ -25,6 +25,7 @@ import com.example.purrfectmatch.model.ChatPet;
 import com.example.purrfectmatch.model.ChatsModel;
 import com.example.purrfectmatch.model.Model;
 import com.example.purrfectmatch.model.Pet;
+import com.example.purrfectmatch.model.SaveSharedPreference;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -36,17 +37,12 @@ public class ChatListRvFragment extends Fragment {
     SwipeRefreshLayout swipeRefresh;
     String petId;
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(ChatListRvViewModel.class);
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list,container,false);
         petId = ChatListRvFragmentArgs.fromBundle(getArguments()).getPetId();
+        viewModel = new ViewModelProvider(this, new ChatListRvViewModelFactory(petId)).get(ChatListRvViewModel.class);
 
         swipeRefresh = view.findViewById(R.id.chatlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> ChatsModel.instance.refreshChatsList(petId));
@@ -62,13 +58,13 @@ public class ChatListRvFragment extends Fragment {
         adapter.setOnItemClickListener(new ChatListRvFragment.OnItemClickListener() {
             @Override
             public void onItemClick(View v,int position) {
-                String selectedPetId = viewModel.getData(petId).getValue().get(position).getEmail();
+                String selectedPetId = viewModel.getData().getValue().get(position).getEmail();
                 Navigation.findNavController(v).navigate(ChatListRvFragmentDirections.actionChatListRvFragmentToChatFragment(petId, selectedPetId));
             }
         });
 
         setHasOptionsMenu(true);
-        viewModel.getData(petId).observe(getViewLifecycleOwner(), list1 -> refresh());
+        viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
         swipeRefresh.setRefreshing(ChatsModel.instance.getChatPetsListLoadingState().getValue() == ChatsModel.LoadingState.loading);
         ChatsModel.instance.getChatPetsListLoadingState().observe(getViewLifecycleOwner(), ChatPetsListLoadingState -> {
             if (ChatPetsListLoadingState == ChatsModel.LoadingState.loading){
@@ -128,17 +124,17 @@ public class ChatListRvFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ChatListRvFragment.MyViewHolder holder, int position) {
-            ChatPet chatPet = viewModel.getData(petId).getValue().get(position);
+            ChatPet chatPet = viewModel.getData().getValue().get(position);
             holder.petName.setText(chatPet.getName());
             Picasso.get().load(chatPet.getPetUrl()).into(holder.petImage);
         }
 
         @Override
         public int getItemCount() {
-            if (viewModel.getData(petId).getValue() == null) {
+            if (viewModel.getData().getValue() == null) {
                 return 0;
             }
-            return viewModel.getData(petId).getValue().size();
+            return viewModel.getData().getValue().size();
         }
     }
 }

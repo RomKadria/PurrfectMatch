@@ -15,12 +15,11 @@ import java.util.List;
 public class ChatListRvViewModel extends ViewModel {
     LiveData<List<ChatPet>> data;
 
-    public ChatListRvViewModel(){ }
+    public ChatListRvViewModel(String petId){
+        data = ChatsModel.instance.getAllChatPets(petId);
+    }
 
-    public LiveData<List<ChatPet>> getData(String petId) {
-        if (data == null) {
-            data = ChatsModel.instance.getAllChatPets(petId);
-        }
+    public LiveData<List<ChatPet>> getData() {
         return data;
     }
 }

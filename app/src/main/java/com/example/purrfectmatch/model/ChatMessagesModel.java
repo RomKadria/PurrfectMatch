@@ -39,10 +39,8 @@ public class ChatMessagesModel {
     MutableLiveData<List<ChatMessage>> chatMessages = new MutableLiveData<List<ChatMessage>>();
 
     public LiveData<List<ChatMessage>> getAllChatMessages(String sendingPetId, String receivingPetId) {
-        if (chatMessages.getValue() == null) {
-            refreshChatMessages(sendingPetId, receivingPetId);
-        }
-        ;
+        chatMessagesLoadingState.setValue(LoadingState.loading);
+        refreshChatMessages(sendingPetId, receivingPetId);
         return chatMessages;
     }
 
@@ -78,7 +76,7 @@ public class ChatMessagesModel {
                                 .commit();
 
                         //return all data to caller
-                        List<ChatMessage> allChatMessages = AppLocalDb.db.chatMessageDao().getAllChatMessages(receivingPetId);
+                        List<ChatMessage> allChatMessages = AppLocalDb.db.chatMessageDao().getAllChatMessages(sendingPetId, receivingPetId);
                         chatMessages.postValue(allChatMessages);
                         chatMessagesLoadingState.postValue(LoadingState.loaded);
                     }
@@ -92,7 +90,10 @@ public class ChatMessagesModel {
     }
 
     public void addChatMessage(ChatMessage chatMessage, AddChatMessageListener listener) {
-        modelFirebase.addChatMessage(chatMessage, listener);
+        modelFirebase.addChatMessage(chatMessage, () -> {
+            listener.onComplete();
+            refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId);
+        });
     }
 
     public void addChatMessage(ChatMessage chatMessage) {

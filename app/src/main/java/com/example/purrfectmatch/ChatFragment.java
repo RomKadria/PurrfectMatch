@@ -35,7 +35,6 @@ import com.example.purrfectmatch.model.Model;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class ChatFragment extends Fragment {
     private static final int SELECT_IMAGE = 22;
@@ -53,23 +52,15 @@ public class ChatFragment extends Fragment {
     private Uri filePath;
     Bitmap photo;
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(ChatMessagesViewModel.class);
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-//        sendingPetId = ChatFragmentArgs.fromBundle(getArguments()).getSendingPetId();
-//        receivingPetId = ChatFragmentArgs.fromBundle(getArguments()).getReceivingPetId();
-// TODO: remove this 
-        sendingPetId = "a@a.a";
-        receivingPetId = "a@a.b";
+        sendingPetId = ChatFragmentArgs.fromBundle(getArguments()).getSendingPetId();
+        receivingPetId = ChatFragmentArgs.fromBundle(getArguments()).getReceivingPetId();
 
+        viewModel = new ViewModelProvider(this, new ChatMessagesViewModelFactory(sendingPetId, receivingPetId)).get(ChatMessagesViewModel.class);
 
         swipeRefresh = view.findViewById(R.id.chat_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> ChatMessagesModel.instance.refreshChatMessages(sendingPetId, receivingPetId));
@@ -83,7 +74,7 @@ public class ChatFragment extends Fragment {
         list.setAdapter(adapter);
 
         setHasOptionsMenu(true);
-        viewModel.getData(sendingPetId, receivingPetId).observe(getViewLifecycleOwner(), list1 -> refresh());
+        viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
         swipeRefresh.setRefreshing(ChatMessagesModel.instance.getChatMessagesLoadingState().getValue() == ChatMessagesModel.LoadingState.loading);
         ChatMessagesModel.instance.getChatMessagesLoadingState().observe(getViewLifecycleOwner(), chatMessagesLoadingState -> {
             if (chatMessagesLoadingState == ChatMessagesModel.LoadingState.loading) {
@@ -111,6 +102,21 @@ public class ChatFragment extends Fragment {
         // Sending msg only if text was written / photo was taken
         if (!text.isEmpty() || photo != null) {
 
+            String textMsg = chatEditText.getText().toString();
+            Long tsLong = System.currentTimeMillis()/1000;
+            String ts = tsLong.toString();
+            ChatMessage msg = new ChatMessage(sendingPetId, receivingPetId, textMsg, null, null);
+            if (photo == null){
+                ChatMessagesModel.instance.addChatMessage(msg,()->{
+//                    Navigation.findNavController().navigateUp();
+                });
+            }else{
+                Model.instance.saveImage(photo, "" + ".jpg", url -> {
+                    ChatMessagesModel.instance.addChatMessage(msg,()->{
+//                        Navigation.findNavController(nameEt).navigateUp();
+                    });
+                });
+            }
         }
     }
 
@@ -158,7 +164,7 @@ public class ChatFragment extends Fragment {
 
             editSaveBtn.setOnClickListener(v -> {
                 Integer chatMessagePos = (Integer) v.getTag(R.string.messagePos);
-                ChatMessage chatMessage = viewModel.getData(sendingPetId, receivingPetId).getValue().get(chatMessagePos);
+                ChatMessage chatMessage = viewModel.getData().getValue().get(chatMessagePos);
 
                 chatMessage.setMessageTime(System.currentTimeMillis());
                 chatMessage.setTextMessage(editMessageText.getText().toString());
@@ -250,7 +256,7 @@ public class ChatFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            ChatMessage chatMessage = viewModel.getData(sendingPetId, receivingPetId).getValue().get(position);
+            ChatMessage chatMessage = viewModel.getData().getValue().get(position);
 
             holder.editSaveBtn.setTag(R.string.messagePos, position);
             holder.messageText.setText(chatMessage.getTextMessage());
@@ -265,10 +271,10 @@ public class ChatFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            if (viewModel.getData(sendingPetId, receivingPetId).getValue() == null) {
+            if (viewModel.getData().getValue() == null) {
                 return 0;
             }
-            return viewModel.getData(sendingPetId, receivingPetId).getValue().size();
+            return viewModel.getData().getValue().size();
         }
     }
 }
