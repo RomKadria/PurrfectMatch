@@ -94,6 +94,9 @@ public class ChatMessagesModel {
     public interface UpdateChatMessageListener {
         void onComplete();
     }
+    public interface DeleteChatMessageListener {
+        void onComplete();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void addChatMessage(ChatMessage chatMessage, AddChatMessageListener listener) {
@@ -112,6 +115,18 @@ public class ChatMessagesModel {
     public void updateChatMessage(ChatMessage chatMessage, UpdateChatMessageListener listener) {
         modelFirebase.updateChatMessage(chatMessage, () -> {
             listener.onComplete();
+            refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId);
+        });
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void deleteChatMessage(ChatMessage chatMessage, DeleteChatMessageListener listener) {
+        modelFirebase.updateChatMessage(chatMessage, () -> {
+            listener.onComplete();
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    AppLocalDb.db.chatMessageDao().delete(chatMessage);
+                }});
             refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId);
         });
     }
