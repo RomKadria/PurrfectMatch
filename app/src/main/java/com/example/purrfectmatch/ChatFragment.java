@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.example.purrfectmatch.model.ChatMessage;
 import com.example.purrfectmatch.model.ChatMessagesModel;
 import com.example.purrfectmatch.model.Model;
+import com.google.firebase.Timestamp;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -103,18 +104,13 @@ public class ChatFragment extends Fragment {
         if (!text.isEmpty() || photo != null) {
 
             String textMsg = chatEditText.getText().toString();
-            Long tsLong = System.currentTimeMillis()/1000;
-            String ts = tsLong.toString();
             ChatMessage msg = new ChatMessage(sendingPetId, receivingPetId, textMsg, null, null);
             if (photo == null){
-                ChatMessagesModel.instance.addChatMessage(msg,()->{
-//                    Navigation.findNavController().navigateUp();
-                });
+                ChatMessagesModel.instance.addChatMessage(msg);
             }else{
-                Model.instance.saveImage(photo, "" + ".jpg", url -> {
-                    ChatMessagesModel.instance.addChatMessage(msg,()->{
-//                        Navigation.findNavController(nameEt).navigateUp();
-                    });
+                Model.instance.saveImage(photo,Timestamp.now().toString() + ".jpg", url -> {
+                    msg.setImgUrl(url);
+                    ChatMessagesModel.instance.addChatMessage(msg);
                 });
             }
         }
