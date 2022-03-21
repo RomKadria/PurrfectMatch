@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey;
 
 import com.google.firebase.Timestamp;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class ChatMessage {
         this.receivingId = receivingId;
         this.textMessage = textMessage;
         this.imgUrl = imgUrl;
-        this.messageTime = new Date().getTime();
+        this.messageTime = new Timestamp(new Date()).getSeconds();
         this.id = id;
         this.isDeleted = false;
     }
