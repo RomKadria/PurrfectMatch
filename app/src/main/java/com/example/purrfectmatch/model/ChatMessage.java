@@ -16,18 +16,15 @@ import java.util.Map;
 @Entity
 public class ChatMessage {
     final public static String COLLECTION_NAME = "messages";
-
-
+    @PrimaryKey
+    @NonNull
+    String id;
     String sendingId;
     String receivingId;
     String textMessage;
     String imgUrl;
     long messageTime;
-    @PrimaryKey
-    @NonNull
-    String id;
-
-
+    boolean isDeleted;
 
     public ChatMessage() {
     }
@@ -39,14 +36,16 @@ public class ChatMessage {
         this.imgUrl = imgUrl;
         this.messageTime = new Date().getTime();
         this.id = id;
+        this.isDeleted = false;
     }
 
-    public ChatMessage(String sendingId, String receivingId, String textMessage, String imgUrl, long messageTime, String id) {
+    public ChatMessage(String sendingId, String receivingId, String textMessage, String imgUrl, long messageTime, boolean isDeleted, String id) {
         this.sendingId = sendingId;
         this.receivingId = receivingId;
         this.textMessage = textMessage;
         this.imgUrl = imgUrl;
         this.messageTime = messageTime;
+        this.isDeleted = isDeleted;
         this.id = id;
     }
 
@@ -90,7 +89,6 @@ public class ChatMessage {
         this.sendingId = sendingId;
     }
 
-
     public long getMessageTime() {
         return messageTime;
     }
@@ -99,14 +97,23 @@ public class ChatMessage {
         this.messageTime = messageTime;
     }
 
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("sendingId", sendingId);
         json.put("receivingId", receivingId);
         json.put("textMessage", textMessage);
-        json.put("imgUrl", imgUrl);
         json.put("messageTime", new Timestamp(messageTime, 0));
+        json.put("imgUrl", imgUrl);
+        json.put("isDeleted", isDeleted);
         return json;
     }
 
@@ -115,9 +122,10 @@ public class ChatMessage {
         String receivingId = (String) json.get("receivingId");
         String textMessage = (String) json.get("textMessage");
         String imgUrl = (String) json.get("imgUrl");
+        boolean isDeleted = (boolean) json.get("isDeleted");
         Timestamp ts = (Timestamp) json.get("messageTime");
         Long messageTime = ts.getSeconds();
-        ChatMessage message = new ChatMessage(sendingId, receivingId, textMessage, imgUrl, messageTime, id);
+        ChatMessage message = new ChatMessage(sendingId, receivingId, textMessage, imgUrl, messageTime, isDeleted, id);
         return message;
     }
 }

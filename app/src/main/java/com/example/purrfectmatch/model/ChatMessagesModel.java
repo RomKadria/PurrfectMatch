@@ -89,6 +89,10 @@ public class ChatMessagesModel {
         void onComplete();
     }
 
+    public interface UpdateChatMessageListener {
+        void onComplete();
+    }
+
     public void addChatMessage(ChatMessage chatMessage, AddChatMessageListener listener) {
         modelFirebase.addChatMessage(chatMessage, () -> {
             listener.onComplete();
@@ -100,36 +104,11 @@ public class ChatMessagesModel {
         modelFirebase.addChatMessage(chatMessage);
     }
 
-    public void updateChatMessage(ChatMessage chatMessage, ModelFirebase.UpdateChatMessageListener listener) {
-        modelFirebase.updateChatMessage(chatMessage, new ModelFirebase.UpdateChatMessageListener() {
-            @Override
-            public void onComplete() {
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        AppLocalDb.db.chatMessageDao().update(chatMessage);
-                        listener.onComplete();
-                    }
-                });
-            }
+    public void updateChatMessage(ChatMessage chatMessage, UpdateChatMessageListener listener) {
+        modelFirebase.updateChatMessage(chatMessage, () -> {
+            listener.onComplete();
+            refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId);
         });
     }
-
-
-    // TODO: check if need this
-//    public interface GetPetById{
-//        void onComplete(Pet pet);
-//    }
-//    public Pet getPetById(String petId, GetPetById listener) {
-//        modelFirebase.getPetById(petId, listener);
-//        return null;
-//    }
-//    public interface SaveImageListener{
-//        void onComplete(String url);
-//    }
-//
-//    public void saveImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
-//        modelFirebase.saveImage(imageBitmap,imageName,listener);
-//    }
 }
 

@@ -106,11 +106,11 @@ public class ChatFragment extends Fragment {
             String textMsg = chatEditText.getText().toString();
             ChatMessage msg = new ChatMessage(sendingPetId, receivingPetId, textMsg, null, null);
             if (photo == null){
-                ChatMessagesModel.instance.addChatMessage(msg);
+                ChatMessagesModel.instance.addChatMessage(msg, () -> {});
             }else{
                 Model.instance.saveImage(photo,Timestamp.now().toString() + ".jpg", url -> {
                     msg.setImgUrl(url);
-                    ChatMessagesModel.instance.addChatMessage(msg);
+                    ChatMessagesModel.instance.addChatMessage(msg, () -> {});
                 });
             }
         }
@@ -155,6 +155,19 @@ public class ChatFragment extends Fragment {
             });
 
             deleteBtn.setOnClickListener(v -> {
+                Integer chatMessagePos = (Integer) v.getTag(R.string.messagePos);
+                ChatMessage chatMessage = viewModel.getData().getValue().get(chatMessagePos);
+
+                chatMessage.setMessageTime(System.currentTimeMillis());
+                chatMessage.setIsDeleted(true);
+
+                ChatMessagesModel.instance.updateChatMessage(chatMessage, () -> {
+                    editMessageText.setVisibility(View.GONE);
+                    editSaveBtn.setVisibility(View.GONE);
+                    editCancelBtn.setVisibility(View.GONE);
+                    messageText.setVisibility(View.VISIBLE);
+                    messageImg.setVisibility(View.VISIBLE);
+                });
             });
 
 
@@ -171,13 +184,7 @@ public class ChatFragment extends Fragment {
                     editCancelBtn.setVisibility(View.GONE);
                     messageText.setVisibility(View.VISIBLE);
                     messageImg.setVisibility(View.VISIBLE);
-                    refresh();
-//                    Toast.makeText(Model.instance.appContext,  "message updated successfully",
-//                            Toast.LENGTH_SHORT).show();
-
                 });
-
-
             });
 
             editCancelBtn.setOnClickListener(v -> {
@@ -255,6 +262,7 @@ public class ChatFragment extends Fragment {
             ChatMessage chatMessage = viewModel.getData().getValue().get(position);
 
             holder.editSaveBtn.setTag(R.string.messagePos, position);
+            holder.deleteBtn.setTag(R.string.messagePos, position);
             holder.messageText.setText(chatMessage.getTextMessage());
             holder.messageUser.setText(chatMessage.getSendingId()); // TODO: get the name?
             holder.messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", chatMessage.getMessageTime()));

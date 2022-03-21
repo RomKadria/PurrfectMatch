@@ -4,7 +4,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Pet.class, ChatMessage.class, ChatPet.class}, version = 7)
+@Database(entities = {Pet.class, ChatMessage.class, ChatPet.class}, version = 8)
 abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract PetDao petDao();
     public abstract ChatMessageDao chatMessageDao();
