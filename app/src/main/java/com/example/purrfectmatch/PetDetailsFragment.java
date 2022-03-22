@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.purrfectmatch.model.SaveSharedPreference;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Callback;
 import com.example.purrfectmatch.model.Model;
@@ -30,7 +31,8 @@ public class PetDetailsFragment extends Fragment {
     ImageView petImg;
     TextView contactTv;
     ProgressBar progressBar;
-    ImageButton mapImageBtn;
+    FloatingActionButton chatBtn;
+    FloatingActionButton mapImageBtn;
     String petId;
 
     // menu
@@ -67,9 +69,11 @@ public class PetDetailsFragment extends Fragment {
         petImg = view.findViewById(R.id.pet_details_img);
         contactTv = view.findViewById(R.id.pet_details_contact_tv);
         progressBar = view.findViewById(R.id.pet_details_progressbar);
+        chatBtn = view.findViewById(R.id.pet_details_chat_btn);
         mapImageBtn = view.findViewById(R.id.pet_details_map_btn);
         petId = PetDetailsFragmentArgs.fromBundle(getArguments()).getPetId();
 
+        chatBtn.setOnClickListener(v -> navChat(v));
         mapImageBtn.setOnClickListener(v -> navMap(v));
 
         Model.instance.getPetById(petId, new Model.GetPetById() {
@@ -112,7 +116,16 @@ public class PetDetailsFragment extends Fragment {
                     petId
                 );
         Navigation.findNavController(v).navigate(action);
+    }
 
-//        Navigation.findNavController(v).navigate(PetDetailsFragmentDirections.actionPetDetailsFragmentToAllLocationsMapFragment());
+    private void navChat(View v) {
+        String connectedPetId = SaveSharedPreference.getEmail(getActivity().getApplicationContext());
+
+        PetDetailsFragmentDirections.ActionPetDetailsFragmentToChatFragment action =
+                PetDetailsFragmentDirections.actionPetDetailsFragmentToChatFragment(
+                        connectedPetId,
+                        petId
+                );
+        Navigation.findNavController(v).navigate(action);
     }
 }

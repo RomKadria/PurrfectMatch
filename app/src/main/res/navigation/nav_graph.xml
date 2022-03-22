@@ -41,6 +41,9 @@
             android:name="petId"
             app:argType="string" />
         <action
+            android:id="@+id/action_petDetailsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+        <action
             android:id="@+id/action_petDetailsFragment_to_allLocationsMapFragment"
             app:destination="@id/allLocationsMapFragment" />
     </fragment>
@@ -55,6 +58,9 @@
         <action
             android:id="@+id/action_petListRvFragment_to_allLocationsMapFragment"
             app:destination="@id/allLocationsMapFragment" />
+        <action
+            android:id="@+id/action_petListRvFragment_to_PetChatsFragment"
+            app:destination="@id/chatListRvFragment" />
         <action
             android:id="@+id/action_petListRvFragment_to_watchDetailsFragment"
             app:destination="@id/watchDetailsFragment" />
@@ -104,5 +110,29 @@
         <action
             android:id="@+id/action_loginFragment_to_petListRvFragment"
             app:destination="@id/petListRvFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatListRvFragment"
+        android:name="com.example.purrfectmatch.ChatListRvFragment"
+        android:label="My chats"
+        tools:layout="@layout/fragment_chat_list" >
+        <argument
+            android:name="petId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_chatListRvFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.purrfectmatch.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat">
+        <argument
+            android:name="sendingPetId"
+            app:argType="string" />
+        <argument
+            android:name="receivingPetId"
+            app:argType="string" />
     </fragment>
 </navigation>

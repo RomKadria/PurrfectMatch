@@ -12,7 +12,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,8 +62,11 @@ public class PetListRvFragment extends Fragment {
                 return true;
 
             case R.id.menu_chat_btn:
-                //TODO: add navigation to chat fragment
+                String connectedEmail = SaveSharedPreference.getEmail(getActivity().getApplicationContext());
 
+                Navigation.findNavController(this.getView())
+                        .navigate(PetListRvFragmentDirections
+                                .actionPetListRvFragmentToPetChatsFragment(connectedEmail));
                 return true;
         }
 
@@ -105,9 +107,9 @@ public class PetListRvFragment extends Fragment {
 
         setHasOptionsMenu(true);
         viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
-        swipeRefresh.setRefreshing(Model.instance.getPetListLoadingState().getValue() == Model.PetListLoadingState.loading);
+        swipeRefresh.setRefreshing(Model.instance.getPetListLoadingState().getValue() == Model.LoadingState.loading);
         Model.instance.getPetListLoadingState().observe(getViewLifecycleOwner(), PetListLoadingState -> {
-            if (PetListLoadingState == Model.PetListLoadingState.loading){
+            if (PetListLoadingState == Model.LoadingState.loading){
                 swipeRefresh.setRefreshing(true);
             }else{
                 swipeRefresh.setRefreshing(false);

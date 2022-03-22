@@ -12,7 +12,7 @@ public class PetListRvViewModel extends ViewModel {
     LiveData<List<Pet>> data;
 
     public PetListRvViewModel(){
-        data = Model.instance.getAll();
+        data = Model.instance.getAllPets();
     }
     public LiveData<List<Pet>> getData() {
         return data;
