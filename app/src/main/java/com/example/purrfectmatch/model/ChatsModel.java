@@ -1,16 +1,13 @@
 package com.example.purrfectmatch.model;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -44,7 +41,7 @@ public class ChatsModel {
         chatPetsListLoadingState.setValue(ChatsModel.LoadingState.loading);
 
         // get last local update date
-        Long lastUpdateDate = ChatPet.getLocalLastUpdated();
+        Long lastUpdateDate = MyApplication.context.getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("chatPetsLastUpdateDate",0);
 
         // firebase get all updates since lastLocalUpdateDate
         modelFirebase.getAllChatPets(lastUpdateDate, petId, new ModelFirebase.GetAllChatPetsListener() {
@@ -64,7 +61,9 @@ public class ChatsModel {
                         }
 
                         // update last local update date
-                        ChatPet.setLocalLastUpdated(lud);
+                        MyApplication.context.getSharedPreferences("TAG", Context.MODE_PRIVATE).edit()
+                        .putLong("chatPetsLastUpdateDate", lud)
+                        .commit();
 
                         //return all data to caller
                         List<ChatPet> resList = AppLocalDb.db.chatPetDao().getAllConnectedPetChats(petId);

@@ -15,17 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.purrfectmatch.model.ChatMessage;
 import com.example.purrfectmatch.model.ChatPet;
 import com.example.purrfectmatch.model.ChatsModel;
-import com.example.purrfectmatch.model.Model;
-import com.example.purrfectmatch.model.Pet;
-import com.example.purrfectmatch.model.SaveSharedPreference;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -136,5 +133,19 @@ public class ChatListRvFragment extends Fragment {
             }
             return viewModel.getData().getValue().size();
         }
+    }
+
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.getActivity().onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

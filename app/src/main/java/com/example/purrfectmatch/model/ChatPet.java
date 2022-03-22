@@ -1,8 +1,5 @@
 package com.example.purrfectmatch.model;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import androidx.room.Entity;
 
 import com.google.firebase.Timestamp;
@@ -42,16 +39,5 @@ public class ChatPet extends Pet {
         ChatPet pet = new ChatPet(email,name,age,address,description, password, petUrl, latitude, longitude, connectedEmail);
         pet.setUpdateDate(updateDate);
         return pet;
-    }
-
-    public static void setLocalLastUpdated(Long timestamp) {
-        SharedPreferences.Editor ed = MyApplication.context.getSharedPreferences("TAG", Context.MODE_PRIVATE).edit();
-        ed.putLong("chatPetsLastUpdateDate", timestamp);
-        ed.commit();
-    }
-
-    public static Long getLocalLastUpdated() {
-        SharedPreferences sp = MyApplication.context.getSharedPreferences("TAG", Context.MODE_PRIVATE);
-        return sp.getLong("chatPetsLastUpdateDate",0);
     }
 }
