@@ -11,16 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.content.Context;
 
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,24 +28,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
-
 import com.example.purrfectmatch.model.Pet;
+import com.example.purrfectmatch.model.SaveSharedPreference;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Callback;
 
 import java.io.IOException;
 
 public class watchDetailsFragment extends Fragment {
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    final static int RESULT_SUCCESS = 0;
     final static int MAX_AGE = 200;
     final static int MIN_AGE = 0;
-    private static final int REQUEST_CAMERA = 1;
     private static final int SELECT_IMAGE = 22;
-    private final int PICK_IMAGE_REQUEST = 22;
 
     EditText nameEt;
     EditText ageEt;
@@ -58,16 +54,18 @@ public class watchDetailsFragment extends Fragment {
     Button uploadBtn;
     Button editBtn;
     ImageButton mapBtn;
-    Bitmap imageBitmap;
-    ImageView imageIv;
+    ImageView petImageIv;
+    TextView picTv;
     private Uri filePath;
     Bitmap photo;
     ProgressBar progressBar;
     Double latitude;
     Double longitude;
-    String email;
     String password;
     Boolean isEdit = false;
+    String petId;
+    String currentUrl;
+    boolean isFirstTime = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,11 +73,9 @@ public class watchDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_watch_details, container, false);
         setHasOptionsMenu(true);
-//        if (getArguments() != null) {
-////            email = watchDetailsFragmentArgs.fromBundle(getArguments()).getEmail();
-////            password = watchDetailsFragmentArgs.fromBundle(getArguments()).getPassword();
-////        }
 
+        petId = SaveSharedPreference.getEmail(this.getActivity().getApplicationContext());
+        password = SaveSharedPreference.getPassword(this.getActivity().getApplicationContext());
         nameEt = view.findViewById(R.id.watchDetails_name_et);
         ageEt = view.findViewById(R.id.watchDetails_age_et);
         addressEt = view.findViewById(R.id.watchDetails_address_et);
@@ -88,7 +84,8 @@ public class watchDetailsFragment extends Fragment {
         uploadBtn = view.findViewById(R.id.watchDetails_upload_btn);
         editBtn = view.findViewById(R.id.watchDetails_edit_btn);
         mapBtn = view.findViewById(R.id.watchDetails_map_btn);
-        imageIv = view.findViewById(R.id.watchDetails_image_iv);
+        petImageIv = view.findViewById(R.id.watchDetails_petimage_iv);
+        picTv = view.findViewById(R.id.watchDetails_pic_tv);
         progressBar = view.findViewById(R.id.watchDetails_progressbar);
         progressBar.setVisibility(View.GONE);
         mapBtn.setEnabled(false);
@@ -97,6 +94,36 @@ public class watchDetailsFragment extends Fragment {
         editBtn.setOnClickListener(v -> toggleEdit());
         mapBtn.setOnClickListener(v -> openMap(v));
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
+
+
+        if (isFirstTime) {
+            Model.instance.getPetById(petId, pet -> {
+                if (pet.getPetUrl() != null) {
+                    Picasso.get()
+                            .load(pet.getPetUrl())
+                            .error(R.drawable.pet_avatar)
+                            .into(petImageIv, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    nameEt.setText(pet.getName());
+                                    ageEt.setText("" + pet.getAge());
+                                    aboutEt.setText(pet.getDescription());
+                                    addressEt.setText(pet.getAddress());
+                                    currentUrl = pet.getPetUrl();
+                                    progressBar.setVisibility(View.GONE);
+                                    latitude = pet.getLatitude();
+                                    longitude = pet.getLongitude();
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                }
+                            });
+                }
+            });
+
+            isFirstTime = false;
+        }
 
         return view;
     }
@@ -143,8 +170,7 @@ public class watchDetailsFragment extends Fragment {
         if (nameEt.getText().toString().isEmpty() ||
                 ageEt.getText().toString().isEmpty() ||
                 addressEt.getText().toString().isEmpty() ||
-                aboutEt.getText().toString().isEmpty() ||
-                photo == null) {
+                aboutEt.getText().toString().isEmpty()) {
 
             Context context = getContext();
             CharSequence text = "Please fill all fields";
@@ -165,36 +191,51 @@ public class watchDetailsFragment extends Fragment {
             if (age < MIN_AGE || age > MAX_AGE) {
                 Toast.makeText(getActivity(), "Age must be between " + MIN_AGE + " and " + MAX_AGE, Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
-//            } else if (email.isEmpty() || password.isEmpty()) {
-//                Toast.makeText(getActivity(), "missing data from last phase, please restart the process", Toast.LENGTH_SHORT).show();
-//                progressBar.setVisibility(View.GONE);
+            } else if (petId.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getActivity(), "missing data, please reload app and try again", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             } else { // All good lets add the pet
-                Model.instance.saveImage(photo, email + ".jpg", url -> {
+                if (photo != null) {
+                    Model.instance.saveImage(photo, petId + ".jpg", url -> {
 
-                    Pet pet = new Pet("a@a.a", name, age, address, about, "123456", url, latitude, longitude);
+                        Pet pet = new Pet(petId, name, age, address, about, password, url, latitude, longitude);
+                        Model.instance.updatePet(pet, () -> {
+                            progressBar.setVisibility(View.GONE);
+
+                        });
+                    });
+                } else {
+                    Pet pet = new Pet(petId, name, age, address, about, password, currentUrl, latitude, longitude);
                     Model.instance.updatePet(pet, () -> {
                         progressBar.setVisibility(View.GONE);
 
-                        toggleEdit();
                     });
-                });
+                }
+
+                toggleEdit();
             }
         }
     }
 
-    private  void toggleEdit() {
+    private void toggleEdit() {
         if (!isEdit) {
             nameEt.setEnabled(true);
             ageEt.setEnabled(true);
             aboutEt.setEnabled(true);
+            editBtn.setText("Cancel");
             updateBtn.setVisibility(View.VISIBLE);
+            uploadBtn.setVisibility(View.VISIBLE);
+            picTv.setVisibility(View.VISIBLE);
             mapBtn.setEnabled(true);
             isEdit = true;
         } else {
             nameEt.setEnabled(false);
             ageEt.setEnabled(false);
             aboutEt.setEnabled(false);
+            editBtn.setText("Edit");
             updateBtn.setVisibility(View.INVISIBLE);
+            uploadBtn.setVisibility(View.INVISIBLE);
+            picTv.setVisibility(View.INVISIBLE);
             mapBtn.setEnabled(false);
             isEdit = false;
         }
@@ -233,7 +274,7 @@ public class watchDetailsFragment extends Fragment {
                         photo = (Bitmap) data.getExtras().get("data");
                     }
 
-                    imageIv.setImageBitmap(photo);
+                    petImageIv.setImageBitmap(photo);
 
                 } catch (IOException e) {
                     e.printStackTrace();

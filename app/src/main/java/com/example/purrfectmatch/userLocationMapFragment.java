@@ -17,6 +17,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -94,6 +97,24 @@ public class userLocationMapFragment extends Fragment {
         }
     };
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.blank_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.getActivity().onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -103,6 +124,8 @@ public class userLocationMapFragment extends Fragment {
         geocoder = new Geocoder(getContext());
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireContext());
+
+        setHasOptionsMenu(true);
 
         return view;
     }
