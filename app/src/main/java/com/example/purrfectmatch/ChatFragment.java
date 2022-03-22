@@ -283,6 +283,9 @@ public class ChatFragment extends Fragment {
             if (chatMessage.getSendingId().equals(sendingPetId)) {
                 holder.editBtn.setVisibility(View.VISIBLE);
                 holder.deleteBtn.setVisibility(View.VISIBLE);
+            } else {
+                holder.editBtn.setVisibility(View.GONE);
+                holder.deleteBtn.setVisibility(View.GONE);
             }
 
             String img = chatMessage.getImgUrl();
