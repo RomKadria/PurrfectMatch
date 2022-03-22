@@ -28,12 +28,12 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:contentDescription="@string/watchMap"
-        android:src="@drawable/map_btn"
-        app:tint="@null"
-        app:fabSize="normal"
         android:scaleType="center"
+        android:src="@drawable/white_location"
+        app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@null" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/petlist_watchChats_fb"
