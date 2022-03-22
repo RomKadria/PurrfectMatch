@@ -174,7 +174,7 @@ public class SignupSTwoFragment extends Fragment {
                         progressBar.setVisibility(View.GONE);
                         
                         SaveSharedPreference.setLogin(getActivity().getApplicationContext(), true);
-                        Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToPetListRvFragment());
+                        Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToLoginFragment());
                     });
                 });
             }

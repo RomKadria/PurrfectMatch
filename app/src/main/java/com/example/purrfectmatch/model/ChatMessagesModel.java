@@ -41,12 +41,14 @@ public class ChatMessagesModel {
     MutableLiveData<List<ChatMessage>> chatMessages = new MutableLiveData<List<ChatMessage>>();
 
     public LiveData<List<ChatMessage>> getAllChatMessages(String sendingPetId, String receivingPetId) {
-        refreshChatMessages(sendingPetId, receivingPetId);
+        refreshChatMessages(sendingPetId, receivingPetId, true);
         return chatMessages;
     }
 
-    public void refreshChatMessages(String sendingPetId, String receivingPetId) {
-        chatMessagesLoadingState.setValue(LoadingState.loading);
+    public void refreshChatMessages(String sendingPetId, String receivingPetId, Boolean showLoading) {
+        if (showLoading) {
+            chatMessagesLoadingState.setValue(LoadingState.loading);
+        }
 
         // get last local update date
         Long lastUpdateDate = MyApplication.getContext()
@@ -101,7 +103,7 @@ public class ChatMessagesModel {
     public void addChatMessage(ChatMessage chatMessage, AddChatMessageListener listener) {
         modelFirebase.addChatMessage(chatMessage, () -> {
             listener.onComplete();
-            refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId);
+            refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId, true);
         });
     }
 
@@ -114,7 +116,7 @@ public class ChatMessagesModel {
     public void updateChatMessage(ChatMessage chatMessage, UpdateChatMessageListener listener) {
         modelFirebase.updateChatMessage(chatMessage, () -> {
             listener.onComplete();
-            refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId);
+            refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId, true);
         });
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -134,7 +136,7 @@ public class ChatMessagesModel {
                         }
                     }
                 }});
-            refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId);
+            refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId, true);
             ChatsModel.instance.refreshChatsList(chatMessage.sendingId);
         });
     }

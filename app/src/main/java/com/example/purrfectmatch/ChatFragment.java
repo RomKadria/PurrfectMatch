@@ -68,13 +68,13 @@ public class ChatFragment extends Fragment {
         viewModel = new ViewModelProvider(this, new ChatMessagesViewModelFactory(sendingPetId, receivingPetId)).get(ChatMessagesViewModel.class);
 
         swipeRefresh = view.findViewById(R.id.chat_swiperefresh);
-        swipeRefresh.setOnRefreshListener(() -> ChatMessagesModel.instance.refreshChatMessages(sendingPetId, receivingPetId));
+        swipeRefresh.setOnRefreshListener(() -> ChatMessagesModel.instance.refreshChatMessages(sendingPetId, receivingPetId, true));
 
         // Refresh chat every 30 sec
         new android.os.Handler(Looper.getMainLooper()).postDelayed(
                 new Runnable() {
                     public void run() {
-                        ChatMessagesModel.instance.refreshChatMessages(sendingPetId, receivingPetId);
+                        ChatMessagesModel.instance.refreshChatMessages(sendingPetId, receivingPetId, false);
                     }
                 },
                 30000);

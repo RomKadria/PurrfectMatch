@@ -25,11 +25,11 @@
             android:name="password"
             app:argType="string" />
         <action
-            android:id="@+id/action_signupSTwoFragment_to_petListRvFragment"
-            app:destination="@id/petListRvFragment" />
-        <action
             android:id="@+id/action_signupSTwoFragment_to_userLocationMapFragment"
             app:destination="@id/userLocationMapFragment" />
+        <action
+            android:id="@+id/action_signupSTwoFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 
     <fragment
