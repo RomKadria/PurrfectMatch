@@ -33,7 +33,6 @@ public class ChatsModel {
 
     MutableLiveData<List<ChatPet>> chatPetsList = new MutableLiveData<List<ChatPet>>();
     public LiveData<List<ChatPet>> getAllChatPets(String petId){
-        chatPetsListLoadingState.setValue(ChatsModel.LoadingState.loading);
         refreshChatsList(petId);
         return chatPetsList;
     }
@@ -52,7 +51,6 @@ public class ChatsModel {
                     @Override
                     public void run() {
                         Long lud = new Long(0);
-                        AppLocalDb.db.chatPetDao().insertAll();
                         for (ChatPet pet: list) {
                             AppLocalDb.db.chatPetDao().insertAll(pet);
                             if (lud < pet.getUpdateDate()){

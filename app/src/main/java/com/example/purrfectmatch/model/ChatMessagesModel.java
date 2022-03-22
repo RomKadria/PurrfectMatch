@@ -41,7 +41,6 @@ public class ChatMessagesModel {
     MutableLiveData<List<ChatMessage>> chatMessages = new MutableLiveData<List<ChatMessage>>();
 
     public LiveData<List<ChatMessage>> getAllChatMessages(String sendingPetId, String receivingPetId) {
-        chatMessagesLoadingState.setValue(LoadingState.loading);
         refreshChatMessages(sendingPetId, receivingPetId);
         return chatMessages;
     }
@@ -136,6 +135,7 @@ public class ChatMessagesModel {
                     }
                 }});
             refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId);
+            ChatsModel.instance.refreshChatsList(chatMessage.sendingId);
         });
     }
 }
