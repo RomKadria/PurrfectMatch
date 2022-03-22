@@ -11,16 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.content.Context;
 
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,7 +28,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,17 +39,12 @@ import com.example.purrfectmatch.model.SaveSharedPreference;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Callback;
 
-
 import java.io.IOException;
 
 public class watchDetailsFragment extends Fragment {
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    final static int RESULT_SUCCESS = 0;
     final static int MAX_AGE = 200;
     final static int MIN_AGE = 0;
-    private static final int REQUEST_CAMERA = 1;
     private static final int SELECT_IMAGE = 22;
-    private final int PICK_IMAGE_REQUEST = 22;
 
     EditText nameEt;
     EditText ageEt;
@@ -63,7 +54,6 @@ public class watchDetailsFragment extends Fragment {
     Button uploadBtn;
     Button editBtn;
     ImageButton mapBtn;
-    Bitmap imageBitmap;
     ImageView petImageIv;
     TextView picTv;
     private Uri filePath;
@@ -75,6 +65,7 @@ public class watchDetailsFragment extends Fragment {
     Boolean isEdit = false;
     String petId;
     String currentUrl;
+    boolean isFirstTime = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,30 +96,34 @@ public class watchDetailsFragment extends Fragment {
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
 
 
-        Model.instance.getPetById(petId, pet -> {
-            if (pet.getPetUrl() != null) {
-                Picasso.get()
-                        .load(pet.getPetUrl())
-                        .error(R.drawable.pet_avatar)
-                        .into(petImageIv, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                nameEt.setText(pet.getName());
-                                ageEt.setText("" + pet.getAge());
-                                aboutEt.setText(pet.getDescription());
-                                addressEt.setText(pet.getAddress());
-                                currentUrl = pet.getPetUrl();
-                                progressBar.setVisibility(View.GONE);
-                                latitude = pet.getLatitude();
-                                longitude = pet.getLongitude();
-                            }
+        if (isFirstTime) {
+            Model.instance.getPetById(petId, pet -> {
+                if (pet.getPetUrl() != null) {
+                    Picasso.get()
+                            .load(pet.getPetUrl())
+                            .error(R.drawable.pet_avatar)
+                            .into(petImageIv, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    nameEt.setText(pet.getName());
+                                    ageEt.setText("" + pet.getAge());
+                                    aboutEt.setText(pet.getDescription());
+                                    addressEt.setText(pet.getAddress());
+                                    currentUrl = pet.getPetUrl();
+                                    progressBar.setVisibility(View.GONE);
+                                    latitude = pet.getLatitude();
+                                    longitude = pet.getLongitude();
+                                }
 
-                            @Override
-                            public void onError(Exception e) {
-                            }
-                        });
-            }
-        });
+                                @Override
+                                public void onError(Exception e) {
+                                }
+                            });
+                }
+            });
+
+            isFirstTime = false;
+        }
 
         return view;
     }
