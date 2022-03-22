@@ -163,17 +163,6 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/watchDetails_pic_tv" />
 
-    <ImageView
-        android:id="@+id/watchDetails_image_iv"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        app:layout_constraintStart_toEndOf="@+id/watchDetails_upload_btn"
-        app:layout_constraintTop_toBottomOf="@+id/watchDetails_about_tv" />
-
     <TextView
         android:id="@+id/watchDetails_age_tv"
         android:layout_width="wrap_content"

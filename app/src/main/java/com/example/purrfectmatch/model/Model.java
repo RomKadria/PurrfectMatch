@@ -34,7 +34,6 @@ public class Model {
     private Model(){
         petListLoadingState.setValue(PetListLoadingState.loaded);
     }
-
     MutableLiveData<List<Pet>> petsList = new MutableLiveData<List<Pet>>();
     public LiveData<List<Pet>> getAll(){
         if (petsList.getValue() == null) { refreshPetList(); };

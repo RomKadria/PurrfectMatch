@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
@@ -19,6 +20,7 @@ import com.example.purrfectmatch.model.SaveSharedPreference;
 
 
 public class LoginFragment extends Fragment {
+    ProgressBar progressBar;
 
     @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,6 +29,9 @@ public class LoginFragment extends Fragment {
 
             Button signInButton = view.findViewById(R.id.signin_signin_button);
             Button signUpButton = view.findViewById(R.id.signin_signup_button);
+
+            progressBar = view.findViewById(R.id.signin_progressbar);
+            progressBar.setVisibility(View.GONE);
 
             EditText emailInput = view.findViewById(R.id.signin_email_input);
             EditText passwordInput = view.findViewById(R.id.signin_password_input);
@@ -40,6 +45,7 @@ public class LoginFragment extends Fragment {
             // on sign in
             signInButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+                    progressBar.setVisibility(View.VISIBLE);
 
                     String email = emailInput.getText().toString();
                     String password = passwordInput.getText().toString();
@@ -52,6 +58,9 @@ public class LoginFragment extends Fragment {
                                 Toast.LENGTH_SHORT)
                                 .show();
 
+                        progressBar.setVisibility(View.GONE);
+
+
                     } else {
                         // user validation
                         Model.instance.checkUserValid(email, password, valid -> {
@@ -61,6 +70,8 @@ public class LoginFragment extends Fragment {
                                         "Your email or password is incorrect",
                                         Toast.LENGTH_SHORT)
                                         .show();
+
+                                progressBar.setVisibility(View.GONE);
                             } else {
                                 setLoginPref(email, password, saveLoginCheckBox.isChecked());
 
