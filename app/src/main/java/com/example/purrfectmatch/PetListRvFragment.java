@@ -62,8 +62,11 @@ public class PetListRvFragment extends Fragment {
                 return true;
 
             case R.id.menu_chat_btn:
-                //TODO: add navigation to chat fragment
+                String connectedEmail = SaveSharedPreference.getEmail(getActivity().getApplicationContext());
 
+                Navigation.findNavController(this.getView())
+                        .navigate(PetListRvFragmentDirections
+                                .actionPetListRvFragmentToPetChatsFragment(connectedEmail));
                 return true;
         }
 
@@ -83,12 +86,6 @@ public class PetListRvFragment extends Fragment {
         FloatingActionButton watchMap = view.findViewById(R.id.petlist_watchMap_fb);
         watchMap.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToAllLocationsMapFragment(null));
-        });
-
-        FloatingActionButton watchChats = view.findViewById(R.id.petlist_watchChats_fb);
-        watchChats.setOnClickListener(v -> {
-            String connectedEmail = SaveSharedPreference.getEmail(getActivity().getApplicationContext());
-            Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToPetChatsFragment(connectedEmail));
         });
 
         RecyclerView list = view.findViewById(R.id.petlist_rv);

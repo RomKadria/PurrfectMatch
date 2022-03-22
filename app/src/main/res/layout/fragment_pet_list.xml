@@ -35,18 +35,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@null" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/petlist_watchChats_fb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|bottom"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/watchChats"
-        android:src="@drawable/chat_btn"
-        app:tint="@null"
-        app:fabSize="normal"
-        android:scaleType="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
