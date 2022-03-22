@@ -49,7 +49,7 @@ public class ChatMessagesModel {
     public void refreshChatMessages(String sendingPetId, String receivingPetId) {
         chatMessagesLoadingState.setValue(LoadingState.loading);
 
-        // get last local update date TODO: mark the specific chat
+        // get last local update date
         Long lastUpdateDate = MyApplication.getContext()
                 .getSharedPreferences("TAG", Context.MODE_PRIVATE)
                 .getLong("ChatMessagesLastUpdateDate" + receivingPetId, 0);
@@ -74,7 +74,7 @@ public class ChatMessagesModel {
                         MyApplication.getContext()
                                 .getSharedPreferences("TAG", Context.MODE_PRIVATE)
                                 .edit()
-                                .putLong("ChatMessagesLastUpdateDate" + receivingPetId, lud) // TODO: save for specific chat
+                                .putLong("ChatMessagesLastUpdateDate" + receivingPetId, lud)
                                 .commit();
 
                         //return all data to caller
