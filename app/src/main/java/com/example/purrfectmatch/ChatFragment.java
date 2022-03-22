@@ -280,10 +280,13 @@ public class ChatFragment extends Fragment {
             holder.messageUser.setText(chatMessage.getSendingId());
             holder.messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", chatMessage.getMessageTime() * 1000));
 
-            String img = chatMessage.getImgUrl();
-            if (img != null && !img.isEmpty()) {
-                Picasso.get().load(img).into(holder.messageImg);
+            if (chatMessage.getSendingId().equals(sendingPetId)) {
+                holder.editBtn.setVisibility(View.VISIBLE);
+                holder.deleteBtn.setVisibility(View.VISIBLE);
             }
+
+            String img = chatMessage.getImgUrl();
+            Picasso.get().load(img).into(holder.messageImg);
         }
 
         @Override
