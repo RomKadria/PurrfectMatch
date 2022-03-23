@@ -1,9 +1,7 @@
 package com.example.purrfectmatch;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,8 +23,6 @@ import com.example.purrfectmatch.model.ChatPet;
 import com.example.purrfectmatch.model.ChatsModel;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 public class ChatListRvFragment extends Fragment {
 
     ChatListRvViewModel viewModel;
@@ -37,7 +33,7 @@ public class ChatListRvFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
         petId = ChatListRvFragmentArgs.fromBundle(getArguments()).getPetId();
         viewModel = new ViewModelProvider(this, new ChatListRvViewModelFactory(petId)).get(ChatListRvViewModel.class);
 
@@ -52,19 +48,16 @@ public class ChatListRvFragment extends Fragment {
         adapter = new ChatListRvFragment.MyAdapter();
         list.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new ChatListRvFragment.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v,int position) {
-                String selectedPetId = viewModel.getData().getValue().get(position).getEmail();
-                Navigation.findNavController(v).navigate(ChatListRvFragmentDirections.actionChatListRvFragmentToChatFragment(petId, selectedPetId));
-            }
+        adapter.setOnItemClickListener((v, position) -> {
+            String selectedPetId = viewModel.getData().getValue().get(position).getEmail();
+            Navigation.findNavController(v).navigate(ChatListRvFragmentDirections.actionChatListRvFragmentToChatFragment(petId, selectedPetId));
         });
 
         setHasOptionsMenu(true);
         viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
         swipeRefresh.setRefreshing(ChatsModel.instance.getChatPetsListLoadingState().getValue() == ChatsModel.LoadingState.loading);
         ChatsModel.instance.getChatPetsListLoadingState().observe(getViewLifecycleOwner(), ChatPetsListLoadingState -> {
-            if (ChatPetsListLoadingState == ChatsModel.LoadingState.loading){
+            if (ChatPetsListLoadingState == ChatsModel.LoadingState.loading) {
                 swipeRefresh.setRefreshing(true);
             } else {
                 swipeRefresh.setRefreshing(false);
@@ -79,7 +72,7 @@ public class ChatListRvFragment extends Fragment {
         swipeRefresh.setRefreshing(false);
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
+    class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView petName;
         public ImageView petImage;
 
@@ -89,18 +82,15 @@ public class ChatListRvFragment extends Fragment {
             petImage = itemView.findViewById(R.id.pc_pet_image);
 
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    listener.onItemClick(v,pos);
-                }
+            itemView.setOnClickListener(v -> {
+                int pos = getAdapterPosition();
+                listener.onItemClick(v, pos);
             });
         }
     }
 
-    interface OnItemClickListener{
-        void onItemClick(View v,int position);
+    interface OnItemClickListener {
+        void onItemClick(View v, int position);
     }
 
     class MyAdapter extends RecyclerView.Adapter<ChatListRvFragment.MyViewHolder> {

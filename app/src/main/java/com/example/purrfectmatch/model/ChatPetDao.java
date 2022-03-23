@@ -10,9 +10,6 @@ import java.util.List;
 
 @Dao
 public interface ChatPetDao {
-    @Query("select * from ChatPet")
-    List<ChatPet> getAll();
-
     @Query("select * from ChatPet where email = :petId")
     List<ChatPet> getById(String petId);
 

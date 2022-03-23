@@ -97,35 +97,35 @@ public class watchDetailsFragment extends Fragment {
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
 
 
-            Model.instance.getPetById(petId, pet -> {
-                if (pet.getPetUrl() != null) {
-                    Picasso.get()
-                            .load(pet.getPetUrl())
-                            .error(R.drawable.pet_avatar)
-                            .into(petImageIv, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    if (isFirstTime) {
-                                        nameEt.setText(pet.getName());
-                                        ageEt.setText("" + pet.getAge());
-                                        aboutEt.setText(pet.getDescription());
-                                        addressEt.setText(pet.getAddress());
-                                        currentUrl = pet.getPetUrl();
-                                        progressBar.setVisibility(View.GONE);
-                                        latitude = pet.getLatitude();
-                                        longitude = pet.getLongitude();
+        Model.instance.getPetById(petId, pet -> {
+            if (pet.getPetUrl() != null) {
+                Picasso.get()
+                        .load(pet.getPetUrl())
+                        .error(R.drawable.pet_avatar)
+                        .into(petImageIv, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                if (isFirstTime) {
+                                    nameEt.setText(pet.getName());
+                                    ageEt.setText("" + pet.getAge());
+                                    aboutEt.setText(pet.getDescription());
+                                    addressEt.setText(pet.getAddress());
+                                    currentUrl = pet.getPetUrl();
+                                    progressBar.setVisibility(View.GONE);
+                                    latitude = pet.getLatitude();
+                                    longitude = pet.getLongitude();
 
-                                        connectedPet = pet;
-                                        isFirstTime = false;
-                                    }
+                                    connectedPet = pet;
+                                    isFirstTime = false;
                                 }
+                            }
 
-                                @Override
-                                public void onError(Exception e) {
-                                }
-                            });
-                }
-            });
+                            @Override
+                            public void onError(Exception e) {
+                            }
+                        });
+            }
+        });
 
         return view;
     }
@@ -139,8 +139,6 @@ public class watchDetailsFragment extends Fragment {
     // handle button activities
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.getActivity().onBackPressed();
@@ -181,7 +179,6 @@ public class watchDetailsFragment extends Fragment {
             toast.show();
 
             progressBar.setVisibility(View.GONE);
-
 
 
         } else {
@@ -261,9 +258,9 @@ public class watchDetailsFragment extends Fragment {
         chooser.putExtra(Intent.EXTRA_INTENT, galleryintent);
         chooser.putExtra(Intent.EXTRA_TITLE, "how would you like to get your photo");
 
-        Intent[] intentArray =  {cameraIntent};
+        Intent[] intentArray = {cameraIntent};
         chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-        startActivityForResult(chooser,SELECT_IMAGE);
+        startActivityForResult(chooser, SELECT_IMAGE);
     }
 
     private void openMap(View v) {
