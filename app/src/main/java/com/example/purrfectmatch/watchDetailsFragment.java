@@ -66,6 +66,7 @@ public class watchDetailsFragment extends Fragment {
     String petId;
     String currentUrl;
     boolean isFirstTime = true;
+    Pet connectedPet;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,6 +114,7 @@ public class watchDetailsFragment extends Fragment {
                                     progressBar.setVisibility(View.GONE);
                                     latitude = pet.getLatitude();
                                     longitude = pet.getLongitude();
+                                    connectedPet = pet;
                                 }
 
                                 @Override
@@ -239,30 +241,13 @@ public class watchDetailsFragment extends Fragment {
             mapBtn.setEnabled(false);
             isEdit = false;
 
-            Model.instance.getPetById(petId, pet -> {
-                if (pet.getPetUrl() != null) {
-                    Picasso.get()
-                            .load(pet.getPetUrl())
-                            .error(R.drawable.pet_avatar)
-                            .into(petImageIv, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    nameEt.setText(pet.getName());
-                                    ageEt.setText("" + pet.getAge());
-                                    aboutEt.setText(pet.getDescription());
-                                    addressEt.setText(pet.getAddress());
-                                    currentUrl = pet.getPetUrl();
-                                    progressBar.setVisibility(View.GONE);
-                                    latitude = pet.getLatitude();
-                                    longitude = pet.getLongitude();
-                                }
-
-                                @Override
-                                public void onError(Exception e) {
-                                }
-                            });
-                }
-            });
+            nameEt.setText(connectedPet.getName());
+            ageEt.setText("" + connectedPet.getAge());
+            aboutEt.setText(connectedPet.getDescription());
+            addressEt.setText(connectedPet.getAddress());
+            currentUrl = connectedPet.getPetUrl();
+            latitude = connectedPet.getLatitude();
+            longitude = connectedPet.getLongitude();
         }
     }
 
