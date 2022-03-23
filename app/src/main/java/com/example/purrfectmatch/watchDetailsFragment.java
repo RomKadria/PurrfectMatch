@@ -96,7 +96,7 @@ public class watchDetailsFragment extends Fragment {
         mapBtn.setOnClickListener(v -> openMap(v));
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
 
-
+        if (isFirstTime) {
             Model.instance.getPetById(petId, pet -> {
                 if (pet.getPetUrl() != null) {
                     Picasso.get()
@@ -105,27 +105,32 @@ public class watchDetailsFragment extends Fragment {
                             .into(petImageIv, new Callback() {
                                 @Override
                                 public void onSuccess() {
-                                    if (isFirstTime) {
-                                        nameEt.setText(pet.getName());
-                                        ageEt.setText("" + pet.getAge());
-                                        aboutEt.setText(pet.getDescription());
-                                        addressEt.setText(pet.getAddress());
-                                        currentUrl = pet.getPetUrl();
-                                        progressBar.setVisibility(View.GONE);
-                                        latitude = pet.getLatitude();
-                                        longitude = pet.getLongitude();
+                                    nameEt.setText(pet.getName());
+                                    ageEt.setText("" + pet.getAge());
+                                    aboutEt.setText(pet.getDescription());
+                                    addressEt.setText(pet.getAddress());
+                                    currentUrl = pet.getPetUrl();
+                                    progressBar.setVisibility(View.GONE);
+                                    latitude = pet.getLatitude();
+                                    longitude = pet.getLongitude();
 
-                                        connectedPet = pet;
-                                        isFirstTime = false;
-                                    }
+                                    connectedPet = pet;
                                 }
 
                                 @Override
                                 public void onError(Exception e) {
+                                    e.printStackTrace();
                                 }
                             });
                 }
             });
+
+            isFirstTime = false;
+
+        } else {
+            if (photo != null)
+                petImageIv.setImageBitmap(photo);
+        }
 
         return view;
     }
