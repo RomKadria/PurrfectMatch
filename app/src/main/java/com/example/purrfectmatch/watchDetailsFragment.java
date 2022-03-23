@@ -130,6 +130,12 @@ public class watchDetailsFragment extends Fragment {
         } else {
             if (photo != null)
                 petImageIv.setImageBitmap(photo);
+            else {
+                Picasso.get()
+                        .load(connectedPet.getPetUrl())
+                        .error(R.drawable.pet_avatar)
+                        .into(petImageIv);
+            }
         }
 
         return view;
@@ -144,6 +150,8 @@ public class watchDetailsFragment extends Fragment {
     // handle button activities
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.getActivity().onBackPressed();
@@ -184,6 +192,7 @@ public class watchDetailsFragment extends Fragment {
             toast.show();
 
             progressBar.setVisibility(View.GONE);
+
 
 
         } else {
