@@ -60,7 +60,6 @@ public class PetDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pet_details, container, false);
-
         setHasOptionsMenu(true);
 
         headerTv = view.findViewById(R.id.pet_details_header_tv);
@@ -73,7 +72,12 @@ public class PetDetailsFragment extends Fragment {
         mapImageBtn = view.findViewById(R.id.pet_details_map_btn);
         petId = PetDetailsFragmentArgs.fromBundle(getArguments()).getPetId();
 
-        chatBtn.setOnClickListener(v -> navChat(v));
+        String myPetId = SaveSharedPreference.getEmail(this.getActivity().getApplicationContext());
+        if (petId.equals(myPetId)) {
+            chatBtn.setVisibility(View.GONE);
+        } else {
+            chatBtn.setOnClickListener(v -> navChat(v));
+        }
         mapImageBtn.setOnClickListener(v -> navMap(v));
 
         Model.instance.getPetById(petId, new Model.GetPetById() {
