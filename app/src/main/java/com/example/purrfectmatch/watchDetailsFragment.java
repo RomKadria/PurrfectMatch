@@ -66,6 +66,7 @@ public class watchDetailsFragment extends Fragment {
     String petId;
     String currentUrl;
     boolean isFirstTime = true;
+    Pet connectedPet;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,6 +115,7 @@ public class watchDetailsFragment extends Fragment {
                                         latitude = pet.getLatitude();
                                         longitude = pet.getLongitude();
 
+                                        connectedPet = pet;
                                         isFirstTime = false;
                                     }
                                 }
@@ -124,7 +126,6 @@ public class watchDetailsFragment extends Fragment {
                             });
                 }
             });
-
 
         return view;
     }
@@ -239,6 +240,14 @@ public class watchDetailsFragment extends Fragment {
             picTv.setVisibility(View.INVISIBLE);
             mapBtn.setEnabled(false);
             isEdit = false;
+
+            nameEt.setText(connectedPet.getName());
+            ageEt.setText("" + connectedPet.getAge());
+            aboutEt.setText(connectedPet.getDescription());
+            addressEt.setText(connectedPet.getAddress());
+            currentUrl = connectedPet.getPetUrl();
+            latitude = connectedPet.getLatitude();
+            longitude = connectedPet.getLongitude();
         }
     }
 
