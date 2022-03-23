@@ -96,16 +96,15 @@ public class watchDetailsFragment extends Fragment {
         mapBtn.setOnClickListener(v -> openMap(v));
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
 
-
-        Model.instance.getPetById(petId, pet -> {
-            if (pet.getPetUrl() != null) {
-                Picasso.get()
-                        .load(pet.getPetUrl())
-                        .error(R.drawable.pet_avatar)
-                        .into(petImageIv, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                if (isFirstTime) {
+        if (isFirstTime) {
+            Model.instance.getPetById(petId, pet -> {
+                if (pet.getPetUrl() != null) {
+                    Picasso.get()
+                            .load(pet.getPetUrl())
+                            .error(R.drawable.pet_avatar)
+                            .into(petImageIv, new Callback() {
+                                @Override
+                                public void onSuccess() {
                                     nameEt.setText(pet.getName());
                                     ageEt.setText("" + pet.getAge());
                                     aboutEt.setText(pet.getDescription());
@@ -116,16 +115,22 @@ public class watchDetailsFragment extends Fragment {
                                     longitude = pet.getLongitude();
 
                                     connectedPet = pet;
-                                    isFirstTime = false;
                                 }
-                            }
 
-                            @Override
-                            public void onError(Exception e) {
-                            }
-                        });
-            }
-        });
+                                @Override
+                                public void onError(Exception e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                }
+            });
+
+            isFirstTime = false;
+
+        } else {
+            if (photo != null)
+                petImageIv.setImageBitmap(photo);
+        }
 
         return view;
     }
