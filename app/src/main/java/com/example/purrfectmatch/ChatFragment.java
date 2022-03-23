@@ -5,19 +5,16 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -52,7 +49,7 @@ public class ChatFragment extends Fragment {
     EditText chatEditText;
     Button chatSendBtn;
     ImageButton chatCamBtn;
-    ImageView photoIndicatiomImg;
+    ImageView photoIndicationImg;
     private Uri filePath;
     Bitmap photo;
 
@@ -69,15 +66,6 @@ public class ChatFragment extends Fragment {
 
         swipeRefresh = view.findViewById(R.id.chat_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> ChatMessagesModel.instance.refreshChatMessages(sendingPetId, receivingPetId, true));
-
-        // Refresh chat every 30 sec
-        new android.os.Handler(Looper.getMainLooper()).postDelayed(
-                new Runnable() {
-                    public void run() {
-                        ChatMessagesModel.instance.refreshChatMessages(sendingPetId, receivingPetId, false);
-                    }
-                },
-                30000);
 
         RecyclerView list = view.findViewById(R.id.list_of_messages);
         list.setHasFixedSize(true);
@@ -102,7 +90,7 @@ public class ChatFragment extends Fragment {
         chatEditText = view.findViewById(R.id.chat_text_et);
         chatSendBtn = view.findViewById(R.id.chat_send_btn);
         chatCamBtn = view.findViewById(R.id.chat_cam_btn);
-        photoIndicatiomImg = view.findViewById(R.id.chat_camera_img);
+        photoIndicationImg = view.findViewById(R.id.chat_camera_img);
 
         chatCamBtn.setOnClickListener(v -> upload());
         chatSendBtn.setOnClickListener(v -> sendMsg());
@@ -119,14 +107,21 @@ public class ChatFragment extends Fragment {
 
             String textMsg = chatEditText.getText().toString();
             ChatMessage msg = new ChatMessage(sendingPetId, receivingPetId, textMsg, null, null);
-            if (photo == null){
-                ChatMessagesModel.instance.addChatMessage(msg, () -> {});
-            }else{
-                Model.instance.saveImage(photo,Timestamp.now().toString() + ".jpg", url -> {
+            if (photo == null) {
+                ChatMessagesModel.instance.addChatMessage(msg, () -> {
+                });
+            } else {
+                Model.instance.saveImage(photo, Timestamp.now().toString() + ".jpg", url -> {
                     msg.setImgUrl(url);
-                    ChatMessagesModel.instance.addChatMessage(msg, () -> {});
+                    ChatMessagesModel.instance.addChatMessage(msg, () -> {
+                    });
                 });
             }
+
+            filePath = null;
+            chatEditText.setText("");
+            photo = null;
+            photoIndicationImg.setVisibility(View.GONE);
         }
     }
 
@@ -238,7 +233,7 @@ public class ChatFragment extends Fragment {
                         photo = (Bitmap) data.getExtras().get("data");
                     }
 
-                    photoIndicatiomImg.setVisibility(View.VISIBLE);
+                    photoIndicationImg.setVisibility(View.VISIBLE);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -256,10 +251,6 @@ public class ChatFragment extends Fragment {
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         OnItemClickListener listener;
-
-        public void setOnItemClickListener(OnItemClickListener listener) {
-            this.listener = listener;
-        }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         @NonNull
@@ -304,8 +295,6 @@ public class ChatFragment extends Fragment {
     // handle button activities
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.getActivity().onBackPressed();

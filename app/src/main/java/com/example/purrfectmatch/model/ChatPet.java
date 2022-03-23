@@ -10,10 +10,11 @@ import java.util.Map;
 public class ChatPet extends Pet {
     String connectedEmail = "";
 
-    public ChatPet(){
+    public ChatPet() {
         super();
     }
-    public ChatPet( String email, String name, int age, String address, String description, String password, String petUrl, double latitude, double longitude, String connectedEmail) {
+
+    public ChatPet(String email, String name, int age, String address, String description, String password, String petUrl, double latitude, double longitude, String connectedEmail) {
         super(email, name, age, address, description, password, petUrl, latitude, longitude);
         this.connectedEmail = connectedEmail;
     }
@@ -22,7 +23,9 @@ public class ChatPet extends Pet {
         this.connectedEmail = connectedEmail;
     }
 
-    public String getConnectedEmail() { return connectedEmail; }
+    public String getConnectedEmail() {
+        return connectedEmail;
+    }
 
     public static ChatPet create(Map<String, Object> json, String connectedEmail) {
         String email = (String) json.get("email");
@@ -32,11 +35,11 @@ public class ChatPet extends Pet {
         String description = (String) json.get("description");
         String password = (String) json.get("password");
         String petUrl = (String) json.get("petUrl");
-        Timestamp ts = (Timestamp)json.get("updateDate");
+        Timestamp ts = (Timestamp) json.get("updateDate");
         Long updateDate = ts.getSeconds();
         double latitude = Double.parseDouble(json.get("latitude").toString());
         double longitude = Double.parseDouble(json.get("longitude").toString());
-        ChatPet pet = new ChatPet(email,name,age,address,description, password, petUrl, latitude, longitude, connectedEmail);
+        ChatPet pet = new ChatPet(email, name, age, address, description, password, petUrl, latitude, longitude, connectedEmail);
         pet.setUpdateDate(updateDate);
         return pet;
     }

@@ -3,7 +3,7 @@ package com.example.purrfectmatch.model;
 import android.content.Context;
 import android.app.Application;
 
-public class MyApplication extends Application{
+public class MyApplication extends Application {
     static Context context;
 
     @Override
@@ -12,7 +12,7 @@ public class MyApplication extends Application{
         context = getApplicationContext();
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return context;
     }
 }

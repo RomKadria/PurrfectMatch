@@ -58,16 +58,6 @@ public class userLocationMapFragment extends Fragment {
     private Geocoder geocoder;
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
-
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
@@ -104,8 +94,6 @@ public class userLocationMapFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.getActivity().onBackPressed();
@@ -141,7 +129,6 @@ public class userLocationMapFragment extends Fragment {
 
         confirmButton.setOnClickListener(v -> {
             NavHostFragment.findNavController(this).getPreviousBackStackEntry().getSavedStateHandle().set("address", address);
-//            Navigation.findNavController(v).popBackStack(R.id.signupSTwoFragment, false);
             Navigation.findNavController(v).popBackStack();
         });
 
@@ -202,11 +189,6 @@ public class userLocationMapFragment extends Fragment {
     }
 
     private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
         if (ContextCompat.checkSelfPermission(this.requireContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -219,10 +201,6 @@ public class userLocationMapFragment extends Fragment {
     }
 
     private void setLocationMarker() {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
         try {
             if (locationPermissionGranted) {
                 Task<Location> locationResult = fusedLocationProviderClient.getCurrentLocation(PRIORITY_HIGH_ACCURACY, new CancellationToken() {
@@ -237,7 +215,7 @@ public class userLocationMapFragment extends Fragment {
                         return false;
                     }
                 });
-                
+
                 locationResult.addOnCompleteListener(this.requireActivity(), task -> {
                     if (task.isSuccessful()) {
                         // Set the map's camera position to the current location of the device.
@@ -259,7 +237,7 @@ public class userLocationMapFragment extends Fragment {
                     }
                 });
             }
-        } catch (SecurityException e)  {
+        } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage(), e);
         }
     }

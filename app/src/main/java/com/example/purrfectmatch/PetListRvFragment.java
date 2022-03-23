@@ -2,7 +2,6 @@ package com.example.purrfectmatch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.TooltipCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -76,7 +75,7 @@ public class PetListRvFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pet_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_pet_list, container, false);
 
         setHasOptionsMenu(true);
 
@@ -98,10 +97,10 @@ public class PetListRvFragment extends Fragment {
 
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(View v,int position) {
+            public void onItemClick(View v, int position) {
                 String petId = viewModel.getData().getValue().get(position).getEmail();
 
-               Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToPetDetailsFragment(petId));
+                Navigation.findNavController(v).navigate(PetListRvFragmentDirections.actionPetListRvFragmentToPetDetailsFragment(petId));
             }
         });
 
@@ -109,9 +108,9 @@ public class PetListRvFragment extends Fragment {
         viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
         swipeRefresh.setRefreshing(Model.instance.getPetListLoadingState().getValue() == Model.LoadingState.loading);
         Model.instance.getPetListLoadingState().observe(getViewLifecycleOwner(), PetListLoadingState -> {
-            if (PetListLoadingState == Model.LoadingState.loading){
+            if (PetListLoadingState == Model.LoadingState.loading) {
                 swipeRefresh.setRefreshing(true);
-            }else{
+            } else {
                 swipeRefresh.setRefreshing(false);
             }
 
@@ -124,7 +123,7 @@ public class PetListRvFragment extends Fragment {
         swipeRefresh.setRefreshing(false);
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
+    class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView petName;
         public ImageView petImage;
 
@@ -134,32 +133,30 @@ public class PetListRvFragment extends Fragment {
             petImage = itemView.findViewById(R.id.pc_pet_image);
 
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    listener.onItemClick(v,pos);
-                }
+            itemView.setOnClickListener(v -> {
+                int pos = getAdapterPosition();
+                listener.onItemClick(v, pos);
             });
         }
     }
 
-    interface OnItemClickListener{
-        void onItemClick(View v,int position);
+    interface OnItemClickListener {
+        void onItemClick(View v, int position);
     }
 
-    class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
+    class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         OnItemClickListener listener;
-        public void setOnItemClickListener(OnItemClickListener listener){
+
+        public void setOnItemClickListener(OnItemClickListener listener) {
             this.listener = listener;
         }
 
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.pet_list_card,parent,false);
-            MyViewHolder holder = new MyViewHolder(view,listener);
+            View view = getLayoutInflater().inflate(R.layout.pet_list_card, parent, false);
+            MyViewHolder holder = new MyViewHolder(view, listener);
             return holder;
         }
 
@@ -172,7 +169,7 @@ public class PetListRvFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            if(viewModel.getData().getValue() == null){
+            if (viewModel.getData().getValue() == null) {
                 return 0;
             }
             return viewModel.getData().getValue().size();

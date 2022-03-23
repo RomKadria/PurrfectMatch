@@ -13,7 +13,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -83,13 +82,6 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
-    public void addPet(Pet pet) {
-        Map<String, Object> json = pet.toJson();
-        db.collection(Pet.COLLECTION_NAME)
-                .document(pet.getEmail())
-                .set(json);
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void addChatMessage(ChatMessage chatMessage, ChatMessagesModel.AddChatMessageListener listener) {
         Map<String, Object> json = chatMessage.toJson();
@@ -98,14 +90,6 @@ public class ModelFirebase {
                 .set(json)
                 .addOnSuccessListener(unused -> listener.onComplete())
                 .addOnFailureListener(e -> listener.onComplete());
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void addChatMessage(ChatMessage chatMessage) {
-        Map<String, Object> json = chatMessage.toJson();
-        db.collection(ChatMessage.COLLECTION_NAME)
-                .document()
-                .set(json);
     }
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -226,7 +210,7 @@ public class ModelFirebase {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void updateChatMessage(ChatMessage chatMessage, ChatMessagesModel.UpdateChatMessageListener listener){
+    public void updateChatMessage(ChatMessage chatMessage, ChatMessagesModel.UpdateChatMessageListener listener) {
         Map<String, Object> json = chatMessage.toJson();
         db.collection(ChatMessage.COLLECTION_NAME)
                 .document(chatMessage.getId())
@@ -235,14 +219,13 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
-    public void checkUser(String email, String password, Model.OnUserCheckListener listener){
+    public void checkUser(String email, String password, Model.OnUserCheckListener listener) {
         db.collection(Pet.COLLECTION_NAME).
                 whereEqualTo("email", email)
                 .whereEqualTo("password", password)
                 .get()
                 .addOnCompleteListener((user -> {
-                    if (user.getResult().isEmpty())
-                    {
+                    if (user.getResult().isEmpty()) {
                         listener.onComplete(false);
                     } else {
                         listener.onComplete(true);
@@ -250,7 +233,7 @@ public class ModelFirebase {
                 }));
     }
 
-    public void checkEmail(String email, Model.OnEmailCheckListener listener){
+    public void checkEmail(String email, Model.OnEmailCheckListener listener) {
         db.collection(Pet.COLLECTION_NAME).
                 whereEqualTo("email", email)
                 .get()

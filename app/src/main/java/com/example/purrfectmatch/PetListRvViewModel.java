@@ -11,9 +11,10 @@ import java.util.List;
 public class PetListRvViewModel extends ViewModel {
     LiveData<List<Pet>> data;
 
-    public PetListRvViewModel(){
+    public PetListRvViewModel() {
         data = Model.instance.getAllPets();
     }
+
     public LiveData<List<Pet>> getData() {
         return data;
     }

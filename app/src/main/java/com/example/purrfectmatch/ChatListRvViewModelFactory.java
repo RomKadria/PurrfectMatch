@@ -1,8 +1,9 @@
 package com.example.purrfectmatch;
+
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-public class ChatListRvViewModelFactory implements ViewModelProvider.Factory{
+public class ChatListRvViewModelFactory implements ViewModelProvider.Factory {
     private String mPetId;
 
     public ChatListRvViewModelFactory(String petId) {

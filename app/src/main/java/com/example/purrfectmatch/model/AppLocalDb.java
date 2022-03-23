@@ -7,11 +7,13 @@ import androidx.room.RoomDatabase;
 @Database(entities = {Pet.class, ChatMessage.class, ChatPet.class}, version = 9)
 abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract PetDao petDao();
+
     public abstract ChatMessageDao chatMessageDao();
+
     public abstract ChatPetDao chatPetDao();
 }
 
-public class AppLocalDb{
+public class AppLocalDb {
     static public AppLocalDbRepository db =
             Room.databaseBuilder(MyApplication.getContext(),
                     AppLocalDbRepository.class,

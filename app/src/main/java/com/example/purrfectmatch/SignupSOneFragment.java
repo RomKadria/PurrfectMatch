@@ -14,11 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.purrfectmatch.model.Model;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SignupSOneFragment extends Fragment {
 
@@ -80,7 +77,7 @@ public class SignupSOneFragment extends Fragment {
         });
 
         btnNext.setOnClickListener(v -> {
-            if(validateAll()) {
+            if (validateAll()) {
                 SignupSOneFragmentDirections.ActionSignupSOneFragmentToSignupSTwoFragment action =
                         SignupSOneFragmentDirections.actionSignupSOneFragmentToSignupSTwoFragment(
                                 etEmail.getText().toString().trim(),
@@ -96,13 +93,13 @@ public class SignupSOneFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
     public void validateEmail() {
@@ -137,8 +134,7 @@ public class SignupSOneFragment extends Fragment {
         if (password.matches(cPassword)) {
             etConfirmPassword.setError(null);
             return true;
-        }
-        else {
+        } else {
             etConfirmPassword.setError("Passwords don't match");
             return false;
         }
@@ -151,13 +147,13 @@ public class SignupSOneFragment extends Fragment {
             etConfirmPassword.requestFocus();
             flag = false;
         }
-        if(!validatePassword()) {
+        if (!validatePassword()) {
             etPassword.requestFocus();
             flag = false;
         }
 
         validateEmail();
-        if(!mailValid) {
+        if (!mailValid) {
             etEmail.requestFocus();
             flag = false;
         }
