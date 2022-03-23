@@ -144,8 +144,6 @@ public class watchDetailsFragment extends Fragment {
     // handle button activities
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.getActivity().onBackPressed();
@@ -186,7 +184,6 @@ public class watchDetailsFragment extends Fragment {
             toast.show();
 
             progressBar.setVisibility(View.GONE);
-
 
 
         } else {
@@ -266,9 +263,9 @@ public class watchDetailsFragment extends Fragment {
         chooser.putExtra(Intent.EXTRA_INTENT, galleryintent);
         chooser.putExtra(Intent.EXTRA_TITLE, "how would you like to get your photo");
 
-        Intent[] intentArray =  {cameraIntent};
+        Intent[] intentArray = {cameraIntent};
         chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-        startActivityForResult(chooser,SELECT_IMAGE);
+        startActivityForResult(chooser, SELECT_IMAGE);
     }
 
     private void openMap(View v) {

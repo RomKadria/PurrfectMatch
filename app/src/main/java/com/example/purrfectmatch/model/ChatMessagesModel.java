@@ -1,14 +1,10 @@
 package com.example.purrfectmatch.model;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.os.HandlerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -19,7 +15,6 @@ import java.util.concurrent.Executors;
 public class ChatMessagesModel {
     public static final ChatMessagesModel instance = new ChatMessagesModel();
     Executor executor = Executors.newFixedThreadPool(1);
-    Handler mainThread = HandlerCompat.createAsync(Looper.getMainLooper());
 
     public enum LoadingState {
         loading,
@@ -95,6 +90,7 @@ public class ChatMessagesModel {
     public interface UpdateChatMessageListener {
         void onComplete();
     }
+
     public interface DeleteChatMessageListener {
         void onComplete();
     }
@@ -108,36 +104,21 @@ public class ChatMessagesModel {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void addChatMessage(ChatMessage chatMessage) {
-        modelFirebase.addChatMessage(chatMessage);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateChatMessage(ChatMessage chatMessage, UpdateChatMessageListener listener) {
         modelFirebase.updateChatMessage(chatMessage, () -> {
             listener.onComplete();
             refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId, true);
         });
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void deleteChatMessage(ChatMessage chatMessage, DeleteChatMessageListener listener) {
         modelFirebase.updateChatMessage(chatMessage, () -> {
             listener.onComplete();
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    AppLocalDb.db.chatMessageDao().delete(chatMessage);
-
-                    if (AppLocalDb.db.chatMessageDao().getAllChatMessages(chatMessage.sendingId, chatMessage.receivingId).isEmpty()) {
-                        List<ChatPet> pets = AppLocalDb.db.chatPetDao().getById(chatMessage.receivingId);
-                        if (!pets.isEmpty()) {
-                            ChatPet petToDelete = pets.get(0);
-                            AppLocalDb.db.chatPetDao().delete(petToDelete);
-                        }
-                    }
-                }});
+            executor.execute(() -> {
+                AppLocalDb.db.chatMessageDao().delete(chatMessage);
+            });
             refreshChatMessages(chatMessage.sendingId, chatMessage.receivingId, true);
-            ChatsModel.instance.refreshChatsList(chatMessage.sendingId);
         });
     }
 }

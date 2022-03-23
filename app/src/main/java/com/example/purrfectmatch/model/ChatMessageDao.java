@@ -5,18 +5,15 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import java.util.List;
 
 @Dao
 public interface ChatMessageDao {
-    @Query("select * from ChatMessage where sendingId = :petId")
-    List<ChatMessage> getAllChats(String petId);
-
     @Query("select * from ChatMessage " +
-            "where (sendingId = :connectedPetId and receivingId = :otherPetId) " +
-            "or (sendingId = :otherPetId and receivingId = :connectedPetId) " +
+            "where ((sendingId = :connectedPetId and receivingId = :otherPetId) " +
+            "or (sendingId = :otherPetId and receivingId = :connectedPetId)) " +
+            "and isDeleted = 0 " +
             "order by messageTime asc")
     List<ChatMessage> getAllChatMessages(String connectedPetId, String otherPetId);
 
@@ -25,7 +22,4 @@ public interface ChatMessageDao {
 
     @Delete
     void delete(ChatMessage chatMessage);
-
-    @Update
-    void update(ChatMessage chatMessage);
 }

@@ -11,16 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.content.Context;
 
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,7 +28,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -43,13 +39,9 @@ import com.example.purrfectmatch.model.SaveSharedPreference;
 import java.io.IOException;
 
 public class SignupSTwoFragment extends Fragment {
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    final static int RESULT_SUCCESS = 0;
     final static int MAX_AGE = 200;
     final static int MIN_AGE = 0;
-    private static final int REQUEST_CAMERA = 1;
     private static final int SELECT_IMAGE = 22;
-    private final int PICK_IMAGE_REQUEST = 22;
 
     EditText nameEt;
     EditText ageEt;
@@ -58,7 +50,6 @@ public class SignupSTwoFragment extends Fragment {
     Button signUpBtn;
     Button uploadBtn;
     ImageButton mapBtn;
-    Bitmap imageBitmap;
     ImageView imageIv;
     private Uri filePath;
     Bitmap photo;
@@ -77,8 +68,6 @@ public class SignupSTwoFragment extends Fragment {
     // handle button activities
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.getActivity().onBackPressed();
@@ -139,10 +128,10 @@ public class SignupSTwoFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         if (nameEt.getText().toString().isEmpty() ||
-            ageEt.getText().toString().isEmpty() ||
-            addressEt.getText().toString().isEmpty() ||
-            aboutEt.getText().toString().isEmpty() ||
-            photo == null) {
+                ageEt.getText().toString().isEmpty() ||
+                addressEt.getText().toString().isEmpty() ||
+                aboutEt.getText().toString().isEmpty() ||
+                photo == null) {
 
             Context context = getContext();
             CharSequence text = "Please fill all fields";
@@ -151,7 +140,6 @@ public class SignupSTwoFragment extends Fragment {
             toast.show();
 
             progressBar.setVisibility(View.GONE);
-
 
 
         } else {
@@ -172,7 +160,7 @@ public class SignupSTwoFragment extends Fragment {
                     Pet pet = new Pet(email, name, age, address, about, password, url, latitude, longitude);
                     Model.instance.addPet(pet, () -> {
                         progressBar.setVisibility(View.GONE);
-                        
+
                         SaveSharedPreference.setLogin(getActivity().getApplicationContext(), true);
                         Navigation.findNavController(v).navigate(SignupSTwoFragmentDirections.actionSignupSTwoFragmentToLoginFragment());
                     });
@@ -191,9 +179,9 @@ public class SignupSTwoFragment extends Fragment {
         chooser.putExtra(Intent.EXTRA_INTENT, galleryintent);
         chooser.putExtra(Intent.EXTRA_TITLE, "how would you like to get your photo");
 
-        Intent[] intentArray =  {cameraIntent};
+        Intent[] intentArray = {cameraIntent};
         chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-        startActivityForResult(chooser,SELECT_IMAGE);
+        startActivityForResult(chooser, SELECT_IMAGE);
     }
 
     private void openMap(View v) {
@@ -210,7 +198,7 @@ public class SignupSTwoFragment extends Fragment {
                         filePath = data.getData();
                         photo = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
                     } else {
-                         photo = (Bitmap) data.getExtras().get("data");
+                        photo = (Bitmap) data.getExtras().get("data");
                     }
 
                     imageIv.setImageBitmap(photo);
@@ -219,8 +207,8 @@ public class SignupSTwoFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
-            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
+        }
     }
 }
