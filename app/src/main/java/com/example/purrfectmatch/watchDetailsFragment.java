@@ -257,6 +257,11 @@ public class watchDetailsFragment extends Fragment {
             currentUrl = connectedPet.getPetUrl();
             latitude = connectedPet.getLatitude();
             longitude = connectedPet.getLongitude();
+
+            Picasso.get()
+                    .load(connectedPet.getPetUrl())
+                    .error(R.drawable.pet_avatar)
+                    .into(petImageIv);
         }
     }
 
