@@ -238,6 +238,31 @@ public class watchDetailsFragment extends Fragment {
             picTv.setVisibility(View.INVISIBLE);
             mapBtn.setEnabled(false);
             isEdit = false;
+
+            Model.instance.getPetById(petId, pet -> {
+                if (pet.getPetUrl() != null) {
+                    Picasso.get()
+                            .load(pet.getPetUrl())
+                            .error(R.drawable.pet_avatar)
+                            .into(petImageIv, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    nameEt.setText(pet.getName());
+                                    ageEt.setText("" + pet.getAge());
+                                    aboutEt.setText(pet.getDescription());
+                                    addressEt.setText(pet.getAddress());
+                                    currentUrl = pet.getPetUrl();
+                                    progressBar.setVisibility(View.GONE);
+                                    latitude = pet.getLatitude();
+                                    longitude = pet.getLongitude();
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                }
+                            });
+                }
+            });
         }
     }
 

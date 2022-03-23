@@ -201,10 +201,6 @@ public class ChatFragment extends Fragment {
             });
 
             editCancelBtn.setOnClickListener(v -> {
-                Integer chatMessagePos = (Integer) v.getTag(R.string.messagePos);
-                ChatMessage chatMessage = viewModel.getData().getValue().get(chatMessagePos);
-                editMessageText.setText(chatMessage.getTextMessage());
-
                 editMessageText.setVisibility(View.GONE);
                 editSaveBtn.setVisibility(View.GONE);
                 editCancelBtn.setVisibility(View.GONE);
@@ -279,7 +275,6 @@ public class ChatFragment extends Fragment {
             ChatMessage chatMessage = viewModel.getData().getValue().get(position);
 
             holder.editSaveBtn.setTag(R.string.messagePos, position);
-            holder.editCancelBtn.setTag(R.string.messagePos, position);
             holder.deleteBtn.setTag(R.string.messagePos, position);
             holder.messageText.setText(chatMessage.getTextMessage());
             holder.messageUser.setText(chatMessage.getSendingId());
