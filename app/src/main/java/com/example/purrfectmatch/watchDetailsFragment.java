@@ -208,7 +208,7 @@ public class watchDetailsFragment extends Fragment {
                     Pet pet = new Pet(petId, name, age, address, about, password, currentUrl, latitude, longitude);
                     Model.instance.updatePet(pet, () -> {
                         progressBar.setVisibility(View.GONE);
-
+                        Toast.makeText(getActivity(), "User updated", Toast.LENGTH_SHORT).show();
                     });
                 }
 
