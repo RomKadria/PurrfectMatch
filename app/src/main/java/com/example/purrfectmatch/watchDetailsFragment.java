@@ -96,7 +96,6 @@ public class watchDetailsFragment extends Fragment {
         ageEt.setHint("Between " + MIN_AGE + " and " + MAX_AGE);
 
 
-        if (isFirstTime) {
             Model.instance.getPetById(petId, pet -> {
                 if (pet.getPetUrl() != null) {
                     Picasso.get()
@@ -105,14 +104,18 @@ public class watchDetailsFragment extends Fragment {
                             .into(petImageIv, new Callback() {
                                 @Override
                                 public void onSuccess() {
-                                    nameEt.setText(pet.getName());
-                                    ageEt.setText("" + pet.getAge());
-                                    aboutEt.setText(pet.getDescription());
-                                    addressEt.setText(pet.getAddress());
-                                    currentUrl = pet.getPetUrl();
-                                    progressBar.setVisibility(View.GONE);
-                                    latitude = pet.getLatitude();
-                                    longitude = pet.getLongitude();
+                                    if (isFirstTime) {
+                                        nameEt.setText(pet.getName());
+                                        ageEt.setText("" + pet.getAge());
+                                        aboutEt.setText(pet.getDescription());
+                                        addressEt.setText(pet.getAddress());
+                                        currentUrl = pet.getPetUrl();
+                                        progressBar.setVisibility(View.GONE);
+                                        latitude = pet.getLatitude();
+                                        longitude = pet.getLongitude();
+
+                                        isFirstTime = false;
+                                    }
                                 }
 
                                 @Override
@@ -122,8 +125,6 @@ public class watchDetailsFragment extends Fragment {
                 }
             });
 
-            isFirstTime = false;
-        }
 
         return view;
     }
